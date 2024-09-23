@@ -48,9 +48,7 @@ const NavBar = () => {
             </button>
           </Link>
           <Link to="/register">
-            <button className="bg-red-700 h-9 w-24 rounded-md">
-              Register
-            </button>
+            <button className="bg-red-700 h-9 w-24 rounded-md">Register</button>
           </Link>
         </div>
 
@@ -67,10 +65,14 @@ const NavBar = () => {
         <div className="md:hidden mt-4">
           <ul className="flex flex-col items-center text-white">
             <li className="py-2 w-full text-center border-b border-red-700">
-              <Link to="/" onClick={toggleMenu}>Home</Link>
+              <Link to="/" onClick={toggleMenu}>
+                Home
+              </Link>
             </li>
             <li className="py-2 w-full text-center border-b border-red-700">
-              <Link to="/about" onClick={toggleMenu}>About</Link>
+              <Link to="/about" onClick={toggleMenu}>
+                About
+              </Link>
             </li>
             <li className="py-2 w-full text-center border-b border-red-700">
               <Link to="/login" onClick={toggleMenu}>
