@@ -20,6 +20,11 @@ const testimonials = [
     quote:
       "I've been using this fitness tracker app for a few weeks now, and it's been a game-changer! The real-time tracking and personalized workout suggestions keep me motivated, and I love how it integrates seamlessly with my daily routine. Plus, the progress reports give me that extra push to stay on track. Highly recommend it to anyone serious about their fitness goals!",
   },
+  {
+    name: "Giress",
+    image: "src/assets/images/pexels-panther-1547248-Photoroom.png",
+    quote: "I am very well pleased with the fitness tracker tool its one of its kind as it comes with a friendly interface, easy to navgate and more to that, it process tracking tool is many of its kind, "
+  }
 ];
 
 const Customers = () => {

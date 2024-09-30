@@ -25,16 +25,15 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* Centered Home Link on Larger Screens */}
         <div className="hidden md:flex">
           <ul className="flex items-center justify-center text-white">
-            <li className="mx-4">
+            <li className="mx-4 flex items-center justify-center flex-col">
               <Link to="/">Home</Link>
+              <div className="bg-red-600 w-16 h-1 items-center justify-center"></div>
             </li>
           </ul>
         </div>
 
-        {/* Right-side Links */}
         <div className="hidden md:flex items-center gap-5">
           <Link to="/about" className="text-white mx-2">
             About
@@ -47,12 +46,12 @@ const NavBar = () => {
               Login
             </button>
           </Link>
-          <Link to="/register">
+          <Link to="/registration">
             <button className="bg-red-700 h-9 w-24 rounded-md">Register</button>
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* mobile ToggleButton */}
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-white">
             {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -60,7 +59,7 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+{/* Mobile view */}
       {isMenuOpen && (
         <div className="md:hidden mt-4">
           <ul className="flex flex-col items-center text-white">
@@ -85,7 +84,7 @@ const NavBar = () => {
               </Link>
             </li>
             <li className="py-2 w-full text-center">
-              <Link to="/register" onClick={toggleMenu}>
+              <Link to="/registration" onClick={toggleMenu}>
                 <button className="bg-red-700 h-9 w-24 rounded-md">
                   Register
                 </button>
