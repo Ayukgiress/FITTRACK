@@ -29,18 +29,18 @@ const Footer = () => {
               </div>
               <div>
                 <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Legal
+                  Contact
                 </h2>
                 <ul class="text-gray-500 dark:text-gray-400 font-medium">
                   <li class="mb-4">
-                    <a href="#" class="hover:underline">
-                      Privacy Policy
-                    </a>
+                    <h3 class="hover:underline">
+                      Cameroon, Yaounde
+                    </h3>
                   </li>
                   <li>
-                    <a href="#" class="hover:underline">
-                      Terms &amp; Conditions
-                    </a>
+                    <h3 class="hover:underline">
+                      676184440
+                    </h3>
                   </li>
                 </ul>
               </div>

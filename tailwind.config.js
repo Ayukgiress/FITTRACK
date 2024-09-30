@@ -9,7 +9,8 @@ export default {
       backgroundImage: {
         "image-backdrop": " linear-gradient(0deg, rgba(51,52,52,1) 0%, rgba(6,4,0,1) 100%);",
         "nav-gradient": "linear-gradient(90deg, rgba(68,41,2,1) 1%, rgba(6,1,1,1) 5%, rgba(10,1,1,1) 95%, rgba(99,1,1,1) 100%);",
-        "fitness": " radial-gradient(circle, rgba(95,13,17,1) 34%, rgba(20,17,17,1) 80%);"
+        "fitness": " radial-gradient(circle, rgba(95,13,17,1) 34%, rgba(20,17,17,1) 80%);",
+        "login-color": "linear-gradient(90deg, rgba(24,23,23,1) 0%, rgba(24,23,23,1) 82%);"
       },
       colors: {
         customGradient: '#000',
