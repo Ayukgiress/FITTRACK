@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./Pages/LandingPage/Home.jsx";
+import './App.css';
+import Registration from "./Pages/Registration.jsx";
+import Login from "./Pages/Login.jsx";
+import NavBar from "./Component/NavBar.jsx";
+import Footer from "./Component/Footer.jsx";
+import Dashboard from './Pages/Dashboard.jsx';
+// import NotFound from "./Pages/NotFound.jsx"; // Add a NotFound component
 
-function App() {
-  const [count, setCount] = useState(0)
+const PrivateRoute = ({ element, isAuthenticated }) => {
+  return isAuthenticated ? element : <Navigate to="/login" />;
+};
+
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication state
+
+  const isDashboardRoute = window.location.pathname === '/dashboard';
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="bg-customGradient">
+      <Router>
+        {!isDashboardRoute && <NavBar />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route 
+            path="/login" 
+            element={<Login setIsAuthenticated={setIsAuthenticated} />} 
+          />
+          <Route 
+            path="/dashboard" 
+            element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} 
+          />
+          {/* <Route path="*" element={<NotFound />} /> 404 page */}
+        </Routes>
+        {!isDashboardRoute && <Footer />}
+      </Router>
+    </div>
+  );
+};
 
-export default App
+export default App;
