@@ -1,30 +1,36 @@
 import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
+// Import images directly
+import mikeImage from "../../src/assets/images/pexels-mike-jones-8874913-Photoroom.png";
+import smithImage from "../../src/assets/images/pexels-tima-miroshnichenko-5327454-Photoroom.png";
+import johnsonImage from "../../src/assets/images/pexels-mike-jones-8874355-Photoroom.png";
+import giressImage from "../../src/assets/images/pexels-panther-1547248-Photoroom.png";
+
 const testimonials = [
   {
     name: "Mike",
-    image: "src/assets/images/pexels-mike-jones-8874913-Photoroom.png",
+    image: mikeImage,
     quote:
       "I’ve been using ActivePulse for the past three months, and I’m genuinely impressed. The website is easy to navigate, and everything is laid out clearly. I purchased the Premium Plan, and the personalized coaching has been a game-changer for me. My coach is incredibly supportive and always available to answer my questions. The weekly video sessions keep me motivated, and the custom meal plans have helped me stay on track with my goals. Highly recommended for anyone serious about their fitness journey!",
   },
   {
     name: "Smith",
-    image: "src/assets/images/pexels-tima-miroshnichenko-5327454-Photoroom.png",
+    image: smithImage,
     quote:
       "This fitness tracker app has completely transformed how I approach my workouts. The detailed analytics and goal-setting features help me stay focused and make progress every day. I also love the reminders to move and stay active throughout the day—it's like having a personal trainer in my pocket!",
   },
   {
     name: "Johnson",
-    image: "src/assets/images/pexels-mike-jones-8874355-Photoroom.png",
+    image: johnsonImage,
     quote:
       "I've been using this fitness tracker app for a few weeks now, and it's been a game-changer! The real-time tracking and personalized workout suggestions keep me motivated, and I love how it integrates seamlessly with my daily routine. Plus, the progress reports give me that extra push to stay on track. Highly recommend it to anyone serious about their fitness goals!",
   },
   {
     name: "Giress",
-    image: "src/assets/images/pexels-panther-1547248-Photoroom.png",
-    quote: "I am very well pleased with the fitness tracker tool its one of its kind as it comes with a friendly interface, easy to navgate and more to that, it process tracking tool is many of its kind, "
-  }
+    image: giressImage,
+    quote: "I am very well pleased with the fitness tracker tool. Its one of its kind as it comes with a friendly interface, easy to navigate, and more to that, its process tracking tool is many of its kind.",
+  },
 ];
 
 const Customers = () => {
