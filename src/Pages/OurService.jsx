@@ -1,8 +1,13 @@
 import React from "react";
 
+// Import images directly
+import buildingMusclesImage from "../../src/assets/images/pexels-mike-jones-8874913-Photoroom.png";
+import trainingAtHomeImage from "../../src/assets/images/pexels-nappy-935965-Photoroom.png";
+import gymPlanImage from "../../src/assets/images/pexels-mike-jones-8875298-Photoroom.png";
+
 const OurService = () => {
   return (
-    <div className=" bg-customGradient text-white flex items-center justify-center flex-col bg-#090101">
+    <div className="bg-customGradient text-white flex items-center justify-center flex-col">
       <h1 className="text-2xl mb-8">Our Services</h1>
 
       <div className="flex flex-wrap items-center justify-center gap-10 m-5">
@@ -14,7 +19,7 @@ const OurService = () => {
             }}
           >
             <h1 className="mb-0 text-lg">Building Muscles</h1>
-            <h3 className="text-sm  leading-tight">
+            <h3 className="text-sm leading-tight">
               Develop strength and define <br />
               your muscles with a tailored <br />
               program designed to help <br />
@@ -25,8 +30,8 @@ const OurService = () => {
             </h3>
           </div>
           <img
-            src="src/assets/images/pexels-mike-jones-8874913-Photoroom.png"
-            alt="img"
+            src={buildingMusclesImage}
+            alt="Building Muscles"
             className="w-2/5 h-full object-cover"
             style={{
               backgroundColor: "#191919",
@@ -42,7 +47,7 @@ const OurService = () => {
             }}
           >
             <h1 className="mb-0 text-lg">Training at Home</h1>
-            <h3 className="text-sm  leading-tight">
+            <h3 className="text-sm leading-tight">
               Develop strength and define <br />
               your muscles with a tailored <br />
               program designed to help <br />
@@ -53,8 +58,8 @@ const OurService = () => {
             </h3>
           </div>
           <img
-            src="src/assets/images/pexels-nappy-935965-Photoroom.png"
-            alt="img"
+            src={trainingAtHomeImage}
+            alt="Training at Home"
             className="w-2/5 h-full object-cover"
             style={{
               backgroundColor: "#191919",
@@ -81,8 +86,8 @@ const OurService = () => {
             </h3>
           </div>
           <img
-            src="src/assets/images/pexels-mike-jones-8875298-Photoroom.png"
-            alt="img"
+            src={gymPlanImage}
+            alt="Gym Plan"
             className="w-2/5 h-full object-cover"
             style={{
               backgroundColor: "#191919",

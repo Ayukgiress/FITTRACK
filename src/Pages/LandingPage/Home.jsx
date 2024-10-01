@@ -1,10 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import OurService from "../OurService";
 import Fitness from "../../Component/Fitness";
 import Customers from "../Customers";
 import AboutApp from "../AboutApp";
-// import Footer from '../../Component/Footer';
-import { Link } from "react-router-dom";
+import myImage from "../../assets/images/pexels-panther-1547248-Photoroom.png";
 
 const Home = () => {
   return (
@@ -33,7 +33,7 @@ const Home = () => {
 
         <div>
           <img
-            src="src/assets/images/pexels-panther-1547248-Photoroom.png"
+            src={myImage}
             alt="img"
             className="bg-transparent border-b-2 border-red-600 h-80 rounded-full w-5/6"
           />{" "}

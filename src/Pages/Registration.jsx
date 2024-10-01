@@ -140,28 +140,6 @@ const Registration = () => {
           </button>
         </form>
       </div>
-
-      <div className="relative w-1/2 h-screen hidden lg:block">
-        <img
-          src="src/assets/pexels-adrien-olichon-1257089-2387533.jpg"
-          alt="Image"
-          className="object-cover w-full h-full"
-        />
-        <div className="absolute flex items-center justify-center top-36 left-36 w-96 h-96 bg-login-color rounded-md">
-          <h1 className="w-96 text-center justify-center font-bold text-3xl text-white">
-            Achieve your <br /> fitness with <br />
-            Active<span className="text-red-600">Pulse</span>
-          </h1>
-
-          <div className="">
-            <img
-              src="src/assets/images/pexels-mike-jones-8874913-Photoroom.png"
-              alt="img"
-              className="h-96 w-96 bg-transparent border-b-2 border-red-600 rounded-full"
-            />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

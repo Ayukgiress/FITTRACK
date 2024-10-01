@@ -28,11 +28,10 @@ const Login = ({ setIsAuthenticated }) => {
   
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.msg || "Invalid email or password."); // Updated to use error message from server
-        throw new Error("Network response was not ok");
+        toast.error(errorData.error || "Invalid email or password."); 
+        return; 
       }
       
-  
       const data = await response.json();
       localStorage.setItem("token", data.token);
       toast.success("Login successful! Redirecting to Dashboard...");
@@ -41,13 +40,14 @@ const Login = ({ setIsAuthenticated }) => {
       navigate("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
+      toast.error("An unexpected error occurred.");
     }
   };
   
   return (
     <div className="bg-login-color flex justify-center items-center h-screen">
       <div className="lg:p-36 md:p-52 sm:20 p-10 w-full lg:w-1/2">
-        <h1 className="text-2xl font-bold mb-4 text-white items-center justify-center flex">
+        <h1 className="text-2xl font-bold mb-4 text-white flex justify-center items-center">
           Login
         </h1>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -62,6 +62,7 @@ const Login = ({ setIsAuthenticated }) => {
                 {...register("email", { required: true })}
                 className="w-full py-2 px-3 focus:outline-none"
                 placeholder="Enter your email"
+                aria-invalid={errors.email ? "true" : "false"}
               />
               <FaEnvelope className="text-white mx-2" />
             </div>
@@ -78,6 +79,7 @@ const Login = ({ setIsAuthenticated }) => {
                 {...register("password", { required: true })}
                 className="w-full py-2 px-3 focus:outline-none"
                 placeholder="Enter your password"
+                aria-invalid={errors.password ? "true" : "false"}
               />
               <FaLock className="text-white mx-2" />
             </div>
@@ -92,26 +94,7 @@ const Login = ({ setIsAuthenticated }) => {
         </form>
       </div>
 
-      <div className="relative w-1/2 h-screen hidden lg:block">
-        <img
-          src="src/assets/pexels-adrien-olichon-1257089-2387533.jpg"
-          alt="Image"
-          className="object-cover w-full h-full"
-        />
-        <div className="absolute flex items-center justify-center top-36 left-36 w-96 h-96 bg-login-color rounded-md">
-          <h1 className="w-96 text-center justify-center font-bold text-3xl text-white">
-            Achieve your <br /> fitness with <br />
-            Active<span className="text-red-600">Pulse</span>
-          </h1>
-          <div>
-            <img
-              src="src/assets/images/pexels-mike-jones-8874913-Photoroom.png"
-              alt="img"
-              className="h-96 w-96 bg-transparent border-b-2 border-red-600 rounded-full"
-            />
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };
