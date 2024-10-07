@@ -3,8 +3,10 @@ import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { API_URL } from "../../constants";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom"; 
+import { useAuth } from "./AuthContext"; // Import the useAuth hook
 
 const Registration = () => {
+  const { login } = useAuth(); // Access the login function from context
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +42,7 @@ const Registration = () => {
     }
   
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch(`${API_URL}users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,8 +57,11 @@ const Registration = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        toast.success("Registration successful! Redirecting to login");
-        navigate("/login");
+        toast.success("Registration successful! Logging you in...");
+        
+        // Log the user in after successful registration
+        login();
+        navigate("/dashboard"); // Redirect to the dashboard instead of login
       } else if (response.status === 404) {
         toast.error("Registration endpoint not found. Please check your server.");
       } else if (response.status === 400) {
@@ -72,8 +77,6 @@ const Registration = () => {
       toast.error("An error occurred during registration, please try again later");
     }
   };
-  
-  
 
   return (
     <div className="bg-login-color flex justify-center items-center h-screen">
@@ -81,7 +84,7 @@ const Registration = () => {
         <h1 className="text-2xl font-bold mb-4 text-white items-center justify-center flex">
           Register
         </h1>
-        <form action="#" method="POST" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-white font-bold">
               Username
@@ -134,6 +137,7 @@ const Registration = () => {
           </div>
 
           <button
+            type="submit"
             className="bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full"
           >
             Register
