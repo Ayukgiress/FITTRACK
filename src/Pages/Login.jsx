@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom"; 
 import { toast } from "sonner"; 
 import { API_URL } from "../../constants.js"; 
+import { useAuth } from "./AuthContext.jsx"; 
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
+  const { login } = useAuth(); 
   const {
     register,
     handleSubmit,
@@ -18,14 +20,14 @@ const Login = ({ setIsAuthenticated }) => {
     console.log("Logging in with:", { email, password });
   
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(`${API_URL}users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
-  
+      
       if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.error || "Invalid email or password."); 
@@ -36,7 +38,7 @@ const Login = ({ setIsAuthenticated }) => {
       localStorage.setItem("token", data.token);
       toast.success("Login successful! Redirecting to Dashboard...");
       
-      setIsAuthenticated(true);
+      login(); // Call the login function from context
       navigate("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
@@ -93,8 +95,6 @@ const Login = ({ setIsAuthenticated }) => {
           </button>
         </form>
       </div>
-
-
     </div>
   );
 };
