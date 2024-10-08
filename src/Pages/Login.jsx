@@ -20,7 +20,7 @@ const Login = () => {
     console.log("Logging in with:", { email, password });
   
     try {
-      const response = await fetch(`https://fitness-tracker-api-backend.onrender.com/users/login`, {
+      const response = await fetch(`https://fitness-tracker-api-8.onrender.com/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
