@@ -10,9 +10,9 @@ const Sidebar = () => {
     <div className="w-16 h-full bg-dashboard-gradient rounded-3xl flex flex-col items-center justify-between p-4">  
       <div className='flex flex-col items-center justify-center gap-6'>  
         {/* Home Navigation */}  
-        <Link to="/" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
+        {/* <Link to="/" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
           <FaHome className='text-white w-8 h-8' />  
-        </Link>  
+        </Link>   */}
 
         {/* Settings Navigation */}  
         <Link to="/dashboard/settings" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
