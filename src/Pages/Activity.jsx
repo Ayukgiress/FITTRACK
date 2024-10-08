@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Workout from "./Workout";
 import WeeklyChart from "./WeeklyChart";
 import { FaTrash, FaEdit } from 'react-icons/fa';
+import { API_URL } from "../../constants";
 
 function Activity() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +30,7 @@ function Activity() {
   const handleLogSubmit = async (workout) => {
     if (editingWorkout) {
       try {
-        const response = await fetch(`http://localhost:5000/workouts/${editingWorkout.id}`, {
+        const response = await fetch(`${API_URL}/workouts/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ function Activity() {
       setEditingWorkout(null);
     } else {
       try {
-        const response = await fetch('http://localhost:5000/workouts', {
+        const response = await fetch(`${API_URL}/workouts`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -79,7 +80,7 @@ function Activity() {
   const deleteWorkout = async (index) => {
     const workoutToDelete = workoutLog[index];
     try {
-      const response = await fetch(`http://localhost:5000/workouts/${workoutToDelete.id}`, {
+      const response = await fetch(`${API_URL}/workouts/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
