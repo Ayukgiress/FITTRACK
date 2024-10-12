@@ -1,40 +1,78 @@
-import React from 'react';  
+import React, { useState } from 'react';  
 import { Link } from 'react-router-dom';  
-import { FaHome } from 'react-icons/fa';  
+import { FaBars, FaTimes } from 'react-icons/fa';  
 import { IoSettings } from 'react-icons/io5';  
-import { FcStatistics } from 'react-icons/fc';  
-import workoutIcon from '../../src/assets/images/report (1).png';  
+import { FcStatistics } from 'react-icons/fc';   
+import { IoHome } from "react-icons/io5";  
+import workoutIcon from '../../src/assets/images/report (1).png'; 
+import  Plan from '../Pages/Plan.jsx'
 
 const Sidebar = () => {  
+  const [isOpen, setIsOpen] = useState(false);  
+
+  const toggleSidebar = () => {  
+    setIsOpen(!isOpen);  
+  };  
+
   return (  
-    <div className="w-16 h-full bg-dashboard-gradient rounded-3xl flex flex-col items-center justify-between p-4">  
-      <div className='flex flex-col items-center justify-center gap-6'>  
-        {/* Home Navigation */}  
-        {/* <Link to="/" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
-          <FaHome className='text-white w-8 h-8' />  
-        </Link>   */}
+    <div className="relative h-lvh">  
+      {/* Hamburger Menu Button */}  
+      {!isOpen && (  
+        <button   
+          onClick={toggleSidebar}   
+          className="mb-4 text-white focus:outline-none"  
+        >  
+          <FaBars className="w-8 h-8" />  
+        </button>  
+      )}  
 
-        {/* Settings Navigation */}  
-        <Link to="/dashboard/settings" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
-          <IoSettings className='text-white w-8 h-8' />  
-        </Link>  
+      {/* Sidebar Links */}  
+      {isOpen && (  
+        <div className="fixed left-0 w-64 h-full bg-dashboard-gradient p-4 transition-transform transform duration-300 ease-in-out">  
+          {/* Close Button */}  
+          <button   
+            onClick={toggleSidebar}   
+            className="mb-4 text-white focus:outline-none"  
+          >  
+            <FaTimes className="w-8 h-8" />  
+          </button>  
 
-        {/* Statistics Navigation */}  
-        <Link to="/dashboard/statistics" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
-          <FcStatistics className='text-white w-8 h-8' />  
-        </Link>  
+          <div className="flex flex-col items-start justify-start gap-6">  
 
-        {/* Workouts Navigation */}  
-        <Link to="/dashboard/workoutstore" className="transition-colors duration-200 p-2 rounded-full hover:bg-red-600">  
-          <img src={workoutIcon} alt="Workouts" className='w-10 h-8' />  
-        </Link>  
-      </div>  
+            {/* Home Navigation */}  
+            <Link to="/" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+              <IoHome className='text-white w-8 h-8' />  
+              <span className="text-white ml-2">Home</span>  
+            </Link>   
 
-      <div>  
-        <Link to='/dashboard/musics' className="text-white hover:underline">  
-          Musics  
-        </Link>  
-      </div>  
+            {/* Settings Navigation */}  
+            <Link to="/dashboard/settings" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+              <IoSettings className='text-white w-8 h-8' />  
+              <span className="text-white ml-2">Settings</span>  
+            </Link>  
+
+            {/* Statistics Navigation */}  
+            <Link to="/dashboard/statistics" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+              <FcStatistics className='text-white w-8 h-8' />  
+              <span className="text-white ml-2">Statistics</span>  
+            </Link>  
+
+            <Plan/>
+
+            {/* Workouts Navigation */}  
+            <Link to="/dashboard/workoutstore" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+              <img src={workoutIcon} alt="Workouts" className='w-10 h-8' />  
+              <span className="text-white ml-2">Goals</span>  
+            </Link>  
+          </div>  
+
+          {/* <div className="mt-4">  
+            <Link to='/dashboard/musics' className="flex items-center text-white hover:underline">  
+              <span>Musics</span>  
+            </Link>  
+          </div>   */}
+        </div>  
+      )}  
     </div>  
   );  
 };  

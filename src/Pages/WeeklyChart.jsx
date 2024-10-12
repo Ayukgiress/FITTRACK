@@ -1,57 +1,71 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import React from 'react';  
+import { Bar } from 'react-chartjs-2';  
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';  
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);  
 
-const WeeklyChart = ({ weeklyWorkoutData }) => {
-  const createGradient = (ctx, chartArea) => {
-    if (!chartArea) return null; 
+const WeeklyChart = ({ weeklyWorkoutData }) => {  
+  console.log("Weekly Workout Data:", weeklyWorkoutData);  
 
-    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.8)'); 
-    gradient.addColorStop(1, 'rgba(169, 169, 169, 0.8)');
-    return gradient;
-  };
+  const data = {  
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],  
+    datasets: [  
+      {  
+        label: 'Calories Burned', // Change this from 'Workout Duration (minutes)' to 'Calories Burned'  
+        data: weeklyWorkoutData,  
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',  
+        borderColor: 'rgba(75, 192, 192, 1)',  
+        borderWidth: 1,  
+      },  
+    ],  
+  };  
 
-  const data = {
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    datasets: [
-      {
-        label: 'Workout Duration (minutes)',
-        data: weeklyWorkoutData,
-        borderColor: 'rgba(255, 0, 0, 0.8))',
-        borderWidth: 1,
-        backgroundColor: (context) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
+  const options = {  
+    responsive: true,  
+    plugins: {  
+      legend: {  
+        position: 'top',  
+        labels: {  
+          font: {  
+            size: 14,  
+            color: 'white',  
+          },  
+        },  
+      },  
+      title: {  
+        display: true,  
+        text: 'Weekly Calories Burned', // Change this from 'Weekly Workout Duration' to 'Weekly Calories Burned'  
+        font: {  
+          size: 18,  
+          color: 'white',  
+        },  
+      },  
+    },  
+    scales: {  
+      x: {  
+        ticks: {  
+          color: 'white',  
+          font: {  
+            size: 14,  
+          },  
+        },  
+      },  
+      y: {  
+        ticks: {  
+          color: 'white',  
+          font: {  
+            size: 14,  
+          },  
+        },  
+      },  
+    },  
+  };  
 
-          const gradient = createGradient(ctx, chartArea);
-          return gradient || 'rgba(75, 192, 192, 0.6)'; 
-        },
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Weekly Workout Duration',
-      },
-    },
-  };
-
-  return (
-    <div style={{ height: '350px' }}>
-      <Bar data={data} options={options} />
-    </div>
-  );
-};
+  return (  
+    <div>  
+      <Bar data={data} options={options} />  
+    </div>  
+  );  
+};  
 
 export default WeeklyChart;
