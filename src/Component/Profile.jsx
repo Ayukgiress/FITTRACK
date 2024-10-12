@@ -20,7 +20,7 @@ const Profile = ({ isAuthenticated }) => {
       }  
   
       try {  
-        const response = await fetch(`${API_URL}users/profile`, {  
+        const response = await fetch(`http://localhost:5000/users/profile`, {  
           headers: {  
             Authorization: `Bearer ${token}`,  
           },  
@@ -50,7 +50,7 @@ const Profile = ({ isAuthenticated }) => {
     formData.append('file', file);
   
     try {
-      const response = await fetch(`${API_URL}users/uploadProfileImage`, {
+      const response = await fetch(`http://localhost:5000/users/uploadProfileImage`, {
         method: 'POST',
         body: formData,
         headers: {

@@ -3,24 +3,24 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom"; 
 import { toast } from "sonner"; 
-import { API_URL } from "../../constants.js"; 
-import { useAuth } from "./AuthContext.jsx"; 
+import { useAuth } from "./AuthContext.jsx";
 
 const Login = () => {
-  const { login } = useAuth(); 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm(); 
+  } = useForm();
+
+  const { setRefetchCurrentUser } = useAuth();
 
   const navigate = useNavigate(); 
 
   const handleFormSubmit = async ({ email, password }) => {
     console.log("Logging in with:", { email, password });
-  
+
     try {
-      const response = await fetch(`https://fitness-tracker-api-8.onrender.com/users/login`, {
+      const response = await fetch(`http://localhost:5000/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,16 +30,14 @@ const Login = () => {
       
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.error || "Invalid email or password."); 
-        return; 
+        toast.error(errorData.error || "Invalid email or password.");
+        return;
       }
       
       const data = await response.json();
       localStorage.setItem("token", data.token);
-      toast.success("Login successful! Redirecting to Dashboard...");
-      
-      login(); // Call the login function from context
       navigate("/dashboard");
+      setRefetchCurrentUser(prev => !prev);
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error("An unexpected error occurred.");

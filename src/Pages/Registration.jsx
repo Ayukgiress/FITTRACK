@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { API_URL } from "../../constants";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom"; 
-import { useAuth } from "./AuthContext"; // Import the useAuth hook
+import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
-  const { login } = useAuth(); // Access the login function from context
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +40,7 @@ const Registration = () => {
     }
   
     try {
-      const response = await fetch(`${API_URL}/users/register`, {
+      const response = await fetch(`http://localhost:5000/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,9 +56,7 @@ const Registration = () => {
         const data = await response.json();
         localStorage.setItem("token", data.token);
         toast.success("Registration successful! Logging you in...");
-        
-        // Log the user in after successful registration
-        login();
+
         navigate("/dashboard"); // Redirect to the dashboard instead of login
       } else if (response.status === 404) {
         toast.error("Registration endpoint not found. Please check your server.");
@@ -69,7 +65,6 @@ const Registration = () => {
         toast.error("Email already exists, please login");
       } else {
         const data = await response.json();
-        console.error("Registration failed:", data.message);
         toast.error(`Registration failed: ${data.message}`);
       }
     } catch (error) {

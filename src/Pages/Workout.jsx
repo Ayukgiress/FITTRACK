@@ -1,111 +1,188 @@
 import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
+import { toast } from 'sonner'; // For notifications
 
 const calorieRates = {
-    running: 10,
-    cycling: 8,
-    swimming: 7,
-    yoga: 3,
-    weightlifting: 6,
+  running: 10,
+  cycling: 8,
+  swimming: 7,
+  yoga: 3,
+  weightlifting: 6,
 };
 
 const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
-    const [exercise, setExercise] = useState('');
-    const [duration, setDuration] = useState(0);
-    const [date, setDate] = useState('');
-    const [calories, setCalories] = useState(0);
+  const [exercise, setExercise] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [date, setDate] = useState('');
+  const [calories, setCalories] = useState(0);
 
-    const token = localStorage.getItem('token');
+  useEffect(() => {
+    if (workoutToEdit) {
+      setExercise(workoutToEdit.exercise);
+      setStartTime(workoutToEdit.startTime);
+      setEndTime(workoutToEdit.endTime);
+      setDate(workoutToEdit.date);
+      setCalories(workoutToEdit.calories);
+    } else {
+      resetForm();
+    }
+  }, [workoutToEdit]);
 
-    useEffect(() => {
-        if (workoutToEdit) {
-            setExercise(workoutToEdit.exercise);
-            setDuration(workoutToEdit.duration);
-            setDate(workoutToEdit.date);
-            setCalories(workoutToEdit.calories);
-        } else {
-            setExercise('');
-            setDuration(0);
-            setDate('');
-            setCalories(0);
-        }
-    }, [workoutToEdit]);
+  const resetForm = () => {
+    setExercise('');
+    setStartTime('');
+    setEndTime('');
+    setDate('');
+    setCalories(0);
+  };
 
-    const handleDurationChange = (e) => {
-        const newDuration = e.target.value;
-        setDuration(newDuration);
-        const calculatedCalories = (calorieRates[exercise.toLowerCase()] || 0) * newDuration;
-        setCalories(calculatedCalories);
-    };
+  const calculateCalories = () => {
+    if (!startTime || !endTime) return 0;
 
-    const handleExerciseChange = (e) => {
-        const selectedExercise = e.target.value;
-        setExercise(selectedExercise);
-        const calculatedCalories = (calorieRates[selectedExercise.toLowerCase()] || 0) * duration;
-        setCalories(calculatedCalories);
-    };
+    const duration = (new Date(`1970-01-01T${endTime}Z`) - new Date(`1970-01-01T${startTime}Z`)) / 60000; // Duration in minutes
+    return (calorieRates[exercise.toLowerCase()] || 0) * duration;
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const workoutData = { exercise, duration, date, calories };
+  const handleExerciseChange = (e) => {
+    const selectedExercise = e.target.value;
+    setExercise(selectedExercise);
+    setCalories(calculateCalories());
+  };
 
-        onSubmit(workoutData); // Pass the workout data back to the Activity component
-        setExercise('');
-        setDuration(0);
-        setDate('');
-        setCalories(0);
-        onClose();
-    };
+  useEffect(() => {
+    setCalories(calculateCalories());
+  }, [startTime, endTime]);
 
-    if (!isOpen) return null;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const calculatedCalories = calculateCalories();
+    const workoutData = { exercise, startTime, endTime, date, calories: calculatedCalories };
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow-md w-80">
-                <span className="cursor-pointer text-gray-400 float-right" onClick={onClose}>&times;</span>
-                <h2 className="text-lg font-semibold mb-4">Log Your Workout</h2>
-                <form onSubmit={handleSubmit}>
-                    <label className="block mb-2">
-                        Exercise:
-                        <select
-                            className="border border-gray-300 rounded w-full p-2"
-                            value={exercise}
-                            onChange={handleExerciseChange}
-                            required
-                        >
-                            <option value="">Select an exercise</option>
-                            {Object.keys(calorieRates).map((type) => (
-                                <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
-                            ))}
-                        </select>
-                    </label>
-                    <label className="block mb-2">
-                        Duration (minutes):
-                        <input
-                            className="border border-gray-300 rounded w-full p-2"
-                            type="number"
-                            value={duration}
-                            onChange={handleDurationChange}
-                            required
-                        />
-                    </label>
-                    <label className="block mb-4">
-                        Date:
-                        <input
-                            className="border border-gray-300 rounded w-full p-2"
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                        />
-                    </label>
-                    <div className="mb-4">
-                        <strong>Calories Burned:</strong> {calories.toFixed(2)} calories
-                    </div>
-                    <button className="bg-blue-500 text-white rounded p-2 w-full" type="submit">Submit</button>
-                </form>
-            </div>
+    onSubmit(workoutData);
+    toast.success("Exercise logged successfully!");
+    onClose();
+    resetForm();
+  };
+
+  // Conditional rendering to avoid registering modal multiple times
+  if (!isOpen) return null;
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      ariaHideApp={false}
+      shouldCloseOnOverlayClick
+      style={{
+        overlay: {
+          backgroundColor: 'rgba(0, 0, 0, 0.75)', 
+        },
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          transform: 'translate(-50%, -50%)',
+          width: '400px', 
+          backgroundColor: 'black',
+          color: 'white',
+          border: 'none',
+          borderRadius: '10px',
+          padding: '40px',
+        },
+      }}
+    >
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="exerciseType" className="block text-sm font-medium">
+            Exercise Type
+          </label>
+          <select
+            id="exerciseType"
+            value={exercise}
+            onChange={handleExerciseChange}
+            className="w-full border rounded p-3 text-black" // Increased padding
+            required
+          >
+            <option value="">Select an exercise</option>
+            {Object.keys(calorieRates).map((type) => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
-    );
+
+        <div className="mb-4 text-black">
+          <label htmlFor="startTime" className="block text-sm font-medium text-white">
+            Start Time
+          </label>
+          <input
+            type="time"
+            id="startTime"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-full border rounded p-3" // Increased padding
+            required
+          />
+        </div>
+
+        <div className="mb-4 text-black">
+          <label htmlFor="endTime" className="block text-sm font-medium text-white">
+            End Time
+          </label>
+          <input
+            type="time"
+            id="endTime"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-full border rounded p-3" // Increased padding
+            required
+          />
+        </div>
+
+        <div className="mb-4 text-black">
+          <label htmlFor="date" className="block text-sm font-medium text-white">
+            Date
+          </label>
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full border rounded p-3" // Increased padding
+            required
+          />
+        </div>
+
+        <div className="mb-4 text-black">
+          <label htmlFor="calories" className="block text-sm font-medium text-white">
+            Calories Burned
+          </label>
+          <input
+            type="number"
+            id="calories"
+            value={calories}
+            readOnly
+            className="w-full border rounded p-3"
+          />
+        </div>
+
+        <div className="flex justify-between mt-4">
+          <button
+            type="submit"
+            className="bg-black border-2 border-red-700 text-white font-semibold rounded py-2 px-4"
+          >
+            Submit
+          </button>
+          <button onClick={onClose} className="text-red-500 font-semibold">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
 };
 
 export default Workout;

@@ -1,5 +1,4 @@
-// App.jsx
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,12 +15,18 @@ import Dashboard from "./Pages/Dashboard.jsx";
 import Statistics from "./Pages/Statistics.jsx";
 import Settings from "./Pages/Settings.jsx";
 import Activity from "./Pages/Activity.jsx";
-// import WorkoutStore from "./Pages/WorkoutStore.jsx";
 import Profile from "./Component/Profile.jsx";
 import { AuthProvider, useAuth } from './Pages/AuthContext.jsx'; 
+import { FitnessProvider } from './Pages/PlanContext.jsx'; // Import the FitnessProvider
+import Plan from "./Pages/Plan.jsx";
+import WorkoutStore from "./Pages/WorkoutStore.jsx";
 
 const PrivateRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentUserLoading } = useAuth();
+  if (currentUserLoading) return (
+    <p>loading...</p>
+  );
+
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
@@ -47,8 +52,8 @@ const AppRoutes = () => {
         >
           <Route path="statistics" element={<Statistics />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="goals" element={<gooals />} />
-          {/* <Route path="workouts" element={<WorkoutStore />} /> */}
+          <Route path="workoutStore" element={<WorkoutStore/>}/>
+          <Route path="plan" element={<Plan />} /> {/* Make sure Goals component is defined */}
           <Route index element={<Activity />} /> {/* Default view for dashboard */}
         </Route>
       </Routes>
@@ -60,11 +65,13 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <div className="bg-customGradient">
-        <Router>
-          <AppRoutes />
-        </Router>
-      </div>
+      <FitnessProvider> {/* Wrap your app with the FitnessProvider */}
+        <div className="bg-customGradient">
+          <Router>
+            <AppRoutes />
+          </Router>
+        </div>
+      </FitnessProvider>
     </AuthProvider>
   );
 };
