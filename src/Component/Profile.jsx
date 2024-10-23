@@ -1,54 +1,56 @@
-import React, { useEffect, useState } from "react";  
-import { useNavigate } from "react-router-dom";  
-import { toast } from "react-toastify";  
-import { API_URL } from "../../constants";  
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { CiLogout } from "react-icons/ci";
+import { useAuth } from "../Pages/AuthContext"
 
-const Profile = ({ isAuthenticated }) => {  
-  const [profile, setProfile] = useState(null);  
-  const [loading, setLoading] = useState(true);  
-  const [imageFile, setImageFile] = useState(null);  
-  const [showDetails, setShowDetails] = useState(false); // State to toggle details visibility
-  const [isEditing, setIsEditing] = useState(false); // State to track if in editing mode
-  const navigate = useNavigate();  
-  
-  useEffect(() => {  
-    const fetchProfile = async () => {  
-      const token = localStorage.getItem("token");  
-      if (!isAuthenticated || !token) {  
-        navigate("/login");  
-        return;  
-      }  
-  
-      try {  
-        const response = await fetch(`http://localhost:5000/users/profile`, {  
-          headers: {  
-            Authorization: `Bearer ${token}`,  
-          },  
-        });  
-  
-        if (!response.ok) {  
-          const errorData = await response.json();  
-          toast.error(errorData.error || "Failed to fetch profile.");  
-          return;  
-        }  
-  
-        const data = await response.json();  
-        setProfile(data);  
-      } catch (error) {  
-        console.error("Error fetching profile:", error);  
-        toast.error("An unexpected error occurred.");  
-      } finally {
-        setLoading(false);  
+const Profile = ({ isAuthenticated }) => {
+  const { logout } = useAuth();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [imageFile, setImageFile] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!isAuthenticated || !token) {
+        navigate("/login");
+        return;
       }
-    };  
-  
-    fetchProfile();  
+
+      try {
+        const response = await fetch(`http://localhost:5000/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          toast.error(errorData.error || "Failed to fetch profile.");
+          return;
+        }
+
+        const data = await response.json();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        toast.error("An unexpected error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, [isAuthenticated, navigate]);
 
   const handleUpload = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-  
+
     try {
       const response = await fetch(`http://localhost:5000/users/uploadProfileImage`, {
         method: 'POST',
@@ -57,116 +59,130 @@ const Profile = ({ isAuthenticated }) => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to upload image');
       }
-  
+
       const data = await response.json();
-      console.log('Upload successful:', data); // Ensure this logs the URL
       setProfile((prevProfile) => ({
         ...prevProfile,
-        profileImage: data.url, // Update the state with the new image URL
+        profileImage: data.url,
       }));
-      setIsEditing(false); // Exit editing mode after upload
+      setIsEditing(false);
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error(error.message || 'Upload failed');
     }
   };
-  
+
   const handleImageUpload = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (!imageFile) {
       toast.error("Please select an image file to upload.");
       return;
     }
-    await handleUpload(imageFile); 
+    await handleUpload(imageFile);
   };
 
   const handleEditImage = () => {
-    setIsEditing(true); // Enter editing mode
+    setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
-    setIsEditing(false); // Exit editing mode
-    setImageFile(null); // Clear the selected file
+    setIsEditing(false);
+    setImageFile(null);
   };
 
   const toggleDetails = () => {
-    setShowDetails(prev => !prev); 
+    setShowDetails(prev => !prev);
   };
 
-  if (loading) {  
-    return <p className="text-center">Loading profile...</p>;  
-  }  
+  const handleLogout = () => {
+    logout(); // Call the logout function from context
+    navigate("/login"); // Redirect to login page after logout
+  };
 
-  if (!profile) {  
-    return <p className="text-center">No profile found.</p>;  
-  }  
+  if (loading) {
+    return <p className="text-center">Loading profile...</p>;
+  }
 
-  return ( 
-    <div className="w-52 h-56 rounded-full bg-black">
-      <div className="w-48 h-52 mx-auto m-3 bg-white shadow-md rounded-full p-5 flex flex-col items-center">  
-        {profile.profileImage && (  
-          <img 
-            src={profile.profileImage} 
-            alt={`${profile.username}'s profile`} 
-            className="w-32 h-32 rounded-full mb-4 cursor-pointer border-4 border-gray-200" 
-            onClick={toggleDetails} // Toggle details on image click
-          />
-        )}
-        {showDetails && (
-          <div className="text-center">
-            <p className="text-lg font-semibold">{profile.username}</p>  
-            <p className="text-sm text-gray-500"><small>Email:</small> {profile.email}</p>  
-            {profile.profileImage && !isEditing && ( // Show Edit button only when not editing
-              <button 
-                onClick={handleEditImage} 
-                className="bg-green-600 text-white rounded px-4 py-2 mt-2 transition duration-200 hover:bg-green-500"
-              >
-                Edit Image
-              </button>
-            )}
-          </div>
-        )}
+  if (!profile) {
+    return <p className="text-center">No profile found.</p>;
+  }
 
-        {isEditing ? (
-          <form onSubmit={handleImageUpload} className="mt-4 flex flex-col items-center">
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => setImageFile(e.target.files[0])} 
-              className="mb-2 border border-gray-300 rounded p-2"
+  return (
+    <div className="flex item-center flex-col justify-between bg-neutral-800 w-72 h-full">
+      <div className="bg-black h-80 w-full">
+        <div className="w-48 h-48 mx-auto m-3 bg-white shadow-md rounded-full p-5 flex flex-col items-center">
+          {profile.profileImage && (
+            <img
+              src={profile.profileImage}
+              alt={`${profile.username}'s profile`}
+              className="w-44 h-44 rounded-full mb-4 cursor-pointer border-4 border-gray-200"
+              onClick={toggleDetails}
             />
-            <button 
-              type="submit" 
-              className="bg-blue-600 text-white rounded px-4 py-2 transition duration-200 hover:bg-blue-500"
-            >
-              Upload Profile Image
-            </button>
-            <button 
-              type="button" 
-              onClick={handleCancelEdit} 
-              className="bg-red-600 text-white rounded px-4 py-2 mt-2 transition duration-200 hover:bg-red-500"
-            >
-              Cancel
-            </button>
-          </form>
-        ) : (
-          !profile.profileImage && ( 
-            <button 
-              onClick={handleEditImage} 
-              className="bg-green-600 text-white rounded px-4 py-2 mt-4 transition duration-200 hover:bg-green-500"
-            >
-              Upload Image
-            </button>
-          )
-        )}
-      </div> 
-    </div> 
-  );  
-};  
+          )}
 
-export default Profile;
+          {isEditing ? (
+            <form onSubmit={handleImageUpload} className="mt-4 flex flex-col items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
+                className="mb-2 border border-gray-300 rounded p-2"
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 text-white rounded px-4 py-2 transition duration-200 hover:bg-blue-500"
+              >
+                Upload Profile Image
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="bg-red-600 text-white rounded px-4 py-2 mt-2 transition duration-200 hover:bg-red-500"
+              >
+                Cancel
+              </button>
+            </form>
+          ) : (
+            !profile.profileImage && (
+              <button
+                onClick={handleEditImage}
+                className="bg-green-600 text-white rounded px-4 py-2 mt-4 transition duration-200 hover:bg-green-500"
+              >
+                Upload Image
+              </button>
+            )
+          )}
+        </div>
+
+        <div className="text-center mt-4 flex flex-col items-center">
+          <p className="text-lg font-bold text-white">{profile.username}</p>
+          <p className="text-sm text-white">{profile.email}</p>
+        </div>
+
+        {showDetails && !isEditing && (
+          <button
+            onClick={handleEditImage}
+            className="bg-green-600 text-white rounded px-4 py-2 mt-2 transition duration-200 hover:bg-green-500"
+          >
+            Edit Image
+          </button>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center mt-4">
+        <CiLogout className="mr-2 text-white text-xl" />
+        <button onClick={handleLogout} className="text-white text-xl bg-transparent border-none cursor-pointer">
+          Logout
+        </button>
+      </div>
+
+    </div>
+  );
+};
+
+export default Profile;  

@@ -11,7 +11,7 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],  
     datasets: [  
       {  
-        label: 'Calories Burned', // Change this from 'Workout Duration (minutes)' to 'Calories Burned'  
+        label: 'Calories Burned',  
         data: weeklyWorkoutData,  
         backgroundColor: 'rgba(75, 192, 192, 0.6)',  
         borderColor: 'rgba(75, 192, 192, 1)',  
@@ -34,7 +34,7 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
       },  
       title: {  
         display: true,  
-        text: 'Weekly Calories Burned', // Change this from 'Weekly Workout Duration' to 'Weekly Calories Burned'  
+        text: 'Weekly Calories Burned',   
         font: {  
           size: 18,  
           color: 'white',  
@@ -62,10 +62,10 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
   };  
 
   return (  
-    <div>  
+    <div style={{ height: '1000vh' }}> {/* Set the height of the container to a percentage */}  
       <Bar data={data} options={options} />  
     </div>  
   );  
 };  
 
-export default WeeklyChart;
+export default WeeklyChart;  
