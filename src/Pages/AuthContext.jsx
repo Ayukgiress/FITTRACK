@@ -12,12 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [refetchCurrentUser, setRefetchCurrentUser] = useState(false);
 
   const isAuthenticated = useMemo(() => {
-    if (currentUserLoading || !currentUser) return false;
-
-    if (currentUser && currentUser?._id) return true;
-
-    return false;
-  }, [currentUser, currentUserLoading])
+    return !currentUserLoading && !!currentUser?._id;
+  }, [currentUser, currentUserLoading]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -36,26 +32,23 @@ export const AuthProvider = ({ children }) => {
       const user = await response.json();
 
       setCurrentUser(user);
-      console.log(user)
     } catch (error) {
-      console.log(user);
       console.error("Error fetching current user:", error);
     }
   };
 
   useEffect(() => {
     setCurrentUserLoading(true);
-
     const token = localStorage.getItem("token");
+
     if (!token) {
       setCurrentUserLoading(false);
       return;
     }
   
-    fetchCurrentUser(token)
-      .finally(() => {
-        setCurrentUserLoading(false);
-      });
+    fetchCurrentUser(token).finally(() => {
+      setCurrentUserLoading(false);
+    });
   }, [refetchCurrentUser]);
 
   return (
@@ -65,10 +58,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         currentUser,
         setCurrentUser,
-
         currentUserLoading,
         setCurrentUserLoading,
-
         setRefetchCurrentUser,
       }}
     >
@@ -76,3 +67,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

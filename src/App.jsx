@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { Toaster } from "sonner";
 import Home from "./Pages/LandingPage/Home.jsx";
 import Registration from "./Pages/Registration.jsx";
 import Login from "./Pages/Login.jsx";
@@ -17,15 +18,14 @@ import Settings from "./Pages/Settings.jsx";
 import Activity from "./Pages/Activity.jsx";
 import Profile from "./Component/Profile.jsx";
 import { AuthProvider, useAuth } from './Pages/AuthContext.jsx'; 
-import { FitnessProvider } from './Pages/PlanContext.jsx'; // Import the FitnessProvider
+import { FitnessProvider } from './Pages/PlanContext.jsx'; 
 import Plan from "./Pages/Plan.jsx";
 import WorkoutStore from "./Pages/WorkoutStore.jsx";
+import VerifyEmail from "./Component/VerifyEmail.jsx";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
-  if (currentUserLoading) return (
-    <p>loading...</p>
-  );
+  if (currentUserLoading) return <p>Loading...</p>;
 
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
@@ -41,20 +41,18 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-
         <Route
           path="/dashboard/*"
-          element={
-            <PrivateRoute element={<Dashboard />} />
-          }
+          element={<PrivateRoute element={<Dashboard />} />}
         >
           <Route path="statistics" element={<Statistics />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="workoutStore" element={<WorkoutStore/>}/>
-          <Route path="plan" element={<Plan />} /> {/* Make sure Goals component is defined */}
-          <Route index element={<Activity />} /> {/* Default view for dashboard */}
+          <Route path="workoutStore" element={<WorkoutStore />} />
+          <Route path="plan" element={<Plan />} />
+          <Route index element={<Activity />} />
         </Route>
       </Routes>
       {!isDashboard && <Footer />}
@@ -65,9 +63,10 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <FitnessProvider> {/* Wrap your app with the FitnessProvider */}
+      <FitnessProvider>
         <div className="bg-customGradient">
           <Router>
+            <Toaster richColors />
             <AppRoutes />
           </Router>
         </div>

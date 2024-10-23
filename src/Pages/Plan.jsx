@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Modal from "react-modal";
 import { useFitness } from "./PlanContext";
+import { useAuth } from "./AuthContext"; // Ensure you're using the right import
 
 const Plan = () => {
-  const { addDailySteps, addWeeklyDistance, loading } = useFitness();
+  const { currentUser } = useAuth(); // Access currentUser from AuthContext
+  const { addDailySteps, addWeeklyDistance } = useFitness();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [goalType, setGoalType] = useState("dailySteps");
   const [date, setDate] = useState("");
@@ -28,19 +30,21 @@ const Plan = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const userId = currentUser ? currentUser._id : null; // Safely access userId
+
     try {
       if (goalType === "dailySteps" && !isNaN(steps) && date) {
         if (selectedDate > today) {
           alert("You cannot set steps for a future date.");
           return;
         }
-        await addDailySteps({ userId: "USER_ID_HERE", steps, date }); // Replace with actual user ID
+        await addDailySteps({ userId, steps, date });
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
         await addWeeklyDistance({
-          userId: "USER_ID_HERE",
+          userId,
           weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
           distance,
-        }); // Replace with actual user ID
+        });
       }
       handleModalClose();
     } catch (error) {
@@ -70,7 +74,7 @@ const Plan = () => {
             color: "white",
             padding: "20px",
             borderRadius: "10px",
-            width: "90vw", 
+            width: "90vw",
             maxWidth: "400px",
             height: "60vh",
             margin: "auto",
@@ -156,3 +160,4 @@ const Plan = () => {
 };
 
 export default Plan;
+

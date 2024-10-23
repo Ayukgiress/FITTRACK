@@ -28,7 +28,7 @@ const Sidebar = () => {
 
       {/* Sidebar Links */}  
       {isOpen && (  
-        <div className="fixed left-0 w-64 h-full bg-dashboard-gradient p-4 transition-transform transform duration-300 ease-in-out">  
+        <div className="fixed left-0 w-64 h-full bg-neutral-900 p-4 transition-transform transform duration-300 ease-in-out">  
           {/* Close Button */}  
           <button   
             onClick={toggleSidebar}   
@@ -39,8 +39,12 @@ const Sidebar = () => {
 
           <div className="flex flex-col items-start justify-start gap-6">  
 
+          <Link to="/Activity" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+              <span className="text-white text-2xl ml-2">Dashbaord</span>  
+            </Link> 
+
             {/* Home Navigation */}  
-            <Link to="/" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black w-52">  
+            <Link to="/" className="flex items-center transition-colors duration-200 p-2 rounded-3xl hover:bg-black hover:text-red-700 w-52">  
               <IoHome className='text-white w-8 h-8' />  
               <span className="text-white ml-2">Home</span>  
             </Link>   

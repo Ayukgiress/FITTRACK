@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEnvelope, FaLock } from "react-icons/fa"; 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom"; 
 import { toast } from "sonner"; 
+import GoogleAuth from "../Component/GoogleAuth.jsx";
 import { useAuth } from "./AuthContext.jsx";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -13,11 +16,11 @@ const Login = () => {
   } = useForm();
 
   const { setRefetchCurrentUser } = useAuth();
-
   const navigate = useNavigate(); 
 
   const handleFormSubmit = async ({ email, password }) => {
     console.log("Logging in with:", { email, password });
+    setLoading(true); // Set loading to true when form is submitted
 
     try {
       const response = await fetch(`http://localhost:5000/users/login`, {
@@ -36,11 +39,14 @@ const Login = () => {
       
       const data = await response.json();
       localStorage.setItem("token", data.token);
+      toast.success('login in successfull')
       navigate("/dashboard");
       setRefetchCurrentUser(prev => !prev);
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -85,12 +91,38 @@ const Login = () => {
             </div>
             {errors.password && <p className="text-red-500">Password is required</p>}
           </div>
+
+          <div className="flex item-center justify-cemter flex-col gap-4">
+
           <button
             type="submit"
-            className="bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full"
+            disabled={loading} // Disable button when loading
+            className={`bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Login
+            {loading ? (
+              <span className="flex justify-center items-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4" />
+                  <path className="opacity-75" d="M4 12a8 8 0 0112-7.24V12H4z" />
+                </svg>
+                Logging in...
+              </span>
+            ) : (
+              "Login"
+            )}
           </button>
+
+          <h1 className="text-center text-2xl text-white">or</h1>
+
+          <GoogleAuth/>
+          </div>
+          
         </form>
       </div>
     </div>
