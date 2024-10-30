@@ -120,6 +120,11 @@ const Login = () => {
 
           <h1 className="text-center text-2xl text-white">or</h1>
 
+          <div className='flex item-start justify-start'>
+      <h2 className='flex text-start justify-start text-white text-xl'>Continue with Google</h2>
+
+      </div>
+
           <GoogleAuth/>
           </div>
           

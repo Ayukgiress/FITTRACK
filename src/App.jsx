@@ -22,6 +22,7 @@ import { FitnessProvider } from './Pages/PlanContext.jsx';
 import Plan from "./Pages/Plan.jsx";
 import WorkoutStore from "./Pages/WorkoutStore.jsx";
 import VerifyEmail from "./Component/VerifyEmail.jsx";
+import OauthCallback from "./Component/OauthCallback.jsx";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
@@ -43,6 +44,7 @@ const AppRoutes = () => {
         <Route path="/registration" element={<Registration />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<OauthCallback />} />
         <Route path="/profile" element={<Profile />} />
         <Route
           path="/dashboard/*"

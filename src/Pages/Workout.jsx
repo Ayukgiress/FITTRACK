@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { toast } from 'sonner'; // For notifications
+import { getDurationFromEndTimeAndStartTime } from '../utils/utils';
 
 const calorieRates = {
   running: 10,
@@ -39,8 +40,7 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
 
   const calculateCalories = () => {
     if (!startTime || !endTime) return 0;
-
-    const duration = (new Date(`1970-01-01T${endTime}Z`) - new Date(`1970-01-01T${startTime}Z`)) / 60000; // Duration in minutes
+    const duration = getDurationFromEndTimeAndStartTime(endTime, startTime);
     return (calorieRates[exercise.toLowerCase()] || 0) * duration;
   };
 
@@ -76,7 +76,7 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       shouldCloseOnOverlayClick
       style={{
         overlay: {
-          backgroundColor: 'rgba(0, 0, 0, 0.75)', 
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
         },
         content: {
           top: '50%',
@@ -84,7 +84,7 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
           right: 'auto',
           bottom: 'auto',
           transform: 'translate(-50%, -50%)',
-          width: '400px', 
+          width: '400px',
           backgroundColor: 'black',
           color: 'white',
           border: 'none',
