@@ -10,8 +10,8 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-black p-4">
-      <div className="container mx-auto flex items-center justify-between">
+    <nav className="bg-black p-4 w-full flex item-center justify-center flex-col">
+      <div className="container  flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
           <img
@@ -25,8 +25,8 @@ const NavBar = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex">
-          <ul className="flex items-center justify-center text-white">
+        <div className="hidden md:flex flex item-center justify-center">
+          <ul className="flex items-center justify-between text-white">
             <li className="mx-4 flex items-center justify-center flex-col">
               <Link to="/">Home</Link>
               <div className="bg-red-600 w-16 h-1 items-center justify-center"></div>
@@ -35,7 +35,7 @@ const NavBar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-5">
-          <Link to="/about" className="text-white mx-2">
+          <Link to="/about" className="text-white ">
             About
           </Link>
           <Link to="/login">

@@ -41,52 +41,50 @@ const Customers = () => {
   };
 
   const prevTestimonial = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
   };
 
   const { name, image, quote } = testimonials[currentIndex];
 
   return (
-    <>
-      <h1 className="text-white text-2xl text-center">
-        What Our <span className="text-red-700"> Customers Say</span>
+    <div className=" p-6 rounded-lg shadow-lg">
+      <h1 className="text-white text-3xl text-center mb-4">
+        What Our <span className="text-red-700">Customers Say</span>
       </h1>
-      <h3 className="text-center text-white mb-6">
-        At this part you can see many positive reviews of our customers
+      <h3 className="text-center text-gray-300 mb-8">
+        Here are some positive reviews from our customers
       </h3>
 
-      <div className="flex flex-col md:flex-row justify-center items-center gap-7 px-4">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-6">
         <div className="flex-shrink-0">
           <img
             src={image}
             alt={name}
-            className="w-48 h-48 md:w-72 md:h-80 rounded-md mb-4 bg-image-backdrop"
+            className="w-48 h-48 md:w-72 md:h-80 rounded-lg shadow-md transition-transform transform hover:scale-105"
           />
         </div>
 
-        <div className="md:w-3/4 flex items-start gap-6 md:gap-24 flex-col bg-red-700 text-white rounded-md p-4 md:h-56">
+        <div className="bg-red-700 text-white rounded-lg p-6 shadow-md md:w-3/4">
           <h3 className="text-lg font-semibold">{name}</h3>
-          <p className="text-start text-white">{quote}</p>
+          <p className="text-gray-200">{quote}</p>
         </div>
       </div>
 
-      <div className="flex justify-between gap-4 mt-4 px-4 md:px-0">
+      <div className="flex justify-between mt-4">
         <button
           onClick={prevTestimonial}
-          className="text-blue-500 flex items-center bg-red-700 w-24 h-9 text-center justify-center rounded-md"
+          className="flex items-center justify-center w-28 h-10 text-blue-500 bg-red-700 rounded-md shadow hover:bg-red-600 transition"
         >
           <FaChevronLeft className="mr-2" /> Prev
         </button>
         <button
           onClick={nextTestimonial}
-          className="text-blue-500 flex items-center bg-red-700 w-24 h-9 text-center justify-center rounded-md"
+          className="flex items-center justify-center w-28 h-10 text-blue-500 bg-red-700 rounded-md shadow hover:bg-red-600 transition"
         >
           Next <FaChevronRight className="ml-2" />
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

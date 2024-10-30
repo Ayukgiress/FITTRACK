@@ -9,7 +9,7 @@ import myImage from "../../assets/images/pexels-panther-1547248-Photoroom.png";
 const Home = () => {
   return (
     <>
-      <div className="bg-customGradient h-96 w-full flex items-center justify-around g-2">
+      <div className="bg-customGradient h-96 w-full flex items-center justify-around g-5">
         <div className="flex items-center justify-center flex-col text-white gap-6">
           <h1 className="text-white text-3xl gap-2">
             Archive Your <br />

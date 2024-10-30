@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import Modal from "react-modal";
 import { useFitness } from "./PlanContext";
-import { useAuth } from "./AuthContext"; // Ensure you're using the right import
+import { useAuth } from "./AuthContext";
 
 const Plan = () => {
-  const { currentUser } = useAuth(); // Access currentUser from AuthContext
+  const { currentUser } = useAuth();
   const { addDailySteps, addWeeklyDistance } = useFitness();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [goalType, setGoalType] = useState("dailySteps");
@@ -30,7 +30,7 @@ const Plan = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const userId = currentUser ? currentUser._id : null; // Safely access userId
+    const userId = currentUser ? currentUser._id : null;
 
     try {
       if (goalType === "dailySteps" && !isNaN(steps) && date) {
@@ -38,7 +38,7 @@ const Plan = () => {
           alert("You cannot set steps for a future date.");
           return;
         }
-        await addDailySteps({ userId, steps, date });
+        await addDailySteps({ userId, steps, date: selectedDate.toISOString() }); // Ensure date is in ISO format
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
         await addWeeklyDistance({
           userId,
@@ -160,4 +160,3 @@ const Plan = () => {
 };
 
 export default Plan;
-
