@@ -93,94 +93,95 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
         },
       }}
     >
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="exerciseType" className="block text-sm font-medium">
-            Exercise Type
-          </label>
-          <select
-            id="exerciseType"
-            value={exercise}
-            onChange={handleExerciseChange}
-            className="w-full border rounded p-3 text-black" // Increased padding
-            required
-          >
-            <option value="">Select an exercise</option>
-            {Object.keys(calorieRates).map((type) => (
-              <option key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
+   <form onSubmit={handleSubmit} className='form'>
+  <div className="mb-4">
+    <label htmlFor="exerciseType" className="block text-sm font-medium">
+      Exercise Type
+    </label>
+    <select
+      id="exerciseType"
+      value={exercise}
+      onChange={handleExerciseChange}
+      className="w-full border rounded p-3 text-black"
+      required
+    >
+      <option value="">Select an exercise</option>
+      {Object.keys(calorieRates).map((type) => (
+        <option key={type} value={type}>
+          {type.charAt(0).toUpperCase() + type.slice(1)}
+        </option>
+      ))}
+    </select>
+  </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="startTime" className="block text-sm font-medium text-white">
-            Start Time
-          </label>
-          <input
-            type="time"
-            id="startTime"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            className="w-full border rounded p-3" // Increased padding
-            required
-          />
-        </div>
+  <div className="mb-4 text-black">
+    <label htmlFor="startTime" className="block text-sm font-medium text-white">
+      Start Time
+    </label>
+    <input
+      type="time"
+      id="startTime"
+      value={startTime}
+      onChange={(e) => setStartTime(e.target.value)}
+      className="w-full border rounded p-3"
+      required
+    />
+  </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="endTime" className="block text-sm font-medium text-white">
-            End Time
-          </label>
-          <input
-            type="time"
-            id="endTime"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            className="w-full border rounded p-3" // Increased padding
-            required
-          />
-        </div>
+  <div className="mb-4 text-black">
+    <label htmlFor="endTime" className="block text-sm font-medium text-white">
+      End Time
+    </label>
+    <input
+      type="time"
+      id="endTime"
+      value={endTime}
+      onChange={(e) => setEndTime(e.target.value)}
+      className="w-full border rounded p-3"
+      required
+    />
+  </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="date" className="block text-sm font-medium text-white">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded p-3" // Increased padding
-            required
-          />
-        </div>
+  <div className="mb-4 text-black">
+    <label htmlFor="date" className="block text-sm font-medium text-white">
+      Date
+    </label>
+    <input
+      type="date"
+      id="date"
+      value={date}
+      onChange={(e) => setDate(e.target.value)}
+      className="w-full border rounded p-3"
+      required
+    />
+  </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="calories" className="block text-sm font-medium text-white">
-            Calories Burned
-          </label>
-          <input
-            type="number"
-            id="calories"
-            value={calories}
-            readOnly
-            className="w-full border rounded p-3"
-          />
-        </div>
+  <div className="mb-4 text-black">
+    <label htmlFor="calories" className="block text-sm font-medium text-white">
+      Calories Burned
+    </label>
+    <input
+      type="number"
+      id="calories"
+      value={calories}
+      readOnly
+      className="w-full border rounded p-3"
+    />
+  </div>
 
-        <div className="flex justify-between mt-4">
-          <button
-            type="submit"
-            className="bg-black border-2 border-red-700 text-white font-semibold rounded py-2 px-4"
-          >
-            Submit
-          </button>
-          <button onClick={onClose} className="text-red-500 font-semibold">
-            Cancel
-          </button>
-        </div>
-      </form>
+  <div className="flex justify-between mt-4">
+    <button onClick={onClose} className="text-red-500 font-semibold">
+      Cancel
+    </button>
+    <button
+      type="submit"
+      className="bg-black border-2 border-red-700 text-white font-semibold rounded py-2 px-4"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+
     </Modal>
   );
 };

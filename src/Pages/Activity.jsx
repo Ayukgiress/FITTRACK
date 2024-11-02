@@ -12,15 +12,16 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title
+  LineElement,
+  PointElement,
+  Title,
 } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
+import { Pie, Line } from 'react-chartjs-2';
 import { useAuth } from "./AuthContext";
 import { useFitness } from './PlanContext';
 import Workout from "./Workout";
 import { getDurationFromEndTimeAndStartTime } from "../utils/utils";
 
-// Register ChartJS components
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -29,6 +30,8 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title
 );
 
@@ -36,15 +39,11 @@ const prepareChartData = (workoutLog) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  console.log("Workout Log:", workoutLog); 
-
   const todaysWorkouts = workoutLog.filter(workout => {
     const workoutDate = new Date(workout.date);
     workoutDate.setHours(0, 0, 0, 0);
     return workoutDate.getTime() === today.getTime();
   });
-
-  console.log("Today's Workouts:", todaysWorkouts);
 
   const workoutTypes = todaysWorkouts.reduce((acc, workout) => {
     const type = workout.exercise || 'Other';
@@ -53,9 +52,7 @@ const prepareChartData = (workoutLog) => {
     return acc;
   }, {});
 
-  console.log("Workout Types Data:", workoutTypes); 
-
-  const chartData = {
+  return {
     labels: Object.keys(workoutTypes),
     datasets: [{
       label: "Bar chart exercises",
@@ -72,13 +69,9 @@ const prepareChartData = (workoutLog) => {
       borderWidth: 2,
     }]
   };
-
-  console.log("Chart Data:", chartData);
-
-  return chartData;
 };
 
-const TodaysWorkoutChart = ({ workoutLog }) => {  
+const TodaysWorkoutChart = ({ workoutLog }) => {
   const chartOptions = {
     maintainAspectRatio: false,
     responsive: true,
@@ -87,9 +80,7 @@ const TodaysWorkoutChart = ({ workoutLog }) => {
         position: 'top',
         labels: {
           color: 'white',
-          font: {
-            size: 12,
-          },
+          font: { size: 12 },
           padding: 20,
         },
       },
@@ -108,32 +99,29 @@ const TodaysWorkoutChart = ({ workoutLog }) => {
   const chartData = prepareChartData(workoutLog);
 
   return (
-    <div className="h-[370px]">
+    <div className="h-full flex items-center justify-center">
       {chartData.labels.length === 0 ? (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-white text-sm">No workouts logged for today.</p>
-        </div>
+        <p className="text-white text-sm">No workouts logged for today.</p>
       ) : (
         <Pie data={chartData} options={chartOptions} />
       )}
     </div>
   );
 };
-0
+
 const WeeklyChart = ({ weeklyWorkoutData }) => {
   const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  
   const data = {
     labels,
-    datasets: [
-      {
-        label: 'Calories Burned',
-        data: weeklyWorkoutData,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgb(255, 99, 132)',
-        borderWidth: 1,
-      },
-    ],
+    datasets: [{
+      label: 'Calories Burned',
+      data: weeklyWorkoutData,
+      fill: true,
+      backgroundColor: 'rgb(42,106,151)',
+      borderColor: 'rgb(255, 99, 132)',
+      borderWidth: 5,
+      tension: 0.4,
+    }],
   };
 
   const options = {
@@ -142,34 +130,22 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
     scales: {
       y: {
         beginAtZero: true,
-        grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
-        },
-        ticks: {
-          color: 'white',
-        }
+        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+        ticks: { color: 'white' },
       },
       x: {
-        grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
-        },
-        ticks: {
-          color: 'white',
-        }
-      }
+        grid: { color: 'rgb(174,168,255)', lineWidth: 3 },
+        ticks: { color: 'white' },
+      },
     },
     plugins: {
-      legend: {
-        labels: {
-          color: 'white',
-        },
-      },
+      legend: { labels: { color: 'white' } },
     },
   };
 
   return (
     <div className="h-full p-4">
-      <Bar data={data} options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 };
@@ -185,9 +161,7 @@ const Activity = () => {
   const { dailyStepCount, weeklyRunningDistance, loading } = useFitness();
 
   useEffect(() => {
-    if (currentUserLoading) {
-      return;
-    }
+    if (currentUserLoading) return;
 
     if (isAuthenticated && currentUser?._id) {
       const fetchInitialData = async () => {
@@ -209,16 +183,11 @@ const Activity = () => {
   }, [currentUser, currentUserLoading, isAuthenticated]);
 
   const fetchWorkoutLog = async () => {
-    if (!currentUser?._id || !isAuthenticated) {
-      console.log("No authenticated user found");
-      return;
-    }
+    if (!currentUser?._id || !isAuthenticated) return;
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
+      if (!token) throw new Error("No authentication token found");
 
       const response = await fetch(`http://localhost:5000/workouts/${currentUser._id}`, {
         method: 'GET',
@@ -228,12 +197,9 @@ const Activity = () => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const data = await response.json();
-      
       if (Array.isArray(data)) {
         setWorkoutLog(data);
         calculateWeeklyCalories(data);
@@ -289,7 +255,6 @@ const Activity = () => {
     }
   };
 
-  
   const calculateWeeklyCalories = (data) => {
     const today = new Date();
     const startOfWeek = new Date(today);
@@ -319,10 +284,10 @@ const Activity = () => {
   }
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 space-y-4">
       <div className="flex justify-end mb-4">
         <button
-          className="bg-black border-2 border-red-700 text-white rounded p-2"
+          className="bg-black border-2 border-red-700 text-white rounded p-2 workout-btn"
           onClick={() => {
             setIsModalOpen(true);
             setEditingWorkout(null);
@@ -341,50 +306,53 @@ const Activity = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col h-72">
-          <h3 className='text-white text-2xl'>Weekly Kcal Burned</h3>
-          <p className='text-white flex flex-col text-center gap-4 font-bold text-xl border-t-4 border-l-4 border-yellow-500 w-44 h-44 justify-center items-center rounded-full'>
-            <AiOutlineThunderbolt className="text-yellow-500 w-7 h-10" />
-            {weeklyCaloriesBurned.reduce((a, b) => a + b, 0).toFixed(2)} <br />
-            kcal
-          </p>
-        </div>
-        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col h-72">
-          <h3 className='text-white text-2xl'>Daily Steps Count</h3>
-          <p className='text-white flex flex-col gap-4 text-center font-bold text-xl border-t-4 border-l-4 border-green-500 w-44 h-44 justify-center items-center rounded-full'>
-            <FaWalking className="text-green-500 w-8 h-10" />
-            {dailyStepCount.reduce((acc, item) => {
-              const date = new Date(item.date).toDateString();
-              if (date === new Date().toDateString()) {
-                return acc + item.steps;
-              }
-              return acc;
-            }, 0)} <br />steps
-          </p>
-        </div>
-        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col h-72">
-          <h3 className='text-white text-2xl'>Weekly Running Distance</h3>
-          <p className='text-white flex flex-col text-center gap-4 font-bold text-xl border-t-4 border-l-4 border-blue-500 w-44 h-44 justify-center items-center rounded-full'>
-            <RiMapPinLine className="text-blue-500 w-7 h-10" />
-            {weeklyRunningDistance.reduce((acc, item) => acc + item.distance, 0)} <br /> km
-          </p>
-        </div>
-      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message ">Weekly Kcal Burned</h3>
+    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-yellow-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+      <AiOutlineThunderbolt className="text-yellow-500 w-8 h-8" />
+      {weeklyCaloriesBurned.reduce((a, b) => a + b, 0).toFixed(2)} <br />
+      kcal
+    </p>
+  </div>
+  
+  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Daily Steps Count</h3>
+    <p className="text-white flex flex-col gap-4 text-center font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-green-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+      <FaWalking className="text-green-500 w-8 h-8" />
+      {dailyStepCount.reduce((acc, item) => {
+        const date = new Date(item.date).toDateString();
+        if (date === new Date().toDateString()) {
+          return acc + item.steps;
+        }
+        return acc;
+      }, 0)} <br />steps
+    </p>
+  </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="bg-neutral-900 flex-1 w-full md:w-[60%] h-[450px] rounded-md">
-          <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
-        </div>
+  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Weekly Running Distance</h3>
+    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-blue-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+      <RiMapPinLine className="text-blue-500 w-8 h-8" />
+      {weeklyRunningDistance.reduce((acc, item) => acc + item.distance, 0)} <br /> km
+    </p>
+  </div>
+</div>
 
-        <div className="bg-neutral-900 flex-1 w-full md:w-[35%] h-[450px] rounded-md p-4">
-          <h2 className="text-white text-xl mb-4 text-center">Today's Workouts</h2>
-          <div className="h-[400px]">
-            <TodaysWorkoutChart workoutLog={workoutLog} />
-          </div>
-        </div>
-      </div>
-    </div>
+
+<div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
+  <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%] chart-container h-132"> 
+    <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
+  </div>
+
+  <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
+    <h2 className="text-white text-lg sm:text-xl mb-4 lg-text-3xl text-center">Today's Workouts</h2>
+      <TodaysWorkoutChart workoutLog={workoutLog} />
+  </div>
+</div>
+
+</div>
+  
   );
 };
 

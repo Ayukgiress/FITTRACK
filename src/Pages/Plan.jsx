@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import Modal from "react-modal";
 import { useFitness } from "./PlanContext";
 import { useAuth } from "./AuthContext";
+import { TiPlus } from "react-icons/ti";
 
 const Plan = () => {
   const { currentUser } = useAuth();
@@ -56,9 +57,10 @@ const Plan = () => {
     <div className="flex flex-col items-center">
       <button
         onClick={handleModalOpen}
-        className="text-white font-semibold rounded-3xl flex py-2 px-4 mb-4 hover:bg-black w-56"
+        className="text-white font-semibold  flex item-center justify-center gap-8 hover:text-red-700"
       >
-        Set Fitness Goals
+        <TiPlus className="h-7"/>
+            <h3>Goal</h3>
       </button>
 
       <Modal
@@ -74,24 +76,24 @@ const Plan = () => {
             color: "white",
             padding: "20px",
             borderRadius: "10px",
-            width: "90vw",
-            maxWidth: "400px",
-            height: "60vh",
+            width: "95vw",
+            maxWidth: "500px",
+            height: "35vh",
             margin: "auto",
-            top: "50%",
-            left: "50%",
+            top: "0",
+            left: "0",
             transform: "translate(-50%, -50%)",
             overflow: "hidden",
           },
         }}
       >
-        <form onSubmit={handleGoalSubmit} className="flex flex-col">
-          <div className="mb-4">
+        <form onSubmit={handleGoalSubmit} className="flex item-center justify-center flex-col forms gap-4">
+          <div className="mb-4 flex-col item-center justify-center">
             <label className="block text-sm font-medium">Goal Type</label>
             <select
               value={goalType}
               onChange={(e) => setGoalType(e.target.value)}
-              className="w-full border rounded p-2 bg-gray-800 text-white"
+              className="w-full border rounded p-2 bg-gray-800 flex-col text-white"
             >
               <option value="dailySteps">Daily Step Count</option>
               <option value="weeklyDistance">Weekly Running Distance</option>
@@ -100,7 +102,7 @@ const Plan = () => {
 
           {goalType === "dailySteps" && (
             <>
-              <div className="mb-4">
+              <div className="mb-4 flex-col item-center justufy-center">
                 <label htmlFor="steps" className="block text-sm font-medium">
                   Daily Step Goal
                 </label>
