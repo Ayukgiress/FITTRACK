@@ -5,7 +5,7 @@ import fitnessGoalsImg from "../../src/assets/images/bodybuilder_3889169.png"
 
 const Fitness = () => {  
   return (  
-    <div className="text-white bg-black flex items-center justify-center flex-col py-10">  
+    <div className="text-white bg-black flex h-[50rem] items-center justify-center flex-col py-10">  
       <h1 className="text-3xl font-bold mb-6">Our Fitness</h1>  
 
       <div className="flex flex-col items-center">  
@@ -14,8 +14,8 @@ const Fitness = () => {
           effectively  
         </h4>  
 
-        <div className="flex flex-wrap justify-center gap-10 md:gap-8">  
-          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
+        <div className="flex flex-wrap justify-center gap-12 md:gap-8">  
+          <div className="flex items-center justify-center lg:w-[34] gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={caloriesCalculatorImg}  
               alt="Calories Calculator"  
@@ -24,7 +24,7 @@ const Fitness = () => {
             <h1 className="text-2xl md:text-3xl">Calories Calculator</h1>  
           </div>  
 
-          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
+          <div className="flex items-center justify-center lg:w-[34] gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={micronutrientsCalculatorImg}  
               alt="Micronutrients Calculator"  
@@ -33,7 +33,7 @@ const Fitness = () => {
             <h1 className="text-2xl md:text-3xl">Micronutrients Calculator</h1>  
           </div>  
 
-          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
+          <div className="flex items-center lg:w-[34] justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={fitnessGoalsImg}  
               alt="Fitness Setting Goals"  
