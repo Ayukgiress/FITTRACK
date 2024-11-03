@@ -73,6 +73,7 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       ariaHideApp={false}
+      // className="content"
       shouldCloseOnOverlayClick
       style={{
         overlay: {

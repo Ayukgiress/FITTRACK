@@ -16,10 +16,11 @@ import Dashboard from "./Pages/Dashboard";
 import Statistics from "./Pages/Statistics";
 import Settings from "./Pages/Settings";
 import Activity from "./Pages/Activity";
-// import Profile from "./Component/Profile";
+import Profile from "./Component/Profile";
 import { AuthProvider, useAuth } from './Pages/AuthContext'; 
-import { FitnessProvider } from './Pages/PlanContext'; 
-import Plan from "./Pages/Plan.jsx";
+import {  FitnessProvider } from "./Pages/PlanContext";
+
+import Plan from './Pages/Plan';
 import './App.css';
 import WorkoutStore from "./Pages/WorkoutStore";
 import VerifyEmail from "./Component/VerifyEmail";

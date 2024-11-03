@@ -346,7 +346,7 @@ const Activity = () => {
   </div>
 
   <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
-    <h2 className="text-white text-lg sm:text-xl mb-4 lg-text-3xl text-center">Today's Workouts</h2>
+    <h2 className="text-white text-lg sm:text-xl mb-4 text-center">Today's Workouts</h2>
       <TodaysWorkoutChart workoutLog={workoutLog} />
   </div>
 </div>

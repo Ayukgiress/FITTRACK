@@ -17,7 +17,8 @@
 
 .chart-container {
     height: 450px; 
-}
+}  
+
 
 /* Media Queries */
 @media (max-width: 640px) {
@@ -49,6 +50,8 @@
         height: 500px; 
     }
 }
+
+
 
 
 @media (min-width: 2560px) {

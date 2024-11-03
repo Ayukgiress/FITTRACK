@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import Modal from "react-modal";
 import { useFitness } from "./PlanContext";
-import { useAuth } from "./AuthContext";
 import { TiPlus } from "react-icons/ti";
+import { useAuth } from "./AuthContext";
 
 const Plan = () => {
   const { currentUser } = useAuth();
@@ -59,10 +59,9 @@ const Plan = () => {
         onClick={handleModalOpen}
         className="text-white font-semibold  flex item-center justify-center gap-8 hover:text-red-700"
       >
-        <TiPlus className="h-7"/>
-            <h3>Goal</h3>
+        <TiPlus className="h-7" />
+        <h3>Goal</h3>
       </button>
-
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={handleModalClose}
@@ -76,13 +75,13 @@ const Plan = () => {
             color: "white",
             padding: "20px",
             borderRadius: "10px",
-            width: "95vw",
+            width: "80vw",
             maxWidth: "500px",
-            height: "35vh",
+            height: "60vh",
             margin: "auto",
-            top: "0",
-            left: "0",
-            transform: "translate(-50%, -50%)",
+            top: "50%",
+            left: "25%",
+            transform: "translate(-50%, -50%)", // Shift back by half its own size
             overflow: "hidden",
           },
         }}

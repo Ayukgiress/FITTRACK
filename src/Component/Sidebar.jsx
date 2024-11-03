@@ -4,7 +4,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { IoSettings } from 'react-icons/io5';
 import { FcStatistics } from 'react-icons/fc';
 import { IoHome } from "react-icons/io5";
-import Plan from '../pages/Plan';
+import Plan from '../Pages/Plan';
 import Activity from '../Pages/Activity';
 
 const Sidebar = () => {
