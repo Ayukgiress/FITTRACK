@@ -7,27 +7,28 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import Home from "./Pages/LandingPage/Home.jsx";
-import Registration from "./Pages/Registration.jsx";
-import Login from "./Pages/Login.jsx";
-import NavBar from "./Component/NavBar.jsx";
-import Footer from "./Component/Footer.jsx";
-import Dashboard from "./Pages/Dashboard.jsx";
-import Statistics from "./Pages/Statistics.jsx";
-import Settings from "./Pages/Settings.jsx";
-import Activity from "./Pages/Activity.jsx";
-import Profile from "./Component/Profile.jsx";
-import { AuthProvider, useAuth } from './Pages/AuthContext.jsx'; 
-import { FitnessProvider } from './Pages/PlanContext.jsx'; 
-import Plan from "./Pages/Plan.jsx";
-import WorkoutStore from "./Pages/WorkoutStore.jsx";
-import VerifyEmail from "./Component/VerifyEmail.jsx";
-import OauthCallback from "./Component/OauthCallback.jsx";
+import Home from "./Pages/LandingPage/Home";
+import Registration from "./Pages/Registration";
+import Login from "./Pages/Login";
+import NavBar from "./Component/NavBar";
+import Footer from "./Component/Footer";
+import Dashboard from "./Pages/Dashboard";
+import Statistics from "./Pages/Statistics";
+import Settings from "./Pages/Settings";
+import Activity from "./Pages/Activity";
+import Profile from "./Component/Profile";
+import { AuthProvider, useAuth } from './Pages/AuthContext'; 
+import {  FitnessProvider } from "./Pages/PlanContext";
+
+import Plan from './Pages/Plan';
+import './App.css';
+import WorkoutStore from "./Pages/WorkoutStore";
+import VerifyEmail from "./Component/VerifyEmail";
+import OauthCallback from "./Component/OauthCallback";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
   if (currentUserLoading) return <p>Loading...</p>;
-
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
@@ -45,7 +46,7 @@ const AppRoutes = () => {
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<OauthCallback />} />
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
           path="/dashboard/*"
           element={<PrivateRoute element={<Dashboard />} />}
@@ -62,19 +63,17 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => {
-  return (
-    <AuthProvider>
-      <FitnessProvider>
-        <div className="bg-customGradient">
-          <Router>
-            <Toaster richColors />
-            <AppRoutes />
-          </Router>
-        </div>
-      </FitnessProvider>
-    </AuthProvider>
-  );
-};
+const App = () => (
+  <AuthProvider>
+    <FitnessProvider>
+      <div className="bg-customGradient">
+        <Router>
+          <Toaster richColors />
+          <AppRoutes />
+        </Router>
+      </div>
+    </FitnessProvider>
+  </AuthProvider>
+);
 
 export default App;

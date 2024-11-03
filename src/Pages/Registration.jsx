@@ -36,13 +36,13 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-  
-    setLoading(true); 
-  
+
+    setLoading(true);
+
     try {
       const response = await fetch(`http://localhost:5000/users/register`, {
         method: "POST",
@@ -55,14 +55,14 @@ const Registration = () => {
           password,
         }),
       });
-  
+
       if (response.ok) {
         toast.success("Registration successful! Please check your email to verify your account.");
         setUsername("");
         setEmail("");
         setPassword("");
-      } else if (response.status === 404) {
-        toast.error("Registration endpoint not found. Please check your server.");
+        // Optional: Redirect to a different page or show a verification prompt
+        navigate("/verify-email"); // Redirect to a verification page if needed
       } else if (response.status === 400) {
         setErrors({ email: "Email already exists. Please login." });
         toast.error("Email already exists, please login");
@@ -81,14 +81,10 @@ const Registration = () => {
   return (
     <div className="bg-login-color flex justify-center items-center h-screen">
       <div className="lg:p-36 md:p-52 sm:20 p-10 w-full lg:w-1/2">
-        <h1 className="text-2xl font-bold mb-4 text-white items-center justify-center flex">
-          Register
-        </h1>
+        <h1 className="text-2xl font-bold mb-4 text-white flex justify-center">Register</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-white font-bold">
-              Username
-            </label>
+            <label htmlFor="username" className="block text-white font-bold">Username</label>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
                 type="text"
@@ -103,9 +99,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-white font-bold">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-white font-bold">Email</label>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
                 type="text"
@@ -120,9 +114,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-white font-bold">
-              Password
-            </label>
+            <label htmlFor="password" className="block text-white font-bold">Password</label>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
                 type="password"
@@ -136,40 +128,38 @@ const Registration = () => {
             {errors.password && <p className="text-red-500">{errors.password}</p>}
           </div>
 
-<div className="item-center justify-center flex flex-col gap-3">
-<button
-            type="submit"
-            disabled={loading}
-            className={`bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? (
-              <span className="flex justify-center items-center">
-                <svg
-                  className="animate-spin h-5 w-5 mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4" />
-                  <path className="opacity-75" d="M4 12a8 8 0 0112-7.24V12H4z" />
-                </svg>
-                Registering...
-              </span>
-            ) : (
-              "Register"
-            )}
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {loading ? (
+                <span className="flex justify-center items-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4" />
+                    <path className="opacity-75" d="M4 12a8 8 0 0112-7.24V12H4z" />
+                  </svg>
+                  Registering...
+                </span>
+              ) : (
+                "Register"
+              )}
+            </button>
 
-          <h1 className="text-2xl text-center text-white">or</h1>
+            <h1 className="text-2xl text-center text-white">or</h1>
 
-          <div className='flex item-start justify-start'>
-      <h2 className='flex text-start justify-start text-white text-xl'>Continue with Google</h2>
-
-      </div>
-<GoogleAuth/>
-</div>
-
+            <div className='flex justify-start'>
+              <h2 className='text-start text-white text-xl'>Continue with Google</h2>
+            </div>
+            <GoogleAuth />
+          </div>
         </form>
       </div>
     </div>

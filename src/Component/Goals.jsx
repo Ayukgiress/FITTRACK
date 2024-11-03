@@ -80,7 +80,6 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
 
   return (
     <div className="h-[700px] w-[750px] p-4"> 
-      <h2 className="text-white text-2xl mb-4 text-center">Monthly Calories Burned</h2>
       <Bar data={data} options={options} />
     </div>
   );

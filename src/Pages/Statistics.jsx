@@ -1,17 +1,17 @@
 // 
 
 import MonthlyActivity from "./Homes"
-import ChartDoughnut from "../Component/GoalsList"
-
+import MonthlyStepChart from '../Component/GoalsList'
 const statistics = () => {
 
 
 
   return (
-    <div className=" h-full flex item-center justify-around">
+    <div className=" h-full flex item-center justify-center gap-8 bg-neutral-950">
        <MonthlyActivity /> 
-       <ChartDoughnut className="w-90 h-80"/>
-    </div>
+       <MonthlyStepChart/>
+       </div>
+  
   )
 } 
  export default statistics

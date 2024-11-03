@@ -14,32 +14,32 @@ const Fitness = () => {
           effectively  
         </h4>  
 
-        <div className="flex flex-wrap justify-center gap-5">  
-          <div className="flex items-center justify-center gap-4 w-72 h-80 bg-fitness m-5 flex-col text-center">  
+        <div className="flex flex-wrap justify-center gap-10 md:gap-8">  
+          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={caloriesCalculatorImg}  
               alt="Calories Calculator"  
-              className="w-32 h-32 filter invert brightness-0"  
+              className="w-32 md:w-40 h-32 md:h-40 filter invert brightness-0"  
             />  
-            <h1 className="text-2xl">Calories Calculator</h1>  
+            <h1 className="text-2xl md:text-3xl">Calories Calculator</h1>  
           </div>  
 
-          <div className="flex items-center justify-center gap-4 w-72 h-80 bg-fitness m-5 flex-col text-center">  
+          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={micronutrientsCalculatorImg}  
               alt="Micronutrients Calculator"  
-              className="w-32 h-32 filter invert brightness-0"  
+              className="w-32 md:w-40 h-32 md:h-40 filter invert brightness-0"  
             />  
-            <h1 className="text-2xl">Micronutrients Calculator</h1>  
+            <h1 className="text-2xl md:text-3xl">Micronutrients Calculator</h1>  
           </div>  
 
-          <div className="flex items-center justify-center gap-4 w-72 h-80 bg-fitness m-5 flex-col text-center">  
+          <div className="flex items-center justify-center gap-4 w-80 md:w-96 h-96 bg-fitness m-5 flex-col text-center">  
             <img  
               src={fitnessGoalsImg}  
               alt="Fitness Setting Goals"  
-              className="w-32 h-32 filter invert brightness-0"  
+              className="w-32 md:w-40 h-32 md:h-40 filter invert brightness-0"  
             />  
-            <h1 className="text-2xl">Fitness Setting Goals</h1>  
+            <h1 className="text-2xl md:text-3xl">Fitness Setting Goals</h1>  
           </div>  
         </div>  
       </div>  

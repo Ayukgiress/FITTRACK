@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CiLogout } from "react-icons/ci";
-import { useAuth } from "../Pages/AuthContext"
+import { useAuth } from "../Pages/AuthContext";
 
 const Profile = ({ isAuthenticated }) => {
   const { logout } = useAuth();
@@ -66,7 +66,7 @@ const Profile = ({ isAuthenticated }) => {
       }
 
       const data = await response.json();
-      setProfile((prevProfile) => ({
+      setProfile(prevProfile => ({
         ...prevProfile,
         profileImage: data.url,
       }));
@@ -86,41 +86,31 @@ const Profile = ({ isAuthenticated }) => {
     await handleUpload(imageFile);
   };
 
-  const handleEditImage = () => {
-    setIsEditing(true);
-  };
-
+  const handleEditImage = () => setIsEditing(true);
   const handleCancelEdit = () => {
     setIsEditing(false);
     setImageFile(null);
   };
 
-  const toggleDetails = () => {
-    setShowDetails(prev => !prev);
-  };
+  const toggleDetails = () => setShowDetails(prev => !prev);
 
   const handleLogout = () => {
-    logout(); // Call the logout function from context
-    navigate("/login"); // Redirect to login page after logout
+    logout();
+    navigate("/login");
   };
 
-  if (loading) {
-    return <p className="text-center">Loading profile...</p>;
-  }
-
-  if (!profile) {
-    return <p className="text-center">No profile found.</p>;
-  }
+  if (loading) return <p className="text-center">Loading profile...</p>;
+  if (!profile) return <p className="text-center">No profile found.</p>;
 
   return (
-    <div className="flex item-center flex-col justify-between bg-neutral-800 w-72 h-full">
-      <div className="bg-black h-80 w-full">
-        <div className="w-48 h-48 mx-auto m-3 bg-white shadow-md rounded-full p-5 flex flex-col items-center">
+    <div className="flex item-center flex-col justify-between bg-neutral-800 h-full profiles">
+      <div className="bg-black h-80 w-full profile">
+        <div className="w-48 h-48 mx-auto m-3 bg-white shadow-md rounded-full p-5 flex flex-col items-center prof-img">
           {profile.profileImage && (
             <img
               src={profile.profileImage}
               alt={`${profile.username}'s profile`}
-              className="w-44 h-44 rounded-full mb-4 cursor-pointer border-4 border-gray-200"
+              className="w-44 h-44 rounded-full mb-4 cursor-pointer border-4 border-gray-200 img"
               onClick={toggleDetails}
             />
           )}
@@ -147,21 +137,19 @@ const Profile = ({ isAuthenticated }) => {
                 Cancel
               </button>
             </form>
-          ) : (
-            !profile.profileImage && (
-              <button
-                onClick={handleEditImage}
-                className="bg-green-600 text-white rounded px-4 py-2 mt-4 transition duration-200 hover:bg-green-500"
-              >
-                Upload Image
-              </button>
-            )
-          )}
+          ) : !profile.profileImage ? (
+            <button
+              onClick={handleEditImage}
+              className="bg-green-600 text-white rounded px-4 py-2 mt-4 transition duration-200 hover:bg-green-500"
+            >
+              Upload Image
+            </button>
+          ) : null}
         </div>
 
         <div className="text-center mt-4 flex flex-col items-center">
-          <p className="text-lg font-bold text-white">{profile.username}</p>
-          <p className="text-sm text-white">{profile.email}</p>
+          <p className="text-lg font-bold text-white name">{profile.username}</p>
+          <p className="text-sm text-white name">{profile.email}</p>
         </div>
 
         {showDetails && !isEditing && (
@@ -176,13 +164,12 @@ const Profile = ({ isAuthenticated }) => {
 
       <div className="flex items-center justify-center mt-4">
         <CiLogout className="mr-2 text-white text-xl" />
-        <button onClick={handleLogout} className="text-white text-xl bg-transparent border-none cursor-pointer">
+        <button onClick={handleLogout} className="text-white text-xl bg-transparent border-none cursor-pointer logout">
           Logout
         </button>
       </div>
-
     </div>
   );
 };
 
-export default Profile;  
+export default Profile;

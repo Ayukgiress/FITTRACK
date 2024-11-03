@@ -13,6 +13,8 @@ export const FitnessProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const [dailyStepCount, setDailyStepCount] = useState([]);
   const [weeklyRunningDistance, setWeeklyRunningDistance] = useState([]);
+  const [weeklyStepTarget, setWeeklyStepTarget] = useState(0);
+  const [weeklyDistanceTarget, setWeeklyDistanceTarget] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -38,6 +40,12 @@ export const FitnessProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const setTargets = async (stepsTarget, distanceTarget) => {
+    setWeeklyStepTarget(stepsTarget);
+    setWeeklyDistanceTarget(distanceTarget);
+    toast.success("Targets set successfully!");
   };
 
   const addDailySteps = async (data) => {
@@ -79,7 +87,16 @@ export const FitnessProvider = ({ children }) => {
   }, [currentUser]);
 
   return (
-    <PlanContext.Provider value={{ dailyStepCount, weeklyRunningDistance, loading, addDailySteps, addWeeklyDistance }}>
+    <PlanContext.Provider value={{
+      dailyStepCount,
+      weeklyRunningDistance,
+      loading,
+      weeklyStepTarget,
+      weeklyDistanceTarget,
+      addDailySteps,
+      addWeeklyDistance,
+      setTargets,
+    }}>
       {children}
     </PlanContext.Provider>
   );

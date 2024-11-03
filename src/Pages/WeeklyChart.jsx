@@ -1,71 +1,57 @@
-import React from 'react';  
-import { Bar } from 'react-chartjs-2';  
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';  
+import { Line } from 'react-chartjs-2'; // Update the import
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);  
+const WeeklyChart = ({ weeklyWorkoutData }) => {
+  const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Calories Burned',
+        data: weeklyWorkoutData,
+        fill: true, // Optional: to fill under the line
+        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Light background color
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 2,
+        tension: 0.4, // Makes the line smooth
+      },
+    ],
+  };
 
-const WeeklyChart = ({ weeklyWorkoutData }) => {  
-  console.log("Weekly Workout Data:", weeklyWorkoutData);  
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: 'white',
+        },
+      },
+      x: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: 'white',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: 'white',
+        },
+      },
+    },
+  };
 
-  const data = {  
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],  
-    datasets: [  
-      {  
-        label: 'Calories Burned',  
-        data: weeklyWorkoutData,  
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',  
-        borderColor: 'rgba(75, 192, 192, 1)',  
-        borderWidth: 1,  
-      },  
-    ],  
-  };  
-
-  const options = {  
-    responsive: true,  
-    plugins: {  
-      legend: {  
-        position: 'top',  
-        labels: {  
-          font: {  
-            size: 14,  
-            color: 'white',  
-          },  
-        },  
-      },  
-      title: {  
-        display: true,  
-        text: 'Weekly Calories Burned',   
-        font: {  
-          size: 18,  
-          color: 'white',  
-        },  
-      },  
-    },  
-    scales: {  
-      x: {  
-        ticks: {  
-          color: 'white',  
-          font: {  
-            size: 14,  
-          },  
-        },  
-      },  
-      y: {  
-        ticks: {  
-          color: 'white',  
-          font: {  
-            size: 14,  
-          },  
-        },  
-      },  
-    },  
-  };  
-
-  return (  
-    <div style={{ height: '1000vh' }}> {/* Set the height of the container to a percentage */}  
-      <Bar data={data} options={options} />  
-    </div>  
-  );  
-};  
-
-export default WeeklyChart;  
+  return (
+    <div className="h-full p-4">
+      <Line data={data} options={options} /> {/* Change to Line */}
+    </div>
+  );
+};

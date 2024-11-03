@@ -11,7 +11,7 @@ export default {
         fitness:
           " radial-gradient(circle, rgba(95,13,17,1) 34%, rgba(20,17,17,1) 80%);",
         "dashboard-gradient":
-          "linear-gradient(0deg, rgba(246,10,10,1) 0%, rgba(31,29,29,1)  34%, rgba(31,29,29,1) 90%);",
+          "linear-gradient(0deg, rgba(50,47,47,1) 0%, rgba(174,50,34,1) 19%, rgba(205,35,12,1) 100%);",
         "login-color":
           "linear-gradient(90deg, rgba(24,23,23,1) 0%, rgba(24,23,23,1) 82%);",
       },

@@ -29,7 +29,7 @@ const testimonials = [
   {
     name: "Giress",
     image: giressImage,
-    quote: "I am very well pleased with the fitness tracker tool. Its one of its kind as it comes with a friendly interface, easy to navigate, and more to that, its process tracking tool is many of its kind.",
+    quote: "   ",
   },
 ];
 
@@ -47,7 +47,7 @@ const Customers = () => {
   const { name, image, quote } = testimonials[currentIndex];
 
   return (
-    <div className=" p-6 rounded-lg shadow-lg">
+    <div className=" p-6 rounded-lg shadow-lg text-black">
       <h1 className="text-white text-3xl text-center mb-4">
         What Our <span className="text-red-700">Customers Say</span>
       </h1>
@@ -73,13 +73,13 @@ const Customers = () => {
       <div className="flex justify-between mt-4">
         <button
           onClick={prevTestimonial}
-          className="flex items-center justify-center w-28 h-10 text-blue-500 bg-red-700 rounded-md shadow hover:bg-red-600 transition"
+          className="flex items-center b-2 border-red-700 justify-center w-28 h-10 text-white bg-black rounded-md shadow hover:bg-red-600 transition"
         >
           <FaChevronLeft className="mr-2" /> Prev
         </button>
         <button
           onClick={nextTestimonial}
-          className="flex items-center justify-center w-28 h-10 text-blue-500 bg-red-700 rounded-md shadow hover:bg-red-600 transition"
+          className="flex items-center justify-center b-2 border-red-700 w-28 h-10 text-white bg-black rounded-md shadow hover:bg-red-600 transition"
         >
           Next <FaChevronRight className="ml-2" />
         </button>

@@ -11,7 +11,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`${API_URL}/users/verify-email/${token}`, {
+        const response = await fetch(`http://localhost:5000/users/verify-email/${token}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
