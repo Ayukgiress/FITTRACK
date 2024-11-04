@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CiLogout } from "react-icons/ci";
 import { useAuth } from "../Pages/AuthContext";
+import { API_URL } from "../../constants";
 
 const Profile = ({ isAuthenticated }) => {
   const { logout } = useAuth();
@@ -22,7 +23,7 @@ const Profile = ({ isAuthenticated }) => {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/users/profile`, {
+        const response = await fetch(`${API_URL}/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -52,7 +53,7 @@ const Profile = ({ isAuthenticated }) => {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`http://localhost:5000/users/uploadProfileImage`, {
+      const response = await fetch(`${API_URL}/users/uploadProfileImage`, {
         method: 'POST',
         body: formData,
         headers: {

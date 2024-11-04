@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { API_URL } from "../../constants";
+import { API_URL } from "../../constants"; // Ensure API_URL points to your backend
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import GoogleAuth from "../Component/GoogleAuth";
@@ -10,8 +10,15 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for button
   const navigate = useNavigate();
+
+  const handleInputChanged = (e) => {
+    const { id, value } = e.target;
+    if (id === "username") setUsername(value);
+    if (id === "email") setEmail(value);
+    if (id === "password") setPassword(value);
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -38,13 +45,12 @@ const Registration = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      return;
+      return; // Stop submission if the form is invalid
     }
 
-    setLoading(true);
-
+    setLoading(true); // Set loading to true
     try {
-      const response = await fetch(`http://localhost:5000/users/register`, {
+      const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,25 +62,25 @@ const Registration = () => {
         }),
       });
 
+      setLoading(false); // Reset loading state
+
       if (response.ok) {
-        toast.success("Registration successful! Please check your email to verify your account.");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        // Optional: Redirect to a different page or show a verification prompt
-        navigate("/verify-email"); // Redirect to a verification page if needed
+        const data = await response.json();
+        toast.success("Registration successful! Redirecting to login...");
+        navigate("/dashboard");
       } else if (response.status === 400) {
-        setErrors({ email: "Email already exists. Please login." });
-        toast.error("Email already exists, please login");
+        const data = await response.json();
+        setErrors({ email: "Email already exists. Please log in." });
+        toast.error("Email already exists. Please log in.");
       } else {
         const data = await response.json();
+        console.error("Registration failed:", data.message);
         toast.error(`Registration failed: ${data.message}`);
       }
     } catch (error) {
-      console.log("Error:", error);
-      toast.error("An error occurred during registration, please try again later");
-    } finally {
-      setLoading(false);
+      console.error("Error:", error);
+      toast.error("An error occurred during registration. Please try again later.");
+      setLoading(false); // Reset loading state on error
     }
   };
 
@@ -90,7 +96,7 @@ const Registration = () => {
                 type="text"
                 id="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleInputChanged}
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
               />
               <FaUser className="text-white mx-2" />
@@ -105,7 +111,7 @@ const Registration = () => {
                 type="text"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleInputChanged}
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
               />
               <FaEnvelope className="text-white mx-2" />
@@ -120,7 +126,7 @@ const Registration = () => {
                 type="password"
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleInputChanged}
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
               />
               <FaLock className="text-white mx-2" />

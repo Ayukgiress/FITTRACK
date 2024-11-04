@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Pages/AuthContext';
+import { API_URL } from '../../constants';
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const GoogleAuth = () => {
 
   const handleGoogleLogin = () => {
     setLoading(true);
-    window.open('http://localhost:5000/users/auth/google', '_self');
+    window.open(`${API_URL}/users/auth/google`, '_self');
   };
 
   return (
@@ -24,7 +25,7 @@ const GoogleAuth = () => {
       <button
         onClick={handleGoogleLogin}
         className="w-full h-11 rounded-md text-white flex items-center justify-center bg-black transition-colors"
-        disabled={loading} // Disable the button while loading
+        disabled={loading} 
       >
         <FcGoogle className={`m-2 h-7 w-10 ${loading ? 'animate-spin' : ''}`} />
       </button>

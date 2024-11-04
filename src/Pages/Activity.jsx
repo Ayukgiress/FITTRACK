@@ -20,6 +20,7 @@ import { Pie, Line } from 'react-chartjs-2';
 import { useAuth } from "./AuthContext";
 import { useFitness } from './PlanContext';
 import Workout from "./Workout";
+import { API_URL } from "../../constants";
 import { getDurationFromEndTimeAndStartTime } from "../utils/utils";
 
 ChartJS.register(
@@ -189,7 +190,7 @@ const Activity = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      const response = await fetch(`http://localhost:5000/workouts/${currentUser._id}`, {
+      const response = await fetch(`${API_URL}/workouts/${currentUser._id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -224,7 +225,7 @@ const Activity = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      const response = await fetch(`http://localhost:5000/workouts`, {
+      const response = await fetch(`${API_URL}/workouts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

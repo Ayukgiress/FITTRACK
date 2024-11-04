@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
+import { API_URL } from '../../constants';
 
 const PlanContext = createContext();
 
@@ -26,10 +27,10 @@ export const FitnessProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const stepsResponse = await axios.get('http://localhost:5000/plan/daily-steps', {
+      const stepsResponse = await axios.get(`${API_URL}/plan/daily-steps`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const distanceResponse = await axios.get('http://localhost:5000/plan/weekly-distance', {
+      const distanceResponse = await axios.get(`${API_URL}/plan/weekly-distance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDailyStepCount(stepsResponse.data);
@@ -51,7 +52,7 @@ export const FitnessProvider = ({ children }) => {
   const addDailySteps = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/plan/daily-steps', data, {
+      const response = await axios.post(`${API_URL}/plan/daily-steps`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchData(); // Fetch the updated data
@@ -68,7 +69,7 @@ export const FitnessProvider = ({ children }) => {
   const addWeeklyDistance = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/plan/weekly-distance', data, {
+      const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchData();

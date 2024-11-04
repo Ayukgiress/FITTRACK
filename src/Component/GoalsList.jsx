@@ -12,7 +12,7 @@ export default function MonthlyStepChart() {
     datasets: [
       {
         label: "Monthly Steps",
-        data: Array(12).fill(0), // Initialize data for 12 months
+        data: Array(12).fill(0), 
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -48,13 +48,12 @@ export default function MonthlyStepChart() {
 
   useEffect(() => {
     if (!loading && dailyStepCount.length) {
-      // Aggregate daily step counts into monthly totals
-      const monthlySteps = Array(12).fill(0); // Array to hold monthly totals
+      const monthlySteps = Array(12).fill(0);
 
       dailyStepCount.forEach(entry => {
         const date = new Date(entry.date);
-        const month = date.getMonth(); // Get the month (0-11)
-        monthlySteps[month] += entry.steps; // Add steps to the respective month
+        const month = date.getMonth();
+        monthlySteps[month] += entry.steps;
       });
 
       // Update chart data
@@ -73,7 +72,7 @@ export default function MonthlyStepChart() {
       legend: {
         position: "top",
         labels: {
-          color: "green",
+          color: "white",
         },
       },
     },
@@ -96,13 +95,12 @@ export default function MonthlyStepChart() {
   }
 
   return (
-    <div className="h-[600px] w-[650px] p-4 flex item-center justify-center flex-col">
-      <h1 className="text-white item-center justify-center flex">Monthly Steps</h1>
-      <TEChart
-        type="bar"
-        data={data}
-        options={options}
-      />
+      <div className="h-[100px] w-[500px]"> {/* Set height and width here */}
+        <TEChart
+          type="bar"
+          data={data}
+          options={options}
+        />
     </div>
   );
 }
