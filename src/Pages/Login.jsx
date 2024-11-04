@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner"; 
 import GoogleAuth from "../Component/GoogleAuth.jsx";
 import { useAuth } from "./AuthContext.jsx";
+import { API_URL } from "../../constants.js";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const Login = () => {
     setLoading(true); // Set loading to true when form is submitted
 
     try {
-      const response = await fetch(`http://localhost:5000/users/login`, {
+      const response = await fetch(`${API_URL}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
