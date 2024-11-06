@@ -1,33 +1,26 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../Pages/AuthContext';
+import { API_URL } from '../../constants';
 
-const OauthCallback = () => {
+const GoogleCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setRefetchCurrentUser } = useAuth();
-
+  const { setAuthState } = useAuth(); 
   useEffect(() => {
-    const handleCallback = async () => {
-      const searchParams = new URLSearchParams(location.search);
-      const token = searchParams.get('token');
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get('token');
 
-      if (token) {
-        // Store the token in localStorage
-        localStorage.setItem('token', token);
-        
-        // Optionally trigger a refresh of user data
-        setRefetchCurrentUser(prev => !prev);
-        
-        // Navigate to the dashboard or home page
-        navigate('/dashboard');
-      } else {
-        navigate('/login?error=auth_failed');
-      }
-    };
+    if (token) {
+      localStorage.setItem('authToken', token);
 
-    handleCallback();
-  }, [location, navigate, setRefetchCurrentUser]);
+      setAuthState({ token });
+
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
+  }, [location, navigate, setAuthState]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -36,4 +29,4 @@ const OauthCallback = () => {
   );
 };
 
-export default OauthCallback;
+export default GoogleCallback;
