@@ -6,14 +6,14 @@ import { API_URL } from '../../constants';
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
-  const { authState } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
-    if (authState.token) {
+    if (isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [authState, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleGoogleLogin = () => {
     setLoading(true);
