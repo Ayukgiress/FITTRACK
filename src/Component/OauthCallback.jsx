@@ -13,26 +13,19 @@ const OauthCallback = () => {
     const handleCallback = async () => {
       const searchParams = new URLSearchParams(location.search);
       const token = searchParams.get('token');
-
+  
       if (token) {
-        try {
-          localStorage.setItem('token', token);
-          setRefetchCurrentUser(prev => !prev);  
-          navigate('/dashboard');
-        } catch (error) {
-          console.error("Failed to store token:", error);
-          setError('An error occurred while processing your login.');
-        }
+        localStorage.setItem('token', token);
+        setRefetchCurrentUser(prev => !prev);  
+        navigate('/dashboard');
       } else {
-        setError('Authentication failed. Please try again.');
+        navigate('/login?error=auth_failed'); 
       }
-
-      setLoading(false);  
     };
-
+  
     handleCallback();
   }, [location, navigate, setRefetchCurrentUser]);
-
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
