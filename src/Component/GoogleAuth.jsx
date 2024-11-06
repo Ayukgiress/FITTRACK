@@ -6,7 +6,7 @@ import { API_URL } from '../../constants';
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();   
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -17,7 +17,11 @@ const GoogleAuth = () => {
 
   const handleGoogleLogin = () => {
     setLoading(true);
-    window.open(`${API_URL}/users/auth/google`, '_self');
+    try {
+      window.location.href = `${API_URL}/users/auth/google`; 
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
   };
 
   return (
@@ -25,9 +29,10 @@ const GoogleAuth = () => {
       <button
         onClick={handleGoogleLogin}
         className="w-full h-11 rounded-md text-white flex items-center justify-center bg-black transition-colors"
-        disabled={loading} 
+        disabled={loading}
       >
         <FcGoogle className={`m-2 h-7 w-10 ${loading ? 'animate-spin' : ''}`} />
+        {loading ? 'Loading...' : 'Login with Google'}
       </button>
     </div>
   );
