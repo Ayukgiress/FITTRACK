@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import GoogleAuth from "../Component/GoogleAuth.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import { API_URL } from "../../constants.js";
+import  ForgotPass  from "../Component/ForgotPass.jsx";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -118,6 +119,7 @@ const Login = () => {
               "Login"
             )}
           </button>
+          <ForgotPass/>
 
           <h1 className="text-center text-2xl text-white">or</h1>
 
