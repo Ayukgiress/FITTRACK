@@ -1,0 +1,71 @@
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { API_URL } from "../../constants";
+
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserLoading, setCurrentUserLoading] = useState(true);
+  const [refetchCurrentUser, setRefetchCurrentUser] = useState(false);
+
+  const isAuthenticated = useMemo(() => {
+    return !currentUserLoading && !!currentUser?._id;
+  }, [currentUser, currentUserLoading]);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setCurrentUser(null);
+  };
+
+  const fetchCurrentUser = async (token) => {
+    try {
+      const response = await fetch(`${API_URL}/users/current-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch current user");
+      const user = await response.json();
+
+      setCurrentUser(user);
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentUserLoading(true);
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setCurrentUserLoading(false);
+      return;
+    }
+  
+    fetchCurrentUser(token).finally(() => {
+      setCurrentUserLoading(false);
+    });
+  }, [refetchCurrentUser]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        logout,
+        currentUser,
+        setCurrentUser,
+        currentUserLoading,
+        setCurrentUserLoading,
+        setRefetchCurrentUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+

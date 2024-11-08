@@ -1,43 +1,57 @@
-import { data } from "autoprefixer";
-import react from "react";
-import {Bar} from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'; // Update the import
 
-const WeeklyChart = ({ activities }) => {
-    const getWeeklyData = () => {
-        const days = Array(7).fill(0)
+const WeeklyChart = ({ weeklyWorkoutData }) => {
+  const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Calories Burned',
+        data: weeklyWorkoutData,
+        fill: true, // Optional: to fill under the line
+        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Light background color
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 2,
+        tension: 0.4, // Makes the line smooth
+      },
+    ],
+  };
 
-        activities.forEach(activitty => {
-            const day = new Date(activitty.Date).getDate()
-            days(day) += activitty.calories
-        })
-        return days
-    }
-    const data = {
-        labels: ['sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
-        datasets: [{
-            labels: 'calories burned',
-            data: getWeeklyData(),
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    }
-    const option = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-    return (
-        <div>
-            <h2>Weekly activity Chart</h2>
-            <Bar data={data} option={option}/>
-        </div>
-    )
-}
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: 'white',
+        },
+      },
+      x: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: 'white',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: 'white',
+        },
+      },
+    },
+  };
 
-export default WeeklyChart
-
-
-
+  return (
+    <div className="h-full p-4">
+      <Line data={data} options={options} /> {/* Change to Line */}
+    </div>
+  );
+};
