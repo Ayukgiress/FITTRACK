@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { API_URL } from "../../constants"; // Ensure API_URL points to your backend
-import { toast } from "sonner";
+import { API_URL } from "../../constants"; 
 import { useNavigate } from "react-router-dom";
 import GoogleAuth from "../Component/GoogleAuth";
 
@@ -10,7 +9,7 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); // Loading state for button
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleInputChanged = (e) => {
@@ -45,10 +44,10 @@ const Registration = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      return; // Stop submission if the form is invalid
+      return;
     }
 
-    setLoading(true); // Set loading to true
+    setLoading(true); 
     try {
       const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
@@ -62,7 +61,7 @@ const Registration = () => {
         }),
       });
 
-      setLoading(false); // Reset loading state
+      setLoading(false);
 
       if (response.ok) {
         const data = await response.json();
@@ -80,7 +79,7 @@ const Registration = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred during registration. Please try again later.");
-      setLoading(false); // Reset loading state on error
+      setLoading(false); 
     }
   };
 
