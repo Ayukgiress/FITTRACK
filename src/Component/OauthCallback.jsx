@@ -8,15 +8,15 @@ const OauthCallback = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
-
+  
     if (token) {
       localStorage.setItem('authToken', token);
-
-      navigate('/dashboard');
+      navigate('/dashboard'); 
     } else {
-      navigate('/login?error=auth_failed');
+      navigate('/login?error=auth_failed'); 
     }
   }, [location, navigate]);
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen">

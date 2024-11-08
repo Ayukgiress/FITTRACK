@@ -25,6 +25,8 @@ import './App.css';
 import WorkoutStore from "./Pages/WorkoutStore";
 import VerifyEmail from "./Component/VerifyEmail";
 import OauthCallback from "./Component/OauthCallback";
+import PasswordReset from "./Pages/ResetToken";
+import PasswordResetRequest from "./Pages/ResetPassword";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
@@ -45,6 +47,10 @@ const AppRoutes = () => {
         <Route path="/registration" element={<Registration />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/passwordRest" element={<PasswordReset/>} />
+        <Route path="/password" element={<PasswordResetRequest/>} />
+
+
         <Route path="/auth/callback" element={<OauthCallback />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
