@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_URL } from '../../constants';
 
 const PasswordReset = () => {
-  const { token } = useParams();
+  const { token } = useParams(); 
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -13,28 +13,31 @@ const PasswordReset = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${API_URL}/users/reset-password`, {token, newPassword});
+      const response = await axios.post(`${API_URL}/users/reset-password/${token}`, { password: newPassword });
       setMessage(response.data.msg);
-      navigate('/login'); 
+      navigate('/login');  
     } catch (error) {
       setMessage(error.response?.data?.msg || 'An error occurred');
     }
   };
 
   return (
-    <div className='h-screen bg-green w-full bg-neutral-900 flex item-center justify-center'>
+    <div className="h-screen bg-green w-full bg-neutral-900 flex items-center justify-center">
       <h2>Set New Password</h2>
-      <form onSubmit={handleSubmit} className='flex item-center justify-center flex-col gap-4'>
-      <div className='flex item-center justify-center flex-col '>
-      <label className='text-2xl text-white'>New Password</label>
+      <form onSubmit={handleSubmit} className="flex items-center justify-center flex-col gap-4">
+        <div className="flex items-center justify-center flex-col">
+          <label className="text-2xl text-white">New Password</label>
           <input
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
-            className='h-9 rounded-md outline-none p4 w-96 text-xl text-black' />
+            className="h-9 rounded-md outline-none p4 w-96 text-xl text-black"
+          />
         </div>
-        <button type="submit" className='bg-red-700 w-96 h-9 rounded-md'>Reset Password</button>
+        <button type="submit" className="bg-red-700 w-96 h-9 rounded-md">
+          Reset Password
+        </button>
       </form>
       {message && <p>{message}</p>}
     </div>
