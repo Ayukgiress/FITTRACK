@@ -6,7 +6,7 @@ const ForgotPass = () => {
 
   return (
 
-    <div>
+    <div className='item-end justify-end text-white text-xl'>
         
         <Link to='/password'>forgot password</Link>
 
