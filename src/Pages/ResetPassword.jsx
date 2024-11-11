@@ -22,7 +22,7 @@ const PasswordResetRequest = () => {
     <div className="h-screen bg-green w-full bg-neutral-900 flex items-center justify-center">
       <form onSubmit={handleSubmit} className="flex items-center justify-center flex-col gap-4">
         <div className="flex items-center justify-center flex-col">
-          <label className="text-2xl text-white">Email</label>
+          <label className="text-2xl text-white item-start justify-start">Email</label>
           <input
             type="email"
             value={email}

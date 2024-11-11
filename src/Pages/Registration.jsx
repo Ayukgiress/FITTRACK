@@ -160,9 +160,7 @@ const Registration = () => {
 
             <h1 className="text-2xl text-center text-white">or</h1>
 
-            <div className='flex justify-start'>
-              <h2 className='text-start text-white text-xl'>Continue with Google</h2>
-            </div>
+           
             <GoogleAuth />
           </div>
         </form>
