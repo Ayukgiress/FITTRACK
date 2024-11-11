@@ -36,10 +36,9 @@ const PasswordReset = () => {
 
   return (
     <div className="h-screen bg-green w-full bg-neutral-900 flex items-center justify-center">
-      <h2 className="text-white text-3xl">Set New Password</h2>
       <form onSubmit={handleSubmit} className="flex items-center justify-center flex-col gap-4">
         <div className="flex items-center justify-center flex-col">
-          <label className="text-2xl text-white">New Password</label>
+          <label className="text-2xl text-white item-start justify-start">New Password</label>
           <input
             type="password"
             value={newPassword}
