@@ -8,6 +8,8 @@ const OauthCallback = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    console.log('Extracted token:', token); 
+
     
     if (token) {
       localStorage.setItem('authToken', token); 
@@ -16,6 +18,7 @@ const OauthCallback = () => {
       navigate('/login?error=auth_failed'); 
     }
   }, [location, navigate]);
+  
   
   
 
