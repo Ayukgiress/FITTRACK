@@ -21,8 +21,11 @@ const GoogleAuth = () => {
       window.location.href = `${API_URL}/users/auth/google`; 
     } catch (error) {
       console.error("Google login failed:", error);
+      setLoading(false);  
+      alert('Something went wrong. Please try again.');  
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center flex-col">
