@@ -12,7 +12,7 @@ const Dashboard = () => {
         <Sidebar />
       </div>
 
-      <main className="flex-grow w-full overflow-y-auto min-h-0 m-0 p-0">
+      <main className="flex-grow w-full overflow-y-auto min-h-0 m-0 p-0 item-center justify-center">
         <Outlet />
       </main>
       {isAuthenticated && (

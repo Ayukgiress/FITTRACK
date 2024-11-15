@@ -16,7 +16,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <button
         onClick={toggleSidebar}
         className="fixed top-4 left-4 z-50 text-white focus:outline-none md:hidden"
@@ -24,7 +23,6 @@ const Sidebar = () => {
         <FaBars className={`w-8 h-8 ${isOpen ? 'hidden' : 'block'}`} />
       </button>
 
-      {/* Backdrop for mobile */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
@@ -32,13 +30,11 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 z-40 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 3xl:w-80 z-40 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 md:w-52 md:relative`}
       >
-        {/* Close button for mobile */}
         <button
           onClick={toggleSidebar}
           className="absolute top-4 right-4 text-white focus:outline-none md:hidden"
@@ -46,8 +42,7 @@ const Sidebar = () => {
           <FaTimes className="w-8 h-8" />
         </button>
 
-        {/* Navigation Links */}
-        <nav className="flex flex-col h-full pt-16 px-4 sidebar">
+        <nav className="flex flex-col h-full pt-16 px-4 sidebar 3xl:w-80">
           <div className="space-y-6">
           
 

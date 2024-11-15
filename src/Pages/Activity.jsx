@@ -342,12 +342,12 @@ const Activity = () => {
 
 
 <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-  <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%] chart-container h-132"> 
-    <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
+  <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%]  chart-container h-132"> 
+    <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned}/>
   </div>
 
   <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
-    <h2 className="text-white text-lg sm:text-xl mb-4 text-center">Today's Workouts</h2>
+    <h2 className="text-white text-lg sm:text-xl mb-4 text-center 3xl:text-4xl">Today's Workouts</h2>
       <TodaysWorkoutChart workoutLog={workoutLog} />
   </div>
 </div>

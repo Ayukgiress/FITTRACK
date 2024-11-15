@@ -66,9 +66,9 @@
   }
 
   .workout-btn {
-    width: 15%;
-    height: 80px;
-    font-size: 28px;
+    width: 12%;
+    height: 65px;
+    font-size: 22px;
   }
 
   .chart-container {
@@ -82,12 +82,12 @@
   }
 
   .profile {
-    height: 30vh;
+    height: 35vh;
   }
 
   .prof-img {
     width: 15vw;
-    height: 20vh;
+    height: 18vh;
   }
 
   .img {
