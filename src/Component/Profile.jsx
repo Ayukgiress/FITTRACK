@@ -106,7 +106,7 @@ const Profile = ({ isAuthenticated }) => {
   return (
     <div className="flex item-center flex-col justify-between bg-neutral-800 h-full profiles">
       <div className="bg-black h-80 w-full profile">
-        <div className="w-48 h-48 mx-auto m-3 bg-white shadow-md rounded-full p-5 flex flex-col items-center prof-img">
+        <div className="w-48 h-48 mx-auto m-3 bg-white 3xl:w-80 3xl:h-80 shadow-md rounded-full p-5 flex flex-col items-center">
           {profile.profileImage && (
             <img
               src={profile.profileImage}
@@ -163,7 +163,7 @@ const Profile = ({ isAuthenticated }) => {
         )}
       </div>
 
-      <div className="flex items-center justify-center mt-4">
+      <div className="flex items-center justify-center m-7">
         <CiLogout className="mr-2 text-white text-xl" />
         <button onClick={handleLogout} className="text-white text-xl bg-transparent border-none cursor-pointer logout">
           Logout

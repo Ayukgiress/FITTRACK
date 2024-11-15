@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { API_URL } from "../../constants"; 
+import { FaEnvelope, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
+import { API_URL } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import GoogleAuth from "../Component/GoogleAuth";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChanged = (e) => {
@@ -44,10 +47,16 @@ const Registration = () => {
     e.preventDefault();
 
     if (!validateForm()) {
+      // If validation fails, show a toast error with the first error message
+      Object.values(errors).forEach((error) => {
+        toast.error(error);
+      });
       return;
     }
 
-    setLoading(true); 
+    setLoading(true);
+    toast.loading("Registering...");  // Show loading toast
+
     try {
       const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
@@ -73,74 +82,92 @@ const Registration = () => {
         toast.error("Email already exists. Please log in.");
       } else {
         const data = await response.json();
-        console.error("Registration failed:", data.message);
         toast.error(`Registration failed: ${data.message}`);
       }
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred during registration. Please try again later.");
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
     <div className="bg-login-color flex justify-center items-center h-screen">
-      <div className="lg:p-36 md:p-52 sm:20 p-10 w-full lg:w-1/2">
-        <h1 className="text-2xl font-bold mb-4 text-white flex justify-center">Register</h1>
+      <div className="lg:p-36 md:p-52 sm:20 p-10 w-full lg:w-1/2 ">
+        <h1 className="text-2xl 3xl:text-6xl font-bold mb-4 text-white flex justify-center items-center">
+          Register
+        </h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-white font-bold">Username</label>
+          <div className="mb-4 relative">
+            <label htmlFor="username" className="block text-white font-bold 3xl:text-5xl">
+              Username
+            </label>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
                 type="text"
                 id="username"
                 value={username}
                 onChange={handleInputChanged}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full py-2 px-3 3xl:text-4xl 3xl:w-[56rem] focus:outline-none 3xl:h-24"
+                placeholder="Enter your username"
               />
               <FaUser className="text-white mx-2" />
             </div>
-            {errors.username && <p className="text-red-500">{errors.username}</p>}
+            {errors.username && <p className="text-red-500 3xl:text-5xl">{errors.username}</p>}
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-white font-bold">Email</label>
+          <div className="mb-4 relative">
+            <label htmlFor="email" className="block text-white font-bold 3xl:text-5xl">
+              Email
+            </label>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
                 type="text"
                 id="email"
                 value={email}
                 onChange={handleInputChanged}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full py-2 px-3 3xl:text-4xl 3xl:w-[56rem] focus:outline-none 3xl:h-24"
+                placeholder="Enter your email"
               />
               <FaEnvelope className="text-white mx-2" />
             </div>
-            {errors.email && <p className="text-red-500">{errors.email}</p>}
+            {errors.email && <p className="text-red-500 3xl:text-5xl">{errors.email}</p>}
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-white font-bold">Password</label>
+          <div className="mb-4 relative">
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="block text-white font-bold 3xl:text-5xl">
+                Password
+              </label>
+            </div>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
-                type="password"
+                type={passwordVisible ? "text" : "password"}  
                 id="password"
                 value={password}
                 onChange={handleInputChanged}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full py-2 px-3 3xl:w-[56rem] 3xl:h-24 3xl:text-4xl focus:outline-none"
+                placeholder="Enter your password"
               />
-              <FaLock className="text-white mx-2" />
+              <button
+                type="button"
+                className="text-white mx-2"
+                onClick={() => setPasswordVisible(prev => !prev)} 
+              >
+                {passwordVisible ? <FaEyeSlash /> : <FaEye />}  
+              </button>
             </div>
-            {errors.password && <p className="text-red-500">{errors.password}</p>}
+            {errors.password && <p className="text-red-500 3xl:text-5xl">{errors.password}</p>}
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex item-center justify-center flex-col gap-4">
             <button
               type="submit"
               disabled={loading}
-              className={`bg-red-700 hover:bg-black text-white font-semibold rounded-md py-2 px-4 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`bg-red-700 hover:bg-black 3xl:h-24 text-white 3xl:text-5xl font-semibold rounded-md py-2 px-4 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {loading ? (
-                <span className="flex justify-center items-center">
+                <span className="flex justify-center items-center 3xl:text-5xl">
                   <svg
                     className="animate-spin h-5 w-5 mr-2"
                     xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +176,7 @@ const Registration = () => {
                     stroke="currentColor"
                   >
                     <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4" />
-                    <path className="opacity-75" d="M4 12a8 8 0 0112-7.24V12H4z" />
+                    <path className="opacity-75 3xl:text-5xl" d="M4 12a8 8 0 0112-7.24V12H4z" />
                   </svg>
                   Registering...
                 </span>
@@ -158,11 +185,16 @@ const Registration = () => {
               )}
             </button>
 
-            <h1 className="text-2xl text-center text-white">or</h1>
+            <h1 className="text-center text-2xl text-white 3xl:text-7xl">or</h1>
 
-           
             <GoogleAuth />
+
+            <div className="flex items-center justify-center h-10 3xl:h-24 rounded-md bg-black gap-2 text-white">
+              <h2 className="text-center 3xl:text-4xl">Already have an account?</h2>
+              <Link to="/login" className="text-red-700 text-center 3xl:text-4xl">Login</Link>
+            </div>
           </div>
+
         </form>
       </div>
     </div>

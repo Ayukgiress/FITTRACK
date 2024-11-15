@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        '3xl': '2560px',
+      },
       backgroundImage: {
         "image-backdrop":
           " linear-gradient(0deg, rgba(51,52,52,1) 0%, rgba(6,4,0,1) 100%);",
@@ -20,6 +23,9 @@ export default {
         darkColor: "#000",
         darkTexts:
           "linear-gradient(90deg, rgba(108,44,3,0.9724264705882353) 0%, rgba(6,1,1,1) 9%, rgba(6,1,1,1) 17%, rgba(8,4,2,1) 87%, rgba(32,6,2,1) 91%, rgba(138,15,5,1) 100%, rgba(252,90,69,1) 100%);",
+      },
+      fontFamily: {
+        sans: ['Playfair Display', 'sans-serif'],
       },
     },
   },
