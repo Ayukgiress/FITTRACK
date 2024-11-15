@@ -18,7 +18,7 @@ const GoogleAuth = () => {
   const handleGoogleLogin = () => {
     setLoading(true);
     try {
-      window.location.href = `${API_URL}/users/auth/google`; 
+      window.location.href = `${API_URL}/users/auth/google`;
     } catch (error) {
       console.error("Google login failed:", error);
       setLoading(false);  
