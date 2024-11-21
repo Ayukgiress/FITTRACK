@@ -10,16 +10,18 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
+      if (!token) return;
+  
       try {
         const response = await fetch(`${API_URL}/users/verify-email/${token}`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-
+  
         const data = await response.json();
-
+  
         if (response.ok && data.success) {
           setVerificationStatus('success');
           toast.success("Email verified successfully! You can now log in.");
@@ -34,11 +36,10 @@ const VerifyEmail = () => {
         toast.error("An error occurred during email verification.");
       }
     };
-
-    if (token) {
-      verifyEmail();
-    }
+  
+    verifyEmail();
   }, [token, navigate]);
+  
 
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-4">
