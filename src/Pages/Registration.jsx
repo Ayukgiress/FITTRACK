@@ -13,6 +13,7 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);  // Track registration success
   const navigate = useNavigate();
 
   const handleInputChanged = (e) => {
@@ -47,7 +48,6 @@ const Registration = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      // If validation fails, show a toast error with the first error message
       Object.values(errors).forEach((error) => {
         toast.error(error);
       });
@@ -55,7 +55,7 @@ const Registration = () => {
     }
 
     setLoading(true);
-    toast.loading("Registering...");  // Show loading toast
+    toast.loading("Registering...");
 
     try {
       const response = await fetch(`${API_URL}/users/register`, {
@@ -74,8 +74,10 @@ const Registration = () => {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success("Registration successful! Redirecting to login...");
-        navigate("/dashboard");
+        setRegistrationSuccess(true);  // Set registration success
+        toast.success("Registration successful! Please check your email for verification instructions.");
+        // Optionally redirect to a different page, e.g., login page, for manual verification.
+        navigate("/verify-email");  // Redirect to verify email page
       } else if (response.status === 400) {
         const data = await response.json();
         setErrors({ email: "Email already exists. Please log in." });
@@ -194,7 +196,6 @@ const Registration = () => {
               <Link to="/login" className="text-red-700 text-center 3xl:text-4xl">Login</Link>
             </div>
           </div>
-
         </form>
       </div>
     </div>
