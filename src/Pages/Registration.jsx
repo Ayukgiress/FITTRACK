@@ -13,7 +13,7 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);  // Track registration success
+  const [registrationSuccess, setRegistrationSuccess] = useState(false); 
   const navigate = useNavigate();
 
   const handleInputChanged = (e) => {
@@ -76,7 +76,7 @@ const Registration = () => {
         const data = await response.json();
         setRegistrationSuccess(true);
         toast.success("Registration successful! Please check your email for verification instructions.");
-        navigate("/verify");
+        navigate("/verify-email");
       } else if (response.status === 400) {
         const data = await response.json();
         setErrors({ email: "Email already exists. Please log in." });
