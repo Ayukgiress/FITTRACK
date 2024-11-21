@@ -74,10 +74,9 @@ const Registration = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setRegistrationSuccess(true);  // Set registration success
+        setRegistrationSuccess(true);
         toast.success("Registration successful! Please check your email for verification instructions.");
-        // Optionally redirect to a different page, e.g., login page, for manual verification.
-        navigate("/verify-email");  // Redirect to verify email page
+        navigate("/verify");
       } else if (response.status === 400) {
         const data = await response.json();
         setErrors({ email: "Email already exists. Please log in." });
