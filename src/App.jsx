@@ -27,6 +27,7 @@ import VerifyEmail from "./Component/VerifyEmail";
 import OauthCallback from "./Component/OauthCallback";
 import PasswordReset from "./Pages/ResetToken";
 import PasswordResetRequest from "./Pages/ResetPassword";
+import VerifyEmails from "./Component/VerifyEmails";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
@@ -46,6 +47,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
+        <Route path="verify" element={<VerifyEmails/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password/:token" element={<PasswordReset />} />
         <Route path="/password" element={<PasswordResetRequest/>} />
