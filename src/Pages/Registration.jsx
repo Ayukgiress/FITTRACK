@@ -55,7 +55,7 @@ const Registration = () => {
     }
 
     setLoading(true);
-    toast.loading("Registering...");
+    // toast.loading("Registering...");
 
     try {
       const response = await fetch(`${API_URL}/users/register`, {
