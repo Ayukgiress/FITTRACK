@@ -25,23 +25,23 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/users/current-user`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,  
         },
       });
-
+  
       if (!response.ok) throw new Error("Failed to fetch current user");
       const user = await response.json();
-
+  
       setCurrentUser(user);
     } catch (error) {
       console.error("Error fetching current user:", error);
     }
   };
-
+  
   useEffect(() => {
     setCurrentUserLoading(true);
     const token = localStorage.getItem("token");
-
+    console.log("Retrieved Token:", token);  
     if (!token) {
       setCurrentUserLoading(false);
       return;
@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUserLoading(false);
     });
   }, [refetchCurrentUser]);
+  
 
   return (
     <AuthContext.Provider
