@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/users/current-user`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
 
@@ -38,6 +38,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshToken = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    try {
+      const response = await fetch(`${API_URL}/users/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) throw new Error("Failed to refresh token");
+
+      const { accessToken } = await response.json();
+      localStorage.setItem("token", accessToken);
+      return accessToken;
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      logout();
+      return null;
+    }
+  };
+
   useEffect(() => {
     setCurrentUserLoading(true);
     const token = localStorage.getItem("token");
@@ -46,7 +69,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUserLoading(false);
       return;
     }
-  
+
     fetchCurrentUser(token).finally(() => {
       setCurrentUserLoading(false);
     });
