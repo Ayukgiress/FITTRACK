@@ -23,9 +23,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = async ({ email, password }) => {
-    console.log("Logging in with:", { email, password });
     setLoading(true);
-
+  
     try {
       const response = await fetch(`${API_URL}/users/login`, {
         method: "POST",
@@ -34,16 +33,16 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.error || "Invalid email or password.");
         return;
       }
-
+  
       const data = await response.json();
-      localStorage.setItem("token", data.token);
-      toast.success('Login successful');
+      localStorage.setItem("token", data.accessToken); 
+      toast.success("Login successful");
       navigate("/dashboard");
       setRefetchCurrentUser(prev => !prev);
     } catch (error) {
@@ -53,6 +52,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="bg-login-color flex justify-center items-center h-screen">
