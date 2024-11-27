@@ -6,21 +6,22 @@ const OauthCallback = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
+    console.log('Location search:', location.search);
+    const urlParams = new URLSearchParams(location.search);
     const token = urlParams.get('token');
-    console.log('Extracted token:', token); 
+    const error = urlParams.get('error');
 
-    
+    console.log('Token:', token);
+    console.log('Error:', error);
+
     if (token) {
-      localStorage.setItem('authToken', token); 
-      navigate('/dashboard'); 
+      const decodedToken = decodeURIComponent(token);
+      localStorage.setItem('authToken', decodedToken);
+      navigate('/dashboard');
     } else {
-      navigate('/login?error=auth_failed'); 
+      navigate('/login?error=auth_failed');
     }
   }, [location, navigate]);
-  
-  
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen">
