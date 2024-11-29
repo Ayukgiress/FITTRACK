@@ -221,6 +221,35 @@ const Activity = () => {
       return;
     }
 
+    // Check if the date is in the future
+    const currentDate = new Date();
+    const workoutDate = new Date(workoutData.date || new Date());
+    
+    if (workoutDate > currentDate) {
+      toast.error("Cannot log workouts for future dates");
+      return;
+    }
+
+    // Check for duplicate daily steps
+    const todayStepEntry = dailyStepCount.find(item => 
+      new Date(item.date).toDateString() === currentDate.toDateString()
+    );
+
+    if (workoutData.type === 'steps' && todayStepEntry) {
+      toast.error("Daily steps already logged for today");
+      return;
+    }
+
+    // Check for duplicate running distance
+    const todayRunningEntry = weeklyRunningDistance.find(item => 
+      new Date(item.date).toDateString() === currentDate.toDateString()
+    );
+
+    if (workoutData.type === 'running' && todayRunningEntry) {
+      toast.error("Running distance already logged for today");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
@@ -234,7 +263,7 @@ const Activity = () => {
         body: JSON.stringify({
           ...workoutData,
           userId: currentUser._id,
-          date: new Date().toISOString(),
+          date: currentDate.toISOString(),
         }),
       });
 
@@ -308,52 +337,49 @@ const Activity = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message ">Weekly Kcal Burned</h3>
-    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-yellow-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <AiOutlineThunderbolt className="text-yellow-500 w-8 h-8" />
-      {weeklyCaloriesBurned.reduce((a, b) => a + b, 0).toFixed(2)} <br />
-      kcal
-    </p>
-  </div>
+        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+          <h3 className="text-white text-lg sm:text-xl lg:text-3xl message ">Weekly Kcal Burned</h3>
+          <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-yellow-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+            <AiOutlineThunderbolt className="text-yellow-500 w-8 h-8" />
+            {weeklyCaloriesBurned.reduce((a, b) => a + b, 0).toFixed(2)} <br />
+            kcal
+          </p>
+        </div>
   
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Daily Steps Count</h3>
-    <p className="text-white flex flex-col gap-4 text-center font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-green-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <FaWalking className="text-green-500 w-8 h-8" />
-      {dailyStepCount.reduce((acc, item) => {
-        const date = new Date(item.date).toDateString();
-        if (date === new Date().toDateString()) {
-          return acc + item.steps;
-        }
-        return acc;
-      }, 0)} <br />steps
-    </p>
-  </div>
+        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+          <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Daily Steps Count</h3>
+          <p className="text-white flex flex-col gap-4 text-center font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-green-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+            <FaWalking className="text-green-500 w-8 h-8" />
+            {dailyStepCount.reduce((acc, item) => {
+              const date = new Date(item.date).toDateString();
+              if (date === new Date().toDateString()) {
+                return acc + item.steps;
+              }
+              return acc;
+            }, 0)} <br />steps
+          </p>
+        </div>
 
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Weekly Running Distance</h3>
-    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-blue-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <RiMapPinLine className="text-blue-500 w-8 h-8" />
-      {weeklyRunningDistance.reduce((acc, item) => acc + item.distance, 0)} <br /> km
-    </p>
-  </div>
-</div>
+        <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
+          <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Weekly Running Distance</h3>
+          <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-blue-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
+            <RiMapPinLine className="text-blue-500 w-8 h-8" />
+            {weeklyRunningDistance.reduce((acc, item) => acc + item.distance, 0)} <br /> km
+          </p>
+        </div>
+      </div>
 
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
+        <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%] chart-container h-132"> 
+          <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned}/>
+        </div>
 
-<div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-  <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%]  chart-container h-132"> 
-    <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned}/>
-  </div>
-
-  <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
-    <h2 className="text-white text-lg sm:text-xl mb-4 text-center 3xl:text-4xl">Today's Workouts</h2>
-      <TodaysWorkoutChart workoutLog={workoutLog} />
-  </div>
-</div>
-
-</div>
-  
+        <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
+          <h2 className="text-white text-lg sm:text-xl mb-4 text-center 3xl:text-4xl">Today's Workouts</h2>
+          <TodaysWorkoutChart workoutLog={workoutLog} />
+        </div>
+      </div>
+    </div>
   );
 };
 

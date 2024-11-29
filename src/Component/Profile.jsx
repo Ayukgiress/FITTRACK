@@ -111,7 +111,7 @@ const Profile = ({ isAuthenticated }) => {
             <img
               src={profile.profileImage}
               alt={`${profile.username}'s profile`}
-              className="w-44 h-44 rounded-full mb-4 cursor-pointer border-4 border-gray-200 img"
+              className="w-48 h-48 rounded-full mb-4 cursor-pointer border-4 border-gray-200 img"
               onClick={toggleDetails}
             />
           )}
