@@ -12,7 +12,7 @@ const OurService = () => {
       
       <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-12">
         {/* Service Item 1 */}
-        <div className="service 3xl:w-[48rem] 3xl:h-[45rem]  flex flex-col md:flex-row w-full md:w-80 lg:w-[28rem] mb-4 md:mb-0">
+        <div className="service 3xl:w-[48rem] 3xl:h-[45rem]  flex flex-col md:flex-row w-full md:w-40 lg:w-[25rem] mb-4 md:mb-0">
           <div
             className="flex flex-col 3xl:w-80 justify-between p-4 w-full md:w-3/5 lg:w-2/3 min-h-[30rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
@@ -32,7 +32,7 @@ const OurService = () => {
         </div>
         
         {/* Service Item 2 */}
-        <div className="service 3xl:w-[48rem] 3xl:h-[45rem] flex flex-col md:flex-row w-full md:w-80 lg:w-[28rem] mb-4 md:mb-0">
+        <div className="service 3xl:w-[48rem] 3xl:h-[45rem] flex flex-col md:flex-row w-full md:w-80 lg:w-[25rem] mb-4 md:mb-0">
           <div
             className="flex flex-col  3xl:w-80 justify-between p-4 w-full md:w-3/5 lg:w-2/3 min-h-[30rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
@@ -51,7 +51,7 @@ const OurService = () => {
         </div>
 
         {/* Service Item 3 */}
-        <div className="service 3xl:w-[48rem] 3xl:h-[45rem] flex flex-col md:flex-row w-full md:w-80 lg:w-[28rem] mb-4 md:mb-0">
+        <div className="service 3xl:w-[48rem] 3xl:h-[45rem] flex flex-col md:flex-row w-full md:w-80 lg:w-[25rem] mb-4 md:mb-0">
           <div
             className="flex flex-col  3xl:w-80 justify-between p-4 w-full md:w-3/5 lg:w-2/3 min-h-[30rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
