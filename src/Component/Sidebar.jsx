@@ -42,7 +42,13 @@ const Sidebar = () => {
           <FaTimes className="w-8 h-8" />
         </button>
 
-        <nav className="flex flex-col h-full pt-16 px-4 sidebar 3xl:w-80">
+        <nav className="flex flex-col h-full pt-16 px-4 sidebar 3xl:w-80 gap-12">
+        <Link 
+              to="/dashboard" 
+              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
+            >
+              <span className="text-white text-2xl ml-2 group-hover:text-red-700">Dashboard</span>
+            </Link>
           <div className="space-y-6">
           
 
@@ -54,12 +60,7 @@ const Sidebar = () => {
               <span className="text-white ml-2 group-hover:text-red-700">Home</span>
             </Link>
 
-            <Link 
-              to="/dashboard" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <span className="text-white text-2xl ml-2 group-hover:text-red-700">Dashboard</span>
-            </Link>
+            
 
             <Link 
               to="/dashboard/settings" 
@@ -69,28 +70,16 @@ const Sidebar = () => {
               <span className="text-white ml-2 group-hover:text-red-700">Settings</span>
             </Link>
 
+            <div className="w-full flex items-center p-2 rounded-3xl hover:bg-black  hover:text-red-700 transition-colors duration-200 w-full group">
+              <Plan className="text-white ml-2 group-hover:text-red-700"/>
+            </div>
+
             <Link 
               to="/dashboard/statistics" 
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <FcStatistics className="text-white w-8 h-8 group-hover:text-red-700" />
               <span className="text-white ml-2 group-hover:text-red-700">Statistics</span>
-            </Link>
-
-            <div className="w-full flex items-center p-2 rounded-3xl hover:bg-black  hover:text-red-700 transition-colors duration-200 w-full group">
-              <Plan className="text-white ml-2 group-hover:text-red-700"/>
-            </div>
-
-            <Link 
-              to="/dashboard/workoutstore" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <img 
-                src="/src/assets/images/report (1).png" 
-                alt="Workouts" 
-                className="w-10 h-8"
-              />
-              <span className="text-white ml-2 group-hover:text-red-700">Goals</span>
             </Link>
           </div>
         </nav>

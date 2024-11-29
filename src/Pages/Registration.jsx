@@ -112,7 +112,7 @@ const Registration = () => {
                 className="w-full py-2 px-3 3xl:text-4xl 3xl:w-[56rem] focus:outline-none 3xl:h-24"
                 placeholder="Enter your username"
               />
-              <FaUser className="text-white mx-2" />
+              <FaUser className="text-white mx-2 3xl:text-6xl item-center justify-center flex 3xl:ml-6" />
             </div>
             {errors.username && <p className="text-red-500 3xl:text-5xl">{errors.username}</p>}
           </div>
@@ -130,7 +130,7 @@ const Registration = () => {
                 className="w-full py-2 px-3 3xl:text-4xl 3xl:w-[56rem] focus:outline-none 3xl:h-24"
                 placeholder="Enter your email"
               />
-              <FaEnvelope className="text-white mx-2" />
+              <FaEnvelope className="text-white mx-2 3xl:text-6xl item-center justify-center flex 3xl:ml-6" />
             </div>
             {errors.email && <p className="text-red-500 3xl:text-5xl">{errors.email}</p>}
           </div>
@@ -152,7 +152,7 @@ const Registration = () => {
               />
               <button
                 type="button"
-                className="text-white mx-2"
+                className="text-white mx-2 3xl:text-6xl item-center justify-center flex 3xl:ml-6"
                 onClick={() => setPasswordVisible(prev => !prev)} 
               >
                 {passwordVisible ? <FaEyeSlash /> : <FaEye />}  

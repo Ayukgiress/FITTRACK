@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { API_URL } from "../../constants";
 
 const AuthContext = createContext();
@@ -12,12 +12,12 @@ export const AuthProvider = ({ children }) => {
   const [currentUserLoading, setCurrentUserLoading] = useState(true);
   const [refetchCurrentUser, setRefetchCurrentUser] = useState(false);
 
-  const isAuthenticated = useMemo(() => {
-    return !currentUserLoading && !!currentUser?._id;
-  }, [currentUser, currentUserLoading]);
+  // Determine if user is authenticated based on currentUser and loading state
+  const isAuthenticated = currentUser && !currentUserLoading;
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setCurrentUser(null);
   };
 
@@ -25,18 +25,19 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/users/current-user`, {
         headers: {
-          'Authorization': `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) throw new Error("Failed to fetch current user");
+
       const user = await response.json();
       setCurrentUser(user);
     } catch (error) {
       console.error("Error fetching current user:", error);
+      logout(); // Logout user if fetching user fails
     }
   };
-  
 
   const refreshToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }) => {
       return accessToken;
     } catch (error) {
       console.error("Token refresh error:", error);
-      logout();
+      logout(); 
       return null;
     }
   };
@@ -64,17 +65,16 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setCurrentUserLoading(true);
     const token = localStorage.getItem("token");
-  
+
     if (!token) {
-      setCurrentUserLoading(false);
+      setCurrentUserLoading(false); 
       return;
     }
-  
+
     fetchCurrentUser(token).finally(() => {
-      setCurrentUserLoading(false);
+      setCurrentUserLoading(false); 
     });
-  }, [refetchCurrentUser]);
-  
+  }, [refetchCurrentUser]); 
 
   return (
     <AuthContext.Provider
@@ -93,4 +93,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-

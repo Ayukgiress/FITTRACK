@@ -74,7 +74,7 @@ const Login = () => {
                 placeholder="Enter your email"
                 aria-invalid={errors.email ? "true" : "false"}
               /> 
-              <FaEnvelope className="text-white mx-2" />
+              <FaEnvelope className="text-white mx-2 3xl:text-6xl item-center justify-center flex 3xl:ml-6" />
             </div>
             {errors.email && <p className="text-red-500 3xl:text-5xl">Email is required</p>}
           </div>
@@ -88,7 +88,7 @@ const Login = () => {
             </div>
             <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
               <input
-                type={passwordVisible ? "text" : "password"}  // Toggle between password and text
+                type={passwordVisible ? "text" : "password"}  
                 id="password"
                 {...register("password", { required: true })}
                 className="w-full py-2 px-3 3xl:w-[56rem]  3xl:h-24 3xl:text-4xl focus:outline-none"
@@ -97,10 +97,10 @@ const Login = () => {
               />
               <button
                 type="button"
-                className="text-white mx-2"
-                onClick={() => setPasswordVisible(prev => !prev)}  // Toggle password visibility
+                className="text-white mx-2 3xl:text-6xl item-center justify-center flex 3xl:ml-6"
+                onClick={() => setPasswordVisible(prev => !prev)}  
               >
-                {passwordVisible ? <FaEyeSlash /> : <FaEye />}  {/* Toggle the icon */}
+                {passwordVisible ? <FaEyeSlash /> : <FaEye />} 
               </button>
             </div>
             {errors.password && <p className="text-red-500 3xl:text-5xl">Password is required</p>}
