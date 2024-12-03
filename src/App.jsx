@@ -53,7 +53,7 @@ const AppRoutes = () => {
         <Route path="/password" element={<PasswordResetRequest/>} />
 
 
-        <Route path="/auth/callback" element={<OauthCallback />} />
+        <Route path="/oauth-callback" element={<OauthCallback />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
           path="/dashboard/*"
