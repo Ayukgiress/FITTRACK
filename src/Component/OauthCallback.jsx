@@ -8,7 +8,7 @@ const OauthCallback = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const token = urlParams.get('token');
-  
+
     if (token) {
       localStorage.setItem('authToken', token);
       navigate('/dashboard');
