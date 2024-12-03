@@ -6,7 +6,7 @@ import { API_URL } from '../../constants';
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -21,11 +21,10 @@ const GoogleAuth = () => {
       window.location.href = `${API_URL}/users/auth/google`;
     } catch (error) {
       console.error("Google login failed:", error);
-      setLoading(false);  
-      alert('Something went wrong. Please try again.');  
+      setLoading(false);
+      alert('Something went wrong. Please try again.');
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center flex-col">

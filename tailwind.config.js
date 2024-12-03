@@ -5,6 +5,7 @@ export default {
     extend: {
       screens: {
         '3xl': '2560px',
+        "4xl": "1440"
       },
       backgroundImage: {
         "image-backdrop":
@@ -25,7 +26,7 @@ export default {
           "linear-gradient(90deg, rgba(108,44,3,0.9724264705882353) 0%, rgba(6,1,1,1) 9%, rgba(6,1,1,1) 17%, rgba(8,4,2,1) 87%, rgba(32,6,2,1) 91%, rgba(138,15,5,1) 100%, rgba(252,90,69,1) 100%);",
       },
       fontFamily: {
-        sans: ['Playfair Display', 'sans-serif'],
+        sans: ['Parkinsans', 'sans-serif'],
       },
     },
   },

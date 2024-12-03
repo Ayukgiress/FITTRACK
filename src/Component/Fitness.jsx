@@ -5,16 +5,19 @@ import fitnessGoalsImg from "../../src/assets/images/bodybuilder_3889169.png";
 
 const Fitness = () => {
   return (
-    <div className="text-white 3xl:h-[50rem] bg-black flex flex-col items-center py-10 px-4 3xl:m-4 lg:h-[30rem]">
-      <h1 className="text-3xl font-bold mb-6 text-center 3xl:text-6xl">Our Fitness</h1>
+    <div className="text-white 3xl:h-[60rem] bg-black 3xl:mt-40 flex flex-col items-center py-10 px-4 3xl:m-4 lg:h-[30rem] 2xl:h-[45rem] xl:mt-32 xl:h-[45rem]">
+      <div className="gap-7 xl:gap-12 3xl:gap-13">
+        <h1 className="text-3xl font-bold mb-6 text-center 3xl:text-8xl xl:text-5xl sm:text-7xl">Our Fitness</h1>
 
-      <h4 className="text-lg text-center max-w-3xl mb-8 px-4 3xl:text-3xl">
-        Access a variety of tools to help you reach your fitness goals more
-        effectively.
-      </h4>
+        <h4 className="text-lg text-center max-w-3xl mb-8 px-4 3xl:text-3xl xl:text-2xl sm:text-3xl">
+          Access a variety of tools to help you reach your fitness goals more
+          effectively.
+        </h4>
+      </div>
+
 
       <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-2">
-        <div className="flex flex-col items-center justify-center w-full sm:w-64 md:w-8 lg:w-[15rem] xl:w-[27rem] lg:h-[28rem] xl:h-[30rem]  3xl:w-[47rem] 3xl:h-[36rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <div className="flex flex-col items-center justify-center w-full sm:w-84 sm:h-[35rem] lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] lg:h-[28rem] xl:h-[30rem]  3xl:w-[47rem] 3xl:h-[45rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={caloriesCalculatorImg}
             alt="Calories Calculator"
@@ -23,7 +26,7 @@ const Fitness = () => {
           <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl mt-4 text-center 3xl:text-5xl">Calories Calculator</h1>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full sm:w-64 md:w-80 lg:w-[15rem] xl:w-[27rem] 3xl:w-[50rem] 3xl:h-[37rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <div className="flex flex-col items-center justify-center sm:w-84 sm:h-[35rem] w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] 3xl:w-[50rem] 3xl:h-[47rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={micronutrientsCalculatorImg}
             alt="Micronutrients Calculator"
@@ -32,7 +35,7 @@ const Fitness = () => {
           <h1 className="text-2xl 3xl:text-5xl sm:text-3xl md:text-3xl lg:text-3xl mt-4 text-center">Micronutrients Calculator</h1>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full sm:w-64 md:w-80  lg:w-[15rem] xl:w-[27rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness  3xl:w-[47rem] 3xl:h-[36rem] p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <div className="flex flex-col items-center sm:w-84 sm:h-[35rem] justify-center w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness  3xl:w-[47rem] 3xl:h-[45rem] p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={fitnessGoalsImg}
             alt="Fitness Setting Goals"
