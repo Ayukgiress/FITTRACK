@@ -118,8 +118,8 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
       label: 'Calories Burned',
       data: weeklyWorkoutData,
       fill: true,
-      backgroundColor: 'rgb(42,106,151)',
-      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'blue',
+      borderColor: 'green',
       borderWidth: 5,
       tension: 0.4,
     }],
@@ -221,7 +221,6 @@ const Activity = () => {
       return;
     }
 
-    // Check if the date is in the future
     const currentDate = new Date();
     const workoutDate = new Date(workoutData.date || new Date());
     
@@ -230,7 +229,6 @@ const Activity = () => {
       return;
     }
 
-    // Check for duplicate daily steps
     const todayStepEntry = dailyStepCount.find(item => 
       new Date(item.date).toDateString() === currentDate.toDateString()
     );
@@ -240,7 +238,6 @@ const Activity = () => {
       return;
     }
 
-    // Check for duplicate running distance
     const todayRunningEntry = weeklyRunningDistance.find(item => 
       new Date(item.date).toDateString() === currentDate.toDateString()
     );
@@ -315,7 +312,7 @@ const Activity = () => {
 
   return (
     <div className="flex flex-col p-4 space-y-4">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 sm:justify-end">
         <button
           className="bg-black border-2 border-red-700 text-white rounded p-2 workout-btn"
           onClick={() => {
@@ -370,7 +367,7 @@ const Activity = () => {
       </div>
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-        <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%] chart-container h-132"> 
+        <div className="bg-red-600 flex-1 w-full md:w-[60%] chart-container h-132"> 
           <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned}/>
         </div>
 

@@ -6,10 +6,9 @@ import { useFitness } from './PlanContext';  // Import the context
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const DistanceChart = () => {
-  const { weeklyRunningDistance, loading } = useFitness();  // Access the context
+  const { weeklyRunningDistance, loading } = useFitness();  
   const [selectedMonth, setSelectedMonth] = useState('January');
-
-  const trafficData = {
+  const [trafficData, setTrafficData] = useState({
     January: 0,
     February: 0,
     March: 0,
@@ -22,16 +21,33 @@ const DistanceChart = () => {
     October: 0,
     November: 0,
     December: 0,
-  };
+  });
 
   useEffect(() => {
     if (!loading && weeklyRunningDistance.length > 0) {
+      const aggregatedData = {
+        January: 0,
+        February: 0,
+        March: 0,
+        April: 0,
+        May: 0,
+        June: 0,
+        July: 0,
+        August: 0,
+        September: 0,
+        October: 0,
+        November: 0,
+        December: 0,
+      };
+
       weeklyRunningDistance.forEach((entry) => {
         const month = new Date(entry.date).toLocaleString('default', { month: 'long' });
-        if (trafficData[month] !== undefined) {
-          trafficData[month] += entry.distance;
+        if (aggregatedData[month] !== undefined) {
+          aggregatedData[month] += entry.distance;
         }
       });
+
+      setTrafficData(aggregatedData);
     }
   }, [weeklyRunningDistance, loading]);
 
@@ -54,7 +70,7 @@ const DistanceChart = () => {
         display: true,
         text: `Monthly Running Distance - ${selectedMonth}`,
         font: {
-          size: 16, 
+          size: 16,
         },
       },
       tooltip: {
