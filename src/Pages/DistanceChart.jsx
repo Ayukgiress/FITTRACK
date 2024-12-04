@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
-import { useFitness } from './PlanContext';  // Import the context
+import React, { useState, useEffect } from 'react'; 
+import { Doughnut } from 'react-chartjs-2'; 
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js'; 
+import { useFitness } from './PlanContext';  
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
+ChartJS.register(ArcElement, Tooltip, Legend, Title);  
 
-const DistanceChart = () => {
-  const { weeklyRunningDistance, loading } = useFitness();  
-  const [selectedMonth, setSelectedMonth] = useState('January');
-  const [trafficData, setTrafficData] = useState({
+const DistanceChart = () => {   
+  const { weeklyRunningDistance, loading } = useFitness();     
+  const [selectedMonth, setSelectedMonth] = useState('January');   
+  const [trafficData, setTrafficData] = useState({     
     January: 0,
     February: 0,
     March: 0,
@@ -21,7 +21,7 @@ const DistanceChart = () => {
     October: 0,
     November: 0,
     December: 0,
-  });
+  });    
 
   useEffect(() => {
     if (!loading && weeklyRunningDistance.length > 0) {
@@ -41,10 +41,21 @@ const DistanceChart = () => {
       };
 
       weeklyRunningDistance.forEach((entry) => {
-        const month = new Date(entry.date).toLocaleString('default', { month: 'long' });
-        if (aggregatedData[month] !== undefined) {
-          aggregatedData[month] += entry.distance;
+        if (entry.date && entry.distance) {
+          const entryDate = new Date(entry.date);
+          const month = entryDate.toLocaleString('default', { month: 'long' });
+          
+          if (aggregatedData.hasOwnProperty(month)) {
+            const distance = parseFloat(entry.distance);
+            if (!isNaN(distance)) {
+              aggregatedData[month] += distance;
+            }
+          }
         }
+      });
+
+      Object.keys(aggregatedData).forEach(month => {
+        aggregatedData[month] = parseFloat(aggregatedData[month].toFixed(2));
       });
 
       setTrafficData(aggregatedData);
@@ -52,11 +63,14 @@ const DistanceChart = () => {
   }, [weeklyRunningDistance, loading]);
 
   const data = {
-    labels: ['Running Distance'],
+    labels: ['Running Distance', 'Remaining Distance'],
     datasets: [
       {
         label: `Running Distance for ${selectedMonth}`,
-        data: [trafficData[selectedMonth], 100 - trafficData[selectedMonth]], 
+        data: [
+          trafficData[selectedMonth], 
+          Math.max(0, 100 - trafficData[selectedMonth]) // Ensure non-negative value
+        ],
         backgroundColor: ['#36A2EB', '#FF6384'],
         hoverBackgroundColor: ['#36A2EB', '#FF6384'],
       },
@@ -83,10 +97,11 @@ const DistanceChart = () => {
     },
   };
 
+  // Responsive adjustments for larger screens
   if (typeof window !== "undefined" && window.innerWidth >= 1536) {
-    options.plugins.title.font.size = 20; 
+    options.plugins.title.font.size = 20;
     options.plugins.tooltip.callbacks.label = (context) => {
-      return `${context.dataset.label}: ${context.raw} km`; 
+      return `${context.dataset.label}: ${context.raw} km`;
     };
   }
 
@@ -112,8 +127,8 @@ const DistanceChart = () => {
           </select>
         </div>
       </div>
-
-      <div className="mb-6 w-full sm:w-[450px] md:w-[300px] lg:w-[300px] xl:w-[300px] 3xl:w-[800px]  3xl:h-[700px]">
+      
+      <div className="mb-6 w-full sm:w-[450px] md:w-[300px] lg:w-[300px] xl:w-[300px] 3xl:w-[800px] 3xl:h-[700px]">
         {loading ? (
           <div className="text-center text-gray-900">Loading...</div>
         ) : (
