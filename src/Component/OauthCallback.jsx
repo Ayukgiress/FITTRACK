@@ -1,25 +1,32 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../Pages/AuthContext';
+import { useAuth } from '../Pages/AuthContext';  // Adjust import path as needed
 
 const OauthCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setRefetchCurrentUser } = useAuth();
+  const { setCurrentUser, setRefetchCurrentUser } = useAuth();
 
   useEffect(() => {
+    console.log('OAuth Callback - Full Location Search:', location.search);
     const urlParams = new URLSearchParams(location.search);
     const token = urlParams.get('token');
 
-    console.log('Token from URL:', token);
+    console.log('OAuth Callback - Token from URL:', token);
 
     if (token) {
+      console.log('OAuth Callback - Token found, storing and validating');
+      
+      // Store token
       localStorage.setItem('token', token);
+      
+      // Trigger user refetch
+      setRefetchCurrentUser(prev => !prev);
 
-      setRefetchCurrentUser((prev) => !prev);
-
+      // Navigate to dashboard
       navigate('/dashboard');
     } else {
+      console.error('OAuth Callback - No token received');
       navigate('/login?error=auth_failed');
     }
   }, [location, navigate, setRefetchCurrentUser]);
