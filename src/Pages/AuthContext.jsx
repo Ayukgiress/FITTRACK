@@ -23,19 +23,27 @@ export const AuthProvider = ({ children }) => {
 
   const fetchCurrentUser = async (token) => {
     try {
+      console.log('Fetching Current User with Token:', token);
       const response = await fetch(`${API_URL}/users/current-user`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (!response.ok) throw new Error("Failed to fetch current user");
-
+  
+      console.log('Fetch Current User Response Status:', response.status);
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Fetch Current User Error Response:', errorText);
+        throw new Error(`Failed to fetch current user: ${errorText}`);
+      }
+  
       const user = await response.json();
+      console.log('Fetched User:', user);
       setCurrentUser(user);
     } catch (error) {
-      console.error("Error fetching current user:", error);
-      logout(); // Logout user if fetching user fails
+      console.error("Comprehensive Error fetching current user:", error);
+      logout();
     }
   };
 
