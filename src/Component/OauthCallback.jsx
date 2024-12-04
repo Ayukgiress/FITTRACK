@@ -5,7 +5,7 @@ import { useAuth } from '../Pages/AuthContext';
 const OauthCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setRefetchCurrentUser } = useAuth();  // Use context to trigger re-fetch of current user
+  const { setRefetchCurrentUser } = useAuth();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -14,13 +14,10 @@ const OauthCallback = () => {
     console.log('Token from URL:', token);
 
     if (token) {
-      // Store the token in localStorage
       localStorage.setItem('token', token);
 
-      // Trigger refetching current user (so that `currentUser` gets updated)
       setRefetchCurrentUser((prev) => !prev);
 
-      // Redirect to dashboard after storing token
       navigate('/dashboard');
     } else {
       navigate('/login?error=auth_failed');
