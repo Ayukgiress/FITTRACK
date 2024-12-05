@@ -6,11 +6,11 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
     const monthlyCalories = Array(12).fill(0); 
 
     log.forEach(entry => {
-      const entryDate = new Date(entry.date); // Ensure entry.date is a valid date
-      const caloriesNum = parseFloat(entry.calories); // Ensure calories is a number
+      const entryDate = new Date(entry.date); 
+      const caloriesNum = parseFloat(entry.calories); 
       if (!isNaN(caloriesNum)) {
-        const month = entryDate.getMonth(); // Get the month from the date (0-11)
-        monthlyCalories[month] += caloriesNum; // Add calories to the correct month
+        const month = entryDate.getMonth(); 
+        monthlyCalories[month] += caloriesNum; 
       }
     });
 
@@ -38,11 +38,10 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
     ],
   };
 
-  // Update chart options for different screen sizes
   const options = {
-    indexAxis: 'y',  // Horizontal bar chart
-    responsive: true,  // Make the chart responsive
-    maintainAspectRatio: false, // Allow the chart to resize dynamically
+    indexAxis: 'y',  
+    responsive: true,  
+    maintainAspectRatio: false,
     scales: {
       x: {
         beginAtZero: true,

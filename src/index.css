@@ -20,7 +20,6 @@
 }  
 
 
-/* Media Queries */
 @media (max-width: 640px) {
     .workout-card {
         width: 90%; 
@@ -127,24 +126,6 @@
     font-size: 25px;
   }
 
-
-  /* .service {
-    width: 150vw;
-    height: 85vh;
-  } */
-
-  /* .service-image {
-    width: 20vw; 
-    height: 40vh; 
-  } */
-
-  /* .service-item h1 {
-    font-size: 28px;
-  }
-
-  .service-item h3 {
-    font-size: 25px; 
-  } */
 
   .btns {
     width: 30vw;

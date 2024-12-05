@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [currentUserLoading, setCurrentUserLoading] = useState(true);
   const [refetchCurrentUser, setRefetchCurrentUser] = useState(false);
 
-  // Determine if user is authenticated based on currentUser and loading state
   const isAuthenticated = currentUser && !currentUserLoading;
 
   const logout = () => {
