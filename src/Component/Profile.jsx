@@ -70,7 +70,7 @@ const Profile = ({ isAuthenticated }) => {
       }
 
       const data = await response.json();
-      toast.success("Profile uploaded succesfully");
+      toast.success("Profile uploaded successfully");
       setProfile(prevProfile => ({
         ...prevProfile,
         profileImage: data.url,
@@ -123,7 +123,8 @@ const Profile = ({ isAuthenticated }) => {
   if (!profile) return <p className="text-center">No profile found.</p>;
 
   return (
-    <div className="flex flex-col items-center justify-between bg-neutral-800 h-full profiles p-4">
+    // Added hidden class for mobile screens (hidden on screens smaller than lg)
+    <div className="hidden lg:flex flex-col items-center justify-between bg-neutral-800 h-full h-screen p-4">
       <div className="bg-black w-full flex flex-col items-center p-6 shadow-lg rounded-lg profile">
         <div className="relative">
           <div className="w-32 h-32 md:w-48 md:h-48 3xl:w-80 3xl:h-80 bg-white shadow-md rounded-full p-2 flex items-center justify-center">

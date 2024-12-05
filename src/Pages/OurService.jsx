@@ -7,9 +7,9 @@ const OurService = () => {
   return (
     <div className="bg-customGradient 2xl:h-[28rem] xl:h-[37rem] 3xl:m-8 3xl:h-[50rem] xl:h-[50rem] text-white flex flex-col items-center justify-center p-4 3xl:mt-80">
       <h1 className="text-2xl mb-8 3xl:text-8xl xl:text-6xl sm:text-7xl">Our Services</h1>
-      <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-6 md:gap-12 lg:gap-10">
+      <div className="flex flex-col sm:flex-row flex-wrap 2xl:gap-[3rem] items-center justify-center gap-6 md:gap-12 lg:gap-10">
         {/* Service Item 1 */}
-        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[33rem] 3xl:w-[48rem] 3xl:h-[47rem]">
+        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[35rem] 3xl:w-[48rem] 3xl:h-[47rem]">
           <div
             className="flex flex-col justify-between p-4 w-full min-h-[35rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
@@ -28,7 +28,7 @@ const OurService = () => {
         </div>
 
         {/* Service Item 2 */}
-        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[33rem] 3xl:w-[48rem] 3xl:h-[47rem]">
+        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[35rem] 3xl:w-[48rem] 3xl:h-[47rem]">
           <div
             className="flex flex-col justify-between p-4 w-full min-h-[35rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
@@ -47,7 +47,7 @@ const OurService = () => {
         </div>
 
         {/* Service Item 3 */}
-        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[33rem] 3xl:w-[48rem] 3xl:h-[47rem]">
+        <div className="service w-full sm:w-82 lg:w-[32rem] flex flex-col sm:flex-row mb-4 xl:w-[27rem] 2xl:w-[35rem] 3xl:w-[48rem] 3xl:h-[47rem]">
           <div
             className="flex flex-col justify-between p-4 w-full min-h-[35rem] flex-grow"
             style={{ background: "linear-gradient(to right, #4d210e, #191919)" }}
