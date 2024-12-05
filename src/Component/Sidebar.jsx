@@ -14,58 +14,51 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Hamburger Icon (visible on mobile) */}
+      {/* Hamburger Icon (visible only on mobile) */}
       <button
         onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 text-white focus:outline-none md:hidden"
+        className="fixed top-4 left-4 z-50 text-white focus:outline-none lg:hidden"
       >
-        <FaBars className={`w-8 h-8 ${isOpen ? 'hidden' : 'block'}`} />
+        {!isOpen ? <FaBars className="w-8 h-8" /> : <FaTimes className="w-8 h-8" />}
       </button>
 
-      {/* Overlay (visible when sidebar is open) */}
+      {/* Mobile Overlay */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={toggleSidebar}
         />
       )}
 
-      {/* Sidebar (main menu) */}
+      {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 3xl:w-80 z-40 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 md:w-52 md:relative`}
+        className={`
+          fixed top-0 left-0 h-screen w-64 bg-neutral-900 z-50 transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0 lg:relative lg:w-64 3xl:w-80
+        `}
       >
-        {/* Close button for mobile sidebar */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute top-4 right-4 text-white focus:outline-none md:hidden z-50"
-        >
-          <FaTimes className="w-8 h-8" />
-        </button>
-
         {/* Navigation links */}
-        <nav className="flex flex-col h-full pt-16 px-4 sidebar 3xl:w-80 gap-8">
+        <nav className="flex flex-col h-full pt-16 px-4 sidebar gap-8">
           {/* Dashboard link */}
-          <Link 
-            to="/dashboard" 
+          <Link
+            to="/dashboard"
             className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
           >
             <span className="text-white text-2xl ml-2 group-hover:text-red-700">Dashboard</span>
           </Link>
 
-          {/* Other Links */}
           <div className="space-y-6">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <IoHome className="text-white w-8 h-8 group-hover:text-red-700" />
               <span className="text-white ml-2 group-hover:text-red-700">Home</span>
             </Link>
 
-            <Link 
-              to="/dashboard/settings" 
+            <Link
+              to="/dashboard/settings"
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <IoSettings className="text-white w-8 h-8 group-hover:text-red-700" />
@@ -73,7 +66,8 @@ const Sidebar = () => {
             </Link>
 
             {/* Plan Link */}
-            <Link  
+            <Link
+              to="/dashboard/plan"
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <Plan className="text-white w-8 h-8 group-hover:text-red-700" />
@@ -81,8 +75,8 @@ const Sidebar = () => {
             </Link>
 
             {/* Statistics Link */}
-            <Link 
-              to="/dashboard/statistics" 
+            <Link
+              to="/dashboard/statistics"
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <FcStatistics className="text-white w-8 h-8 group-hover:text-red-700" />

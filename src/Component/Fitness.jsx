@@ -16,8 +16,8 @@ const Fitness = () => {
       </div>
 
 
-      <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-2">
-        <div className="flex flex-col items-center justify-center w-full sm:w-84 sm:h-[35rem] lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] lg:h-[28rem] xl:h-[30rem]  3xl:w-[47rem] 3xl:h-[45rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-2 2xl:gap-[2rem]">
+        <div className="flex flex-col items-center justify-center w-full sm:w-84 sm:h-[35rem] lg:w-[15rem] xl:w-[27rem] 2xl:w-[35rem] lg:h-[28rem] xl:h-[30rem]  3xl:w-[47rem] 3xl:h-[45rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={caloriesCalculatorImg}
             alt="Calories Calculator"
@@ -26,7 +26,7 @@ const Fitness = () => {
           <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl mt-4 text-center 3xl:text-5xl">Calories Calculator</h1>
         </div>
 
-        <div className="flex flex-col items-center justify-center sm:w-84 sm:h-[35rem] w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] 3xl:w-[50rem] 3xl:h-[47rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <div className="flex flex-col items-center justify-center sm:w-84 sm:h-[35rem] w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[35rem] 3xl:w-[50rem] 3xl:h-[47rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={micronutrientsCalculatorImg}
             alt="Micronutrients Calculator"
@@ -35,7 +35,7 @@ const Fitness = () => {
           <h1 className="text-2xl 3xl:text-5xl sm:text-3xl md:text-3xl lg:text-3xl mt-4 text-center">Micronutrients Calculator</h1>
         </div>
 
-        <div className="flex flex-col items-center sm:w-84 sm:h-[35rem] justify-center w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[33rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness  3xl:w-[47rem] 3xl:h-[45rem] p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <div className="flex flex-col items-center sm:w-84 sm:h-[35rem] justify-center w-full  lg:w-[15rem] xl:w-[27rem] 2xl:w-[35rem] lg:h-[28rem] xl:h-[30rem] gap-4 m-4 bg-fitness  3xl:w-[47rem] 3xl:h-[45rem] p-4 lg:p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
           <img
             src={fitnessGoalsImg}
             alt="Fitness Setting Goals"

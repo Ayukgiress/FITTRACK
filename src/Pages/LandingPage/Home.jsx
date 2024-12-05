@@ -9,14 +9,14 @@ import myImage from "../../assets/images/pexels-panther-1547248-Photoroom.png";
 const Home = () => {
   return (
     <>
-      <div className="bg-customGradient xl:h-[46rem] 3xl:h-[60rem] h-[40rem] flex flex-col md:flex-row items-center justify-around gap-5 md:gap-40 lg:gap-40 3xl:gap-20 2xl:gap-80">
+      <div className="bg-customGradient xl:h-[46rem] 3xl:h-[60rem] h-[40rem] flex flex-col md:flex-row items-center justify-around gap-5 md:gap-40 lg:gap-40 3xl:gap-[45] 2xl:gap-[40rem] 2xl:mr-19 ">
         <div className="flex items-start justify-between flex-col text-white gap-6 text-center md:text-left xl:ml-16">
-          <h1 className="text-white 3xl:text-8xl text-4xl md:text-5xl lg:text-6xl gap-2 home-texts 3xl:ml-16">
+          <h1 className="text-white 3xl:text-9xl text-4xl md:text-5xl lg:text-6xl gap-2 home-texts">
             Achieve Your
             Fitness <br /> With
             Active<span className="text-red-600">Pulse</span>
           </h1>
-          <h4 className="text-sm md:text-base lg:text-lg home-text 3xl:text-3xl 3xl:ml-16">
+          <h4 className="text-sm md:text-base lg:text-lg home-text 3xl:text-3xl">
             "Join the Active <span className="text-red-600">Pulse</span> community and transform your fitness journey. <br /> 
             Our expert coaches and personalized programs are designed to help 
             you <br /> achieve your goals and exceed your expectations. Ready to make a change?"
