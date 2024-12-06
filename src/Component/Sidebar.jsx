@@ -67,11 +67,10 @@ const Sidebar = () => {
 
             {/* Plan Link */}
             <Link
-              to="/dashboard/plan"
+
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
             >
               <Plan className="text-white w-8 h-8 group-hover:text-red-700" />
-              <span className="text-white ml-2 group-hover:text-red-700">Plan</span>
             </Link>
 
             {/* Statistics Link */}
