@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <div className="bg-customGradient xl:h-[46rem] 3xl:h-[60rem] h-[40rem] flex flex-col md:flex-row items-center justify-around gap-5 md:gap-40 lg:gap-40 3xl:gap-[45] 2xl:gap-[40rem] 2xl:mr-19 ">
-        <div className="flex items-start sm:items-center justify-between flex-col text-white gap-6 text-center md:text-left xl:ml-16">
+        <div className="flex items-start justify-between flex-col text-white gap-6 text-center md:text-left xl:ml-16">
           <h1 className="text-white 3xl:text-9xl text-4xl md:text-5xl lg:text-6xl gap-2 home-texts">
             Achieve Your
             Fitness <br /> With

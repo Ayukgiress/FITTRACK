@@ -30,7 +30,6 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
           fixed top-0 left-0 h-screen w-64 bg-neutral-900 z-50 transform transition-transform duration-300 ease-in-out
@@ -38,9 +37,7 @@ const Sidebar = () => {
           lg:translate-x-0 lg:relative lg:w-64 3xl:w-80
         `}
       >
-        {/* Navigation links */}
         <nav className="flex flex-col h-full pt-16 px-4 sidebar gap-8">
-          {/* Dashboard link */}
           <Link
             to="/dashboard"
             className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
@@ -65,7 +62,6 @@ const Sidebar = () => {
               <span className="text-white ml-2 group-hover:text-red-700">Settings</span>
             </Link>
 
-            {/* Plan Link */}
             <Link
 
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
@@ -73,7 +69,6 @@ const Sidebar = () => {
               <Plan className="text-white w-8 h-8 group-hover:text-red-700" />
             </Link>
 
-            {/* Statistics Link */}
             <Link
               to="/dashboard/statistics"
               className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"

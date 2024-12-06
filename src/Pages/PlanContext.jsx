@@ -104,7 +104,7 @@ export const FitnessProvider = ({ children }) => {
       throw error;
     }
   };
-
+  
   useEffect(() => {
     if (currentUser) {
       fetchData();
