@@ -334,9 +334,8 @@ const Activity = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 3xl:mt-20">
-        {/* Weekly Calories Burned */}
-        <div className="bg-neutral-800 rounded-xl 3xl:gap-[7rem] 3xl:w-[35rem] 3xl:h-[36rem] p-6 flex flex-col items-center justify-center space-y-4 ">
-          <h3 className="text-white text-xl font-semibold 3xl:text-4xl ">Weekly Kcal Burned</h3>
+        <div className="sm:h-[33rem] xl:h-[24rem] xl:gap-12 sm:gap-20 bg-neutral-800 rounded-xl 3xl:gap-[7rem] 3xl:w-[35rem] 3xl:h-[36rem] p-6 flex flex-col items-center justify-center space-y-4 ">
+          <h3 className="text-white text-xl font-semibold 3xl:text-4xl sm:text-4xl  xl:text-xl">Weekly Kcal Burned</h3>
           <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 border-t-4 border-l-4 border-yellow-500 rounded-full flex flex-col items-center justify-center">
             <AiOutlineThunderbolt className="text-yellow-500 w-10 h-10 mb-2" />
             <p className="text-white text-2xl font-bold text-center">
@@ -346,9 +345,8 @@ const Activity = () => {
           </div>
         </div>
 
-        {/* Daily Steps Count */}
-        <div className="bg-neutral-800 rounded-xl p-6 3xl:gap-[7rem] flex flex-col items-center justify-center space-y-4 3xl:w-[35rem] 3xl:h-[36rem]">
-          <h3 className="text-white text-xl font-semibold 3xl:text-4xl">Daily Steps Count</h3>
+        <div className="sm:h-[33rem] sm:gap-20 xl:h-[24rem] xl:gap-12 bg-neutral-800 rounded-xl p-6 3xl:gap-[7rem] flex flex-col items-center justify-center space-y-4 3xl:w-[35rem] 3xl:h-[36rem]">
+          <h3 className="text-white text-xl font-semibold 3xl:text-4xl sm:text-4xl xl:text-xl">Daily Steps Count</h3>
           <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 border-t-4 border-l-4 border-green-500 rounded-full flex flex-col items-center justify-center">
             <FaWalking className="text-green-500 w-10 h-10 mb-2" />
             <p className="text-white text-2xl font-bold text-center">
@@ -361,9 +359,8 @@ const Activity = () => {
           </div>
         </div>
 
-        {/* Weekly Running Distance */}
-        <div className="bg-neutral-800 rounded-xl 3xl:gap-[7rem]  p-6 3xl:w-[35rem] 3xl:h-[36rem] flex flex-col items-center justify-center space-y-4 md:col-span-2 lg:col-span-1">
-          <h3 className="text-white text-xl font-semibold 3xl:text-4xl">Weekly Running Distance</h3>
+        <div className="sm:h-[38rem] sm:gap-24 xl:h-[24rem] xl:gap-12  bg-neutral-800 rounded-xl 3xl:gap-[7rem]  p-6 3xl:w-[35rem] 3xl:h-[36rem] flex flex-col items-center justify-center space-y-4 md:col-span-2 lg:col-span-1">
+          <h3 className="text-white text-xl font-semibold 3xl:text-4xl sm:text-4xl  xl:text-xl">Weekly Run Distance</h3>
           <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 border-t-4 border-l-4 border-blue-500 rounded-full flex flex-col items-center justify-center">
             <RiMapPinLine className="text-blue-500 w-10 h-10 mb-2" />
             <p className="text-white text-2xl font-bold text-center">
@@ -374,12 +371,12 @@ const Activity = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 ">
-        <div className="bg-red-600 rounded-xl overflow-hidden h-96 lg:h-[500px] xl:h-[542px] 2xl:h-[500px] 3xl:h-[1000px]">
+      <div className=" grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 ">
+        <div className="sm:h-[45rem] bg-red-600 rounded-xl overflow-hidden h-96 lg:h-[500px] xl:h-[542px] 2xl:h-[470px] 3xl:h-[1000px]">
           <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
         </div>
-        <div className="bg-neutral-900 rounded-xl overflow-hidden h-96 lg:h-[500px] xl:h-[542px] 2xl:h-[500px] p-4  3xl:h-[1000px]">
-          <h2 className="text-white text-xl text-center mb-4">Today's Workouts</h2>
+        <div className="sm:h-[45rem] bg-neutral-900 rounded-xl overflow-hidden h-96 lg:h-[500px] xl:h-[542px] 2xl:h-[470px] p-4  3xl:h-[1000px]">
+          <h2 className="text-white text-xl text-center mb-4 sm:text-4xl  xl:text-xl">Today's Workouts</h2>
           <TodaysWorkoutChart workoutLog={workoutLog} />
         </div>
       </div>

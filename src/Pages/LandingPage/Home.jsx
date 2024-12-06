@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <div className="bg-customGradient xl:h-[46rem] 3xl:h-[60rem] h-[40rem] flex flex-col md:flex-row items-center justify-around gap-5 md:gap-40 lg:gap-40 3xl:gap-[45] 2xl:gap-[40rem] 2xl:mr-19 ">
-        <div className="flex items-start justify-between flex-col text-white gap-6 text-center md:text-left xl:ml-16">
+        <div className="flex items-start sm:items-center justify-between flex-col text-white gap-6 text-center md:text-left xl:ml-16">
           <h1 className="text-white 3xl:text-9xl text-4xl md:text-5xl lg:text-6xl gap-2 home-texts">
             Achieve Your
             Fitness <br /> With
@@ -28,11 +28,11 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex justify-center">
+        <div className="hidden lg:flex justify-center">
           <img
             src={myImage}
             alt="Fitness Illustration"
-            className="border-b-2 3xl:border-b-4 3xl:w-[56rem] 3xl:h-[40rem] border-red-600 h-72 sm:h-80 md:h-96 lg:h-[28rem] rounded-full w-72 sm:w-80 md:w-96 lg:w-[32rem] object-cover"
+            className="border-b-2 3xl:border-b-4  3xl:w-[56rem] 3xl:h-[40rem] border-red-600 h-72 sm:h-80 md:h-96 lg:h-[28rem] rounded-full w-72 sm:w-80 md:w-96 lg:w-[32rem] object-cover"
           />
         </div>
       </div>

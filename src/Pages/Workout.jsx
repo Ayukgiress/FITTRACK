@@ -78,32 +78,41 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       style={{
         overlay: {
           backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
         },
         content: {
-          top: '50%',
-          left: '50%',
+          position: 'relative',
+          top: 'auto',
+          left: 'auto',
           right: 'auto',
           bottom: 'auto',
-          transform: 'translate(-50%, -50%)',
-          width: '400px',
+          width: '600px', // Increased width for 3XL screen
+          maxWidth: '90%', // Ensure responsiveness
+          maxHeight: '90vh', // Prevent overflow
           backgroundColor: 'black',
           color: 'white',
           border: 'none',
-          borderRadius: '10px',
-          padding: '40px',
+          borderRadius: '15px', // Slightly larger border radius
+          padding: '50px', // More padding
+          boxShadow: '0 10px 30px rgba(255, 255, 255, 0.1)', // Subtle white glow
+          margin: 'auto',
+          overflow: 'auto', // Scroll if content is too long
         },
       }}
     >
-      <form onSubmit={handleSubmit} className='form'>
-        <div className="mb-4">
-          <label htmlFor="exerciseType" className="block text-sm font-medium">
+      <form onSubmit={handleSubmit} className='form space-y-6'>
+        <div>
+          <label htmlFor="exerciseType" className="block text-md font-medium mb-2">
             Exercise Type
           </label>
           <select
             id="exerciseType"
             value={exercise}
             onChange={handleExerciseChange}
-            className="w-full border rounded p-3 text-black"
+            className="w-full border rounded-lg p-4 text-black text-lg"
             required
           >
             <option value="">Select an exercise</option>
@@ -115,8 +124,8 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
           </select>
         </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="startTime" className="block text-sm font-medium text-white">
+        <div className="text-black">
+          <label htmlFor="startTime" className="block text-md font-medium mb-2 text-white">
             Start Time
           </label>
           <input
@@ -124,13 +133,13 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
             id="startTime"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
-            className="w-full border rounded p-3"
+            className="w-full border rounded-lg p-4 text-lg"
             required
           />
         </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="endTime" className="block text-sm font-medium text-white">
+        <div className="text-black">
+          <label htmlFor="endTime" className="block text-md font-medium mb-2 text-white">
             End Time
           </label>
           <input
@@ -138,13 +147,13 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
             id="endTime"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            className="w-full border rounded p-3"
+            className="w-full border rounded-lg p-4 text-lg"
             required
           />
         </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="date" className="block text-sm font-medium text-white">
+        <div className="text-black">
+          <label htmlFor="date" className="block text-md font-medium mb-2 text-white">
             Date
           </label>
           <input
@@ -152,14 +161,14 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
             id="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded p-3"
+            className="w-full border rounded-lg p-4 text-lg"
             max={new Date().toISOString().split('T')[0]} // Disable future dates
             required
           />
         </div>
 
-        <div className="mb-4 text-black">
-          <label htmlFor="calories" className="block text-sm font-medium text-white">
+        <div className="text-black">
+          <label htmlFor="calories" className="block text-md font-medium mb-2 text-white">
             Calories Burned
           </label>
           <input
@@ -167,17 +176,21 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
             id="calories"
             value={calories}
             readOnly
-            className="w-full border rounded p-3"
+            className="w-full border rounded-lg p-4 text-lg"
           />
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button onClick={onClose} className="text-red-500 font-semibold">
+        <div className="flex justify-between mt-6">
+          <button 
+            onClick={onClose} 
+            type="button"
+            className="text-red-500 font-semibold text-lg hover:bg-red-100 px-4 py-2 rounded-lg transition-colors"
+          >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-black border-2 border-red-700 text-white font-semibold rounded py-2 px-4"
+            className="bg-black border-2 border-red-700 text-white font-semibold rounded-lg py-3 px-6 text-lg hover:bg-red-700 transition-colors"
           >
             Submit
           </button>
