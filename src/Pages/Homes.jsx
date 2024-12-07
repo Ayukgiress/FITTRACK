@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';  
-import MonthlyStepChart from '../Component/MonthlyStepChart';  
+import MonthlyStepChart from '../Component/Goals';  
 import { useAuth } from './AuthContext'; 
 import { API_URL } from '../../constants';
 
