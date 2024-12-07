@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';  
-import MonthlyCaloriesChart from '../Component/Goals';  
+import MonthlyStepChart from '../Component/Goals';  
 import { useAuth } from './AuthContext'; 
+import { API_URL } from '../../constants';
 
 const MonthlyActivity = () => {  
   const { currentUser, isAuthenticated } = useAuth();  
@@ -11,7 +12,7 @@ const MonthlyActivity = () => {
       if (!currentUser?._id || !isAuthenticated) return;  
       try {  
         const token = localStorage.getItem("token");  
-        const response = await fetch(`http://localhost:5000/workouts/${currentUser._id}`, {  
+        const response = await fetch(`${API_URL}/workouts/${currentUser._id}`, {  
           method: 'GET',  
           headers: {  
             'Authorization': `Bearer ${token}`,  
@@ -38,7 +39,7 @@ const MonthlyActivity = () => {
   return (  
     <div className="flex flex-col p-4">  
       <h2 className="text-white text-xl mb-4 text-center">Monthly Calories Burned</h2>  
-      <MonthlyCaloriesChart workoutLog={workoutLog} />  
+      <MonthlyStepChart workoutLog={workoutLog} />  
     </div>  
   );  
 };  
