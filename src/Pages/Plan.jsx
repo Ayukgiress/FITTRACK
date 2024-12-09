@@ -20,36 +20,58 @@ const Plan = () => {
   const handleModalClose = () => {
     setModalIsOpen(false);
   };
-
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
-    const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
-    const distance = goalType === "weeklyDistance" ? parseInt(e.target.distance.value) : null;
 
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
+    if (!currentUser) {
+      toast.error("Please log in to set goals");
+      return;
+    }
+
+    const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
+    const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
+
+    const userId = currentUser._id;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const userId = currentUser ? currentUser._id : null;
-
     try {
-      if (goalType === "dailySteps" && !isNaN(steps) && date) {
+      if (goalType === "dailySteps" && !isNaN(steps)) {
+        const selectedDate = date ? new Date(date) : today;
+        selectedDate.setHours(0, 0, 0, 0);
+
         if (selectedDate > today) {
-          alert("You cannot set steps for a future date.");
+          toast.error("You cannot set steps for a future date.");
           return;
         }
-        await addDailySteps({ userId, steps, date: selectedDate.toISOString() }); // Ensure date is in ISO format
+
+        // Ensure date is in ISO format
+        const isoDate = selectedDate.toISOString();
+
+        await addDailySteps({
+          userId,
+          steps,
+          date: isoDate
+        });
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
+        const currentDate = new Date();
+        const currentWeekNumber = Math.ceil((currentDate.getDate() + 1) / 7);
+
         await addWeeklyDistance({
           userId,
-          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
+          weekNumber: currentWeekNumber,
           distance,
+          date: currentDate.toISOString() // Add date to match backend expectation
         });
+      } else {
+        toast.error("Invalid input. Please check your values.");
+        return;
       }
+
       handleModalClose();
+      toast.success(`${goalType === 'dailySteps' ? 'Steps' : 'Distance'} goal added successfully!`);
     } catch (error) {
-      alert("Failed to add data: " + (error.response?.data?.message || "Unknown error"));
+      toast.error(error.response?.data?.message || "Failed to add goal");
     }
   };
 
@@ -81,7 +103,7 @@ const Plan = () => {
             margin: "auto",
             top: "50%",
             left: "25%",
-            transform: "translate(-50%, -50%)", // Shift back by half its own size
+            transform: "translate(-50%, -50%)",
             overflow: "hidden",
           },
         }}
