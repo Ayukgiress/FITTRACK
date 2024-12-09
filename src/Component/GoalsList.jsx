@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { TEChart } from "tw-elements-react";
-import { useFitness } from '../Pages/PlanContext';
+import { Bar } from "react-chartjs-2"; 
+import { useFitness } from "../Pages/PlanContext";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const MonthlyStepChart = () => {
   const { dailyStepCount, loading } = useFitness();
@@ -25,18 +35,19 @@ const MonthlyStepChart = () => {
           "rgba(255,99,132,1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)",
           "rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)", "rgba(255, 159, 64, 1)",
         ],
-        borderWidth: 1,
+        borderWidth: 3,
       },
     ],
   });
 
   const [chartOptions, setChartOptions] = useState({
+    responsive: true,
     plugins: {
       legend: {
         position: "top",
         labels: {
           color: "white",
-          font: { size: 14 },
+          font: { size: 12 },
         },
       },
     },
@@ -63,19 +74,19 @@ const MonthlyStepChart = () => {
         scales: {
           x: {
             ...prevOptions.scales.x,
-            ticks: { font: { size: 19 } },
-            grid: { lineWidth: 3 },
+            ticks: { font: { size: 11 } },
+            grid: { lineWidth: 2 },
           },
           y: {
             ...prevOptions.scales.y,
-            ticks: { font: { size: 19 } },
+            ticks: { font: { size: 12 } },
             grid: { lineWidth: 3 },
           },
         },
         plugins: {
           legend: {
             ...prevOptions.plugins.legend,
-            labels: { font: { size: 19 } },
+            labels: { font: { size: 12 } },
           },
         },
       }));
@@ -97,7 +108,7 @@ const MonthlyStepChart = () => {
         plugins: {
           legend: {
             ...prevOptions.plugins.legend,
-            labels: { font: { size: 14 } },
+            labels: { font: { size: 12 } },
           },
         },
       }));
@@ -137,9 +148,9 @@ const MonthlyStepChart = () => {
   }
 
   return (
-    <div className="flex justify-center items-center p-4 mx-auto w-full md:h-[27rem] 3xl:h-[53rem] 3xl:w-[55rem] md:w-[38rem] bg-neutral-900 rounded-lg">
-      <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px]">
-        <TEChart type="bar" data={data} options={chartOptions} />
+    <div className="flex justify-center items-center p-4 mx-auto w-full md:h-[27rem] 3xl:h-[53rem] 3xl:w-[50rem] md:w-[35rem] bg-neutral-900 rounded-lg xl:h-[29rem] xl:w-[26rem] 2xl:w-[35rem] 2xl:h-[26rem]">
+      <div className="w-full">
+        <Bar data={data} options={chartOptions} />
       </div>
     </div>
   );
