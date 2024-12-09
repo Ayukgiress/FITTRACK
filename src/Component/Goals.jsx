@@ -29,7 +29,7 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
         label: 'Calories Burned',
         data: monthlyCaloriesBurned,
         backgroundColor: monthlyCaloriesBurned.map((calories) => 
-          calories > 0 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(192, 192, 192, 0.7)' // Red for calories > 0, gray for 0
+          calories > 0 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(192, 192, 192, 0.7)'
         ),
         borderColor: 'black',
         borderWidth: 1,
@@ -47,12 +47,12 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
         beginAtZero: true,
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
-          lineWidth: 1, // Default grid line width
+          lineWidth: 1, 
         },
         ticks: {
           color: 'white',
           font: {
-            size: 14, // Default font size for x-axis labels
+            size: 12, 
           },
           callback: (value) => `${value} cal`, 
         },
@@ -60,12 +60,12 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
       y: {
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
-          lineWidth: 1, // Default grid line width
+          lineWidth: 1, 
         },
         ticks: {
           color: 'white',
           font: {
-            size: 14, // Default font size for y-axis labels
+            size: 12, 
           },
         },
       },
@@ -75,7 +75,7 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
         labels: {
           color: 'white',
           font: {
-            size: 14, // Default font size for legend
+            size: 12, 
           },
         },
       },
@@ -87,7 +87,7 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
         },
       },
     },
-    // Customizing for larger screen sizes (3xl)
+    
     interaction: {
       mode: 'nearest',
       axis: 'xy',
@@ -97,15 +97,15 @@ const MonthlyCaloriesChart = ({ workoutLog }) => {
 
  
   if (window.innerWidth >= 1536) { 
-    options.scales.x.ticks.font.size = 19;  
-    options.scales.y.ticks.font.size = 19;  
-    options.scales.x.grid.lineWidth = 3;    
-    options.scales.y.grid.lineWidth = 3;    
-    options.plugins.legend.labels.font.size = 19;  
+    options.scales.x.ticks.font.size = 16;  
+    options.scales.y.ticks.font.size = 16;  
+    options.scales.x.grid.lineWidth = 2;    
+    options.scales.y.grid.lineWidth = 2;    
+    options.plugins.legend.labels.font.size = 12;  
   }
 
   return (
-    <div className="h-[400px] w-full ml-30 p-4 sm:w-[60rem] flex items-center justify-center 3xl:h-[50rem] 3xl:w-[90rem]">  
+    <div className="h-[400px] w-full ml-30 p-4 sm:w-[60rem] flex items-start justify-start 3xl:h-[50rem] 3xl:w-[90rem] xl:w-[50rem] 2xl:w-[78rem] 2xl:h-[26rem]">  
       <Bar data={data} options={options} />
     </div>
   );

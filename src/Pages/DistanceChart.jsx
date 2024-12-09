@@ -111,7 +111,7 @@ const DistanceChart = () => {
 
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6 flex flex-col items-center justify-center">
-      <div className="flex justify-between items-center mb-6 w-full">
+      <div className="flex justify-between items-center mb-6 w-full items-center justify-center">
         <h1 className="text-2xl font-semibold text-gray-900">Monthly Running Distance</h1>
         <div className="flex space-x-4">
           <select
@@ -128,9 +128,9 @@ const DistanceChart = () => {
         </div>
       </div>
       
-      <div className="mb-6 w-full sm:w-[450px] md:w-[300px] lg:w-[300px] xl:w-[300px] 3xl:w-[800px] 3xl:h-[700px]">
+      <div className=" flexitems-center justify-center mb-6 w-full sm:w-[450px] md:w-[300px] lg:w-[300px] xl:w-[300px] 3xl:w-[800px] 3xl:h-[700px] 2xl:w-[35rem] 2xl:h-[17rem]">
         {loading ? (
-          <div className="text-center text-gray-900">Loading...</div>
+          <div className="text-center text-gray-900 items-center justify-center">Loading...</div>
         ) : (
           <Doughnut data={data} options={options} />
         )}
