@@ -57,11 +57,11 @@ export const FitnessProvider = ({ children }) => {
   const setTargets = async (stepsTarget, distanceTarget) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${API_URL}/plan/targets`, 
-        { stepsTarget, distanceTarget }, 
+      await axios.post(`${API_URL}/plan/targets`,
+        { stepsTarget, distanceTarget },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       setWeeklyStepTarget(stepsTarget);
       setWeeklyDistanceTarget(distanceTarget);
       toast.success("Targets set successfully!");
@@ -74,16 +74,21 @@ export const FitnessProvider = ({ children }) => {
   const addDailySteps = async (data) => {
     try {
       const token = localStorage.getItem('token');
+
       const response = await axios.post(`${API_URL}/plan/daily-steps`, data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
       });
+
       await fetchData();
       toast.success("Daily steps added successfully!");
       return response.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || "An unknown error occurred";
       toast.error(errorMessage);
-      console.error("Error adding daily steps:", errorMessage);
+      console.error('Error adding daily steps:', error);
       throw new Error(errorMessage);
     }
   };
@@ -92,19 +97,23 @@ export const FitnessProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
       });
+  
       await fetchData();
       toast.success("Weekly distance added successfully!");
       return response.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Error adding weekly distance";
       toast.error(errorMessage);
-      console.error("Error adding weekly distance:", errorMessage);
+      console.error("Error adding weekly distance:", error);
       throw error;
     }
   };
-  
+
   useEffect(() => {
     if (currentUser) {
       fetchData();
