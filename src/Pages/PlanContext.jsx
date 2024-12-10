@@ -72,6 +72,8 @@ export const FitnessProvider = ({ children }) => {
   };
 
   const addDailySteps = async (data) => {
+    console.log('Adding daily steps:', data);  
+
     try {
       const token = localStorage.getItem('token');
 
@@ -86,6 +88,7 @@ export const FitnessProvider = ({ children }) => {
       toast.success("Daily steps added successfully!");
       return response.data;
     } catch (error) {
+      console.error('Full error details:', error.response);  
       const errorMessage = error.response?.data?.message || "An unknown error occurred";
       toast.error(errorMessage);
       console.error('Error adding daily steps:', error);
@@ -94,6 +97,7 @@ export const FitnessProvider = ({ children }) => {
   };
 
   const addWeeklyDistance = async (data) => {
+    console.log('Adding weekly distance:', data);  // Log the data being sent
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
@@ -102,11 +106,12 @@ export const FitnessProvider = ({ children }) => {
           'Content-Type': 'application/json'
         },
       });
-  
+
       await fetchData();
       toast.success("Weekly distance added successfully!");
       return response.data;
     } catch (error) {
+      console.error('Full error details:', error.response);  // Log full error details
       const errorMessage = error.response?.data?.message || "Error adding weekly distance";
       toast.error(errorMessage);
       console.error("Error adding weekly distance:", error);
