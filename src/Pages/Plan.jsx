@@ -1,28 +1,39 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
-import { useFitness } from "./PlanContext";
+import { toast } from 'sonner';
 import { TiPlus } from "react-icons/ti";
 import { useAuth } from "./AuthContext";
+import { useFitness } from "./PlanContext";
 
 const Plan = () => {
   const { currentUser } = useAuth();
-  const { addDailySteps, addWeeklyDistance } = useFitness();
+  const { 
+    addDailySteps, 
+    addWeeklyDistance, 
+    dailyStepCount, 
+    weeklyRunningDistance 
+  } = useFitness();
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [goalType, setGoalType] = useState("dailySteps");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
 
   const handleModalOpen = () => {
     setModalIsOpen(true);
     setGoalType("dailySteps");
-    setDate("");
+    const today = new Date();
+    setDate(today.toISOString().split('T')[0]);
   };
 
   const handleModalClose = () => {
     setModalIsOpen(false);
   };
+
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
-
     if (!currentUser) {
       toast.error("Please log in to set goals");
       return;
@@ -31,13 +42,23 @@ const Plan = () => {
     const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
     const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
 
+    if (goalType === "dailySteps" && (!steps || isNaN(steps) || steps <= 0)) {
+      toast.error("Please enter a valid number of steps");
+      return;
+    }
+
+    if (goalType === "weeklyDistance" && (!distance || isNaN(distance) || distance <= 0)) {
+      toast.error("Please enter a valid running distance");
+      return;
+    }
+
     const userId = currentUser._id;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     try {
-      if (goalType === "dailySteps" && !isNaN(steps)) {
-        const selectedDate = date ? new Date(date) : today;
+      if (goalType === "dailySteps" && steps) {
+        const selectedDate = new Date(date);
         selectedDate.setHours(0, 0, 0, 0);
 
         if (selectedDate > today) {
@@ -45,7 +66,15 @@ const Plan = () => {
           return;
         }
 
-        // Ensure date is in ISO format
+        const existingStepsEntry = dailyStepCount.find(
+          entry => new Date(entry.date).toDateString() === selectedDate.toDateString()
+        );
+
+        if (existingStepsEntry) {
+          toast.error("Steps already logged for this date");
+          return;
+        }
+
         const isoDate = selectedDate.toISOString();
 
         await addDailySteps({
@@ -53,16 +82,31 @@ const Plan = () => {
           steps,
           date: isoDate
         });
-      } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
+
+      } else if (goalType === "weeklyDistance" && distance) {
         const currentDate = new Date();
-        const currentWeekNumber = Math.ceil((currentDate.getDate() + 1) / 7);
+        const currentWeekNumber = Math.ceil((currentDate.getDate() + 6) / 7);
+
+        const existingDistanceEntry = weeklyRunningDistance.find(
+          entry => {
+            const entryDate = new Date(entry.date);
+            const entryWeekNumber = Math.ceil((entryDate.getDate() + 6) / 7);
+            return entryWeekNumber === currentWeekNumber;
+          }
+        );
+
+        if (existingDistanceEntry) {
+          toast.error("Running distance already logged for this week");
+          return;
+        }
 
         await addWeeklyDistance({
           userId,
           weekNumber: currentWeekNumber,
           distance,
-          date: currentDate.toISOString() // Add date to match backend expectation
+          date: currentDate.toISOString()
         });
+
       } else {
         toast.error("Invalid input. Please check your values.");
         return;
@@ -70,20 +114,23 @@ const Plan = () => {
 
       handleModalClose();
       toast.success(`${goalType === 'dailySteps' ? 'Steps' : 'Distance'} goal added successfully!`);
+
     } catch (error) {
+      console.error("Goal submission error:", error);
       toast.error(error.response?.data?.message || "Failed to add goal");
     }
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center p-6">
       <button
         onClick={handleModalOpen}
-        className="text-white font-semibold  flex item-center justify-center gap-8 hover:text-red-700"
+        className="text-white font-semibold flex items-center justify-center gap-4 hover:text-red-700 transition-colors"
       >
-        <TiPlus className="h-7" />
-        <h3>Goal</h3>
+        <TiPlus className="h-8 w-8" />
+        <h3 className="text-xl">Set a Goal</h3>
       </button>
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={handleModalClose}
@@ -93,28 +140,28 @@ const Plan = () => {
             backgroundColor: "rgba(0, 0, 0, 0.75)",
           },
           content: {
-            backgroundColor: "black",
+            backgroundColor: "#1a1a1a",
             color: "white",
             padding: "20px",
-            borderRadius: "10px",
+            borderRadius: "12px",
             width: "80vw",
-            maxWidth: "500px",
-            height: "60vh",
+            maxWidth: "600px",
+            height: "auto",
             margin: "auto",
             top: "50%",
-            left: "25%",
+            left: "50%",
             transform: "translate(-50%, -50%)",
-            overflow: "hidden",
+            overflow: "auto",
           },
         }}
       >
-        <form onSubmit={handleGoalSubmit} className="flex item-center justify-center flex-col forms gap-4">
-          <div className="mb-4 flex-col item-center justify-center">
-            <label className="block text-sm font-medium">Goal Type</label>
+        <form onSubmit={handleGoalSubmit} className="flex flex-col items-center gap-6">
+          <div className="flex flex-col w-full">
+            <label className="text-sm font-medium mb-2">Goal Type</label>
             <select
               value={goalType}
               onChange={(e) => setGoalType(e.target.value)}
-              className="w-full border rounded p-2 bg-gray-800 flex-col text-white"
+              className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
             >
               <option value="dailySteps">Daily Step Count</option>
               <option value="weeklyDistance">Weekly Running Distance</option>
@@ -123,27 +170,26 @@ const Plan = () => {
 
           {goalType === "dailySteps" && (
             <>
-              <div className="mb-4 flex-col item-center justufy-center">
-                <label htmlFor="steps" className="block text-sm font-medium">
-                  Daily Step Goal
-                </label>
+              <div className="flex flex-col w-full">
+                <label htmlFor="steps" className="text-sm font-medium mb-2">Daily Step Goal</label>
                 <input
                   type="number"
                   name="steps"
                   placeholder="Enter steps"
-                  className="w-full border rounded p-2 bg-gray-800 text-white"
+                  className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label htmlFor="date" className="block text-sm font-medium">
-                  Date
-                </label>
+
+              <div className="flex flex-col w-full">
+                <label htmlFor="date" className="text-sm font-medium mb-2">Date</label>
                 <input
                   type="date"
+                  name="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full border rounded p-2 bg-gray-800 text-white"
+                  className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
+                  max={new Date().toISOString().split('T')[0]} // Prevent future dates
                   required
                 />
               </div>
@@ -151,28 +197,31 @@ const Plan = () => {
           )}
 
           {goalType === "weeklyDistance" && (
-            <div className="mb-4">
-              <label htmlFor="distance" className="block text-sm font-medium">
-                Weekly Running Distance Goal (km)
-              </label>
+            <div className="flex flex-col w-full">
+              <label htmlFor="distance" className="text-sm font-medium mb-2">Weekly Running Distance Goal (km)</label>
               <input
                 type="number"
                 name="distance"
                 placeholder="Enter distance"
-                className="w-full border rounded p-2 bg-gray-800 text-white"
+                step="0.1"
+                className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
                 required
               />
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex justify-between w-full mt-6">
             <button
               type="submit"
-              className="bg-black border-2 border-red-700 text-white font-semibold rounded py-2 px-4 hover:bg-red-600"
+              className="w-full py-3 bg-red-700 text-white font-semibold rounded-md hover:bg-red-600 transition"
             >
               Submit
             </button>
-            <button onClick={handleModalClose} className="mt-4 text-red-500">
+            <button 
+              type="button"
+              onClick={handleModalClose} 
+              className="w-full py-3 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition"
+            >
               Cancel
             </button>
           </div>
