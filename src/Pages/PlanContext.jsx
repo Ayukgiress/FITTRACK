@@ -54,22 +54,22 @@ export const FitnessProvider = ({ children }) => {
     }
   };
 
-  const setTargets = async (stepsTarget, distanceTarget) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.post(`${API_URL}/plan/targets`,
-        { stepsTarget, distanceTarget },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  // const setTargets = async (stepsTarget, distanceTarget) => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     await axios.post(`${API_URL}/plan/daily-steps`,
+  //       { stepsTarget, distanceTarget },
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
 
-      setWeeklyStepTarget(stepsTarget);
-      setWeeklyDistanceTarget(distanceTarget);
-      toast.success("Targets set successfully!");
-    } catch (error) {
-      toast.error("Failed to set targets");
-      console.error(error);
-    }
-  };
+  //     setWeeklyStepTarget(stepsTarget);
+  //     setWeeklyDistanceTarget(distanceTarget);
+  //     toast.success("Targets set successfully!");
+  //   } catch (error) {
+  //     toast.error("Failed to set targets");
+  //     console.error(error);
+  //   }
+  // };
 
   const addDailySteps = async (data) => {
     console.log('Adding daily steps:', data);  
@@ -134,7 +134,7 @@ export const FitnessProvider = ({ children }) => {
       weeklyDistanceTarget,
       addDailySteps,
       addWeeklyDistance,
-      setTargets,
+      // setTargets,
     }}>
       {children}
     </PlanContext.Provider>

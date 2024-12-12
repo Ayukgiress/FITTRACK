@@ -66,15 +66,6 @@ const Plan = () => {
           return;
         }
 
-        const existingStepsEntry = dailyStepCount.find(
-          entry => new Date(entry.date).toDateString() === selectedDate.toDateString()
-        );
-
-        if (existingStepsEntry) {
-          toast.error("Steps already logged for this date");
-          return;
-        }
-
         const isoDate = selectedDate.toISOString();
 
         await addDailySteps({
@@ -86,19 +77,6 @@ const Plan = () => {
       } else if (goalType === "weeklyDistance" && distance) {
         const currentDate = new Date();
         const currentWeekNumber = Math.ceil((currentDate.getDate() + 6) / 7);
-
-        const existingDistanceEntry = weeklyRunningDistance.find(
-          entry => {
-            const entryDate = new Date(entry.date);
-            const entryWeekNumber = Math.ceil((entryDate.getDate() + 6) / 7);
-            return entryWeekNumber === currentWeekNumber;
-          }
-        );
-
-        if (existingDistanceEntry) {
-          toast.error("Running distance already logged for this week");
-          return;
-        }
 
         await addWeeklyDistance({
           userId,
@@ -125,10 +103,10 @@ const Plan = () => {
     <div className="flex flex-col items-center p-6">
       <button
         onClick={handleModalOpen}
-        className="text-white font-semibold flex items-center justify-center gap-4 hover:text-red-700 transition-colors"
+        className="text-white font-semibold flex items-center justify-start gap-4 hover:text-red-700 transition-colors"
       >
         <TiPlus className="h-8 w-8" />
-        <h3 className="text-xl">Set a Goal</h3>
+        <h3 className="text-xl"> Goal</h3>
       </button>
 
       <Modal
@@ -189,7 +167,7 @@ const Plan = () => {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
-                  max={new Date().toISOString().split('T')[0]} // Prevent future dates
+                  max={new Date().toISOString().split('T')[0]} 
                   required
                 />
               </div>
