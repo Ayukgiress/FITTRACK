@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import Modal from "react-modal";
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import DatePicker from 'react-datepicker';  // Import React Datepicker
+import "react-datepicker/dist/react-datepicker.css";  // Import the datepicker styles
 import { toast } from 'sonner';
 import { TiPlus } from "react-icons/ti";
 import { useAuth } from "./AuthContext";
@@ -7,25 +9,15 @@ import { useFitness } from "./PlanContext";
 
 const Plan = () => {
   const { currentUser } = useAuth();
-  const { 
-    addDailySteps, 
-    addWeeklyDistance, 
-    dailyStepCount, 
-    weeklyRunningDistance 
-  } = useFitness();
-
+  const { addDailySteps, addWeeklyDistance } = useFitness()
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [goalType, setGoalType] = useState("dailySteps");
-  const [date, setDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  });
+  const [date, setDate] = useState(new Date());
 
   const handleModalOpen = () => {
     setModalIsOpen(true);
     setGoalType("dailySteps");
-    const today = new Date();
-    setDate(today.toISOString().split('T')[0]);
+    setDate(new Date());
   };
 
   const handleModalClose = () => {
@@ -33,68 +25,44 @@ const Plan = () => {
   };
 
   const handleGoalSubmit = async (e) => {
-    e.preventDefault();
-    if (!currentUser) {
-      toast.error("Please log in to set goals");
-      return;
-    }
+    e.preventDefault();  // Prevent default form submission behavior
 
     const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
     const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
-
-    if (goalType === "dailySteps" && (!steps || isNaN(steps) || steps <= 0)) {
-      toast.error("Please enter a valid number of steps");
-      return;
-    }
-
-    if (goalType === "weeklyDistance" && (!distance || isNaN(distance) || distance <= 0)) {
-      toast.error("Please enter a valid running distance");
-      return;
-    }
-
-    const userId = currentUser._id;
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);  // Reset the time to midnight
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    try {
-      if (goalType === "dailySteps" && steps) {
-        const selectedDate = new Date(date);
-        selectedDate.setHours(0, 0, 0, 0);
+    const userId = currentUser ? currentUser._id : null;
 
+    try {
+      if (goalType === "dailySteps" && !isNaN(steps) && date) {
         if (selectedDate > today) {
           toast.error("You cannot set steps for a future date.");
           return;
         }
 
-        const isoDate = selectedDate.toISOString();
-
+        // Add the daily steps goal
         await addDailySteps({
           userId,
           steps,
-          date: isoDate
+          date: selectedDate.toISOString().split('T')[0], // Format to ISO string
         });
-
-      } else if (goalType === "weeklyDistance" && distance) {
-        const currentDate = new Date();
-        const currentWeekNumber = Math.ceil((currentDate.getDate() + 6) / 7);
-
+      } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
+        // Add the weekly distance goal
         await addWeeklyDistance({
           userId,
-          weekNumber: currentWeekNumber,
+          weekNumber: Math.ceil((new Date().getDate() + 1) / 7), // Calculate week number
           distance,
-          date: currentDate.toISOString()
         });
-
-      } else {
-        toast.error("Invalid input. Please check your values.");
-        return;
       }
 
+      // Close the modal after submission
       handleModalClose();
-      toast.success(`${goalType === 'dailySteps' ? 'Steps' : 'Distance'} goal added successfully!`);
-
+      toast.success(`${goalType === "dailySteps" ? "Steps" : "Distance"} goal added successfully!`);
     } catch (error) {
-      console.error("Goal submission error:", error);
+      // Handle errors by showing a toast
       toast.error(error.response?.data?.message || "Failed to add goal");
     }
   };
@@ -161,13 +129,10 @@ const Plan = () => {
 
               <div className="flex flex-col w-full">
                 <label htmlFor="date" className="text-sm font-medium mb-2">Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
                   className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
-                  max={new Date().toISOString().split('T')[0]} 
                   required
                 />
               </div>
@@ -195,9 +160,9 @@ const Plan = () => {
             >
               Submit
             </button>
-            <button 
+            <button
               type="button"
-              onClick={handleModalClose} 
+              onClick={handleModalClose}
               className="w-full py-3 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition"
             >
               Cancel

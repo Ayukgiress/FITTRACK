@@ -221,31 +221,31 @@ const Activity = () => {
       return;
     }
 
-    const currentDate = new Date();
-    const workoutDate = new Date(workoutData.date || new Date());
+    // const currentDate = new Date();
+    // const workoutDate = new Date(workoutData.date || new Date());
 
-    if (workoutDate > currentDate) {
-      toast.error("Cannot log workouts for future dates");
-      return;
-    }
+    // if (workoutDate > currentDate) {
+    //   toast.error("Cannot log workouts for future dates");
+    //   return;
+    // }
 
-    const todayStepEntry = dailyStepCount.find(item =>
-      new Date(item.date).toDateString() === currentDate.toDateString()
-    );
+    // const todayStepEntry = dailyStepCount.find(item =>
+    //   new Date(item.date).toDateString() === currentDate.toDateString()
+    // );
 
-    if (workoutData.type === 'steps' && todayStepEntry) {
-      toast.error("Daily steps already logged for today");
-      return;
-    }
+    // if (workoutData.type === 'steps' && todayStepEntry) {
+    //   toast.error("Daily steps already logged for today");
+    //   return;
+    // }
 
-    const todayRunningEntry = weeklyRunningDistance.find(item =>
-      new Date(item.date).toDateString() === currentDate.toDateString()
-    );
+    // const todayRunningEntry = weeklyRunningDistance.find(item =>
+    //   new Date(item.date).toDateString() === currentDate.toDateString()
+    // );
 
-    if (workoutData.type === 'running' && todayRunningEntry) {
-      toast.error("Running distance already logged for today");
-      return;
-    }
+    // if (workoutData.type === 'running' && todayRunningEntry) {
+    //   toast.error("Running distance already logged for today");
+    //   return;
+    // }
 
     try {
       const token = localStorage.getItem("token");
@@ -260,7 +260,7 @@ const Activity = () => {
         body: JSON.stringify({
           ...workoutData,
           userId: currentUser._id,
-          date: currentDate.toISOString(),
+          date: new Date().toISOString(),
         }),
       });
 
