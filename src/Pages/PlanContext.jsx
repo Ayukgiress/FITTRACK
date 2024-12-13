@@ -59,7 +59,7 @@ export const FitnessProvider = ({ children }) => {
 
 
   const addDailySteps = async (data) => {
-    console.log('Adding daily steps:', data);  // Log the data being sent
+    console.log('Adding daily steps:', data);
   
     try {
       const token = localStorage.getItem('token');
@@ -78,37 +78,38 @@ export const FitnessProvider = ({ children }) => {
       toast.success("Daily steps added successfully!");
       return response.data;
     } catch (error) {
-      console.error('Full error details:', error.response);
-      const errorMessage = error.response?.data?.message || "An unknown error occurred";
+      console.error('Full error details in addDailySteps:', error);
+      const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred";
       toast.error(errorMessage);
       throw new Error(errorMessage);
     }
   };
   
-
   const addWeeklyDistance = async (data) => {
     console.log('Adding weekly distance:', data);
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+  
       const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
       });
-
+  
       await fetchData();
       toast.success("Weekly distance added successfully!");
       return response.data;
     } catch (error) {
-      console.error('Full error details:', error.response);  
-      const errorMessage = error.response?.data?.message || "Error adding weekly distance";
+      console.error('Full error details in addWeeklyDistance:', error);
+      const errorMessage = error.response?.data?.message || error.message || "Error adding weekly distance";
       toast.error(errorMessage);
-      console.error("Error adding weekly distance:", error);
-      throw error;
+      throw new Error(errorMessage);
     }
   };
-
   useEffect(() => {
     if (currentUser) {
       fetchData();
