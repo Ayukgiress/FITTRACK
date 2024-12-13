@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import DatePicker from 'react-datepicker';  
-import "react-datepicker/dist/react-datepicker.css";  
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'sonner';
 import { TiPlus } from "react-icons/ti";
 import { useAuth } from "./AuthContext";
@@ -196,6 +196,7 @@ const Plan = () => {
 
           <div className="flex justify-between w-full mt-6">
             <button
+              onClick={handleGoalSubmit}
               type="submit"
               className="w-full py-3 bg-red-700 text-white font-semibold rounded-md hover:bg-red-600 transition"
             >
