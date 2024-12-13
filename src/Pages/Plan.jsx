@@ -25,45 +25,58 @@ const Plan = () => {
   };
 
   const handleGoalSubmit = async (e) => {
-    e.preventDefault();  // Prevent default form submission behavior
-
+    e.preventDefault();
+  
     const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
     const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
     const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);  // Reset the time to midnight
+    selectedDate.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
+  
     const userId = currentUser ? currentUser._id : null;
-
+  
+    if (!userId) {
+      toast.error("User not authenticated");
+      return;
+    }
+  
     try {
       if (goalType === "dailySteps" && !isNaN(steps) && date) {
         if (selectedDate > today) {
           toast.error("You cannot set steps for a future date.");
           return;
         }
-
-        // Add the daily steps goal
+  
+        console.log("Submitting daily steps:", { 
+          userId, 
+          steps, 
+          date: selectedDate.toISOString().split('T')[0] 
+        });
+  
         await addDailySteps({
           userId,
           steps,
-          date: selectedDate.toISOString().split('T')[0], // Format to ISO string
+          date: selectedDate.toISOString().split('T')[0],
         });
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
-        // Add the weekly distance goal
+        console.log("Submitting weekly distance:", { 
+          userId, 
+          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
+          distance 
+        });
+  
         await addWeeklyDistance({
           userId,
-          weekNumber: Math.ceil((new Date().getDate() + 1) / 7), // Calculate week number
+          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
           distance,
         });
       }
-
-      // Close the modal after submission
+  
       handleModalClose();
-      toast.success(`${goalType === "dailySteps" ? "Steps" : "Distance"} goal added successfully!`);
     } catch (error) {
-      // Handle errors by showing a toast
-      toast.error(error.response?.data?.message || "Failed to add goal");
+      console.error("Full error in handleGoalSubmit:", error);
+      toast.error(error.message || "Failed to add goal");
     }
   };
 
