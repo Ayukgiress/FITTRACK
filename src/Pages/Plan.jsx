@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import DatePicker from 'react-datepicker';  // Import React Datepicker
-import "react-datepicker/dist/react-datepicker.css";  // Import the datepicker styles
+import DatePicker from 'react-datepicker';  
+import "react-datepicker/dist/react-datepicker.css";  
 import { toast } from 'sonner';
 import { TiPlus } from "react-icons/ti";
 import { useAuth } from "./AuthContext";
@@ -23,9 +23,11 @@ const Plan = () => {
   const handleModalClose = () => {
     setModalIsOpen(false);
   };
-
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
+
+    // Log to ensure form is being submitted
+    console.log("Form submitted");
 
     const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
     const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
@@ -41,44 +43,52 @@ const Plan = () => {
       return;
     }
 
-    try {
-      if (goalType === "dailySteps" && !isNaN(steps) && date) {
-        if (selectedDate > today) {
-          toast.error("You cannot set steps for a future date.");
-          return;
-        }
+    if (goalType === "dailySteps" && !isNaN(steps) && date) {
+      if (selectedDate > today) {
+        toast.error("You cannot set steps for a future date.");
+        return;
+      }
 
-        console.log("Submitting daily steps:", {
-          userId,
-          steps,
-          date: selectedDate.toISOString().split('T')[0]
-        });
+      console.log("Submitting daily steps:", {
+        userId,
+        steps,
+        date: selectedDate.toISOString().split('T')[0]
+      });
 
+      try {
         await addDailySteps({
           userId,
           steps,
           date: selectedDate.toISOString().split('T')[0],
         });
-      } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
-        console.log("Submitting weekly distance:", {
-          userId,
-          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
-          distance
-        });
 
+        handleModalClose(); // Move here after successful submission
+      } catch (error) {
+        console.error("Full error in handleGoalSubmit:", error);
+        toast.error(error.message || "Failed to add goal");
+      }
+    } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
+      console.log("Submitting weekly distance:", {
+        userId,
+        weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
+        distance
+      });
+
+      try {
         await addWeeklyDistance({
           userId,
           weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
           distance,
         });
-      }
 
-      handleModalClose();
-    } catch (error) {
-      console.error("Full error in handleGoalSubmit:", error);
-      toast.error(error.message || "Failed to add goal");
+        handleModalClose();
+      } catch (error) {
+        console.error("Full error in handleGoalSubmit:", error);
+        toast.error(error.message || "Failed to add goal");
+      }
     }
   };
+
 
   return (
     <div className="flex flex-col items-center p-6">
@@ -137,7 +147,7 @@ const Plan = () => {
                   Daily Step Goal
                 </label>
                 <input
-                  id="steps"  
+                  id="steps"
                   type="number"
                   name="steps"
                   placeholder="Enter steps"
@@ -154,7 +164,7 @@ const Plan = () => {
                   Date
                 </label>
                 <DatePicker
-                  id="date"  
+                  id="date"
                   selected={date}
                   onChange={(date) => setDate(date)}
                   className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
@@ -173,7 +183,7 @@ const Plan = () => {
                 Weekly Running Distance Goal (km)
               </label>
               <input
-                id="distance"  
+                id="distance"
                 type="number"
                 name="distance"
                 placeholder="Enter distance"
