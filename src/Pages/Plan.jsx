@@ -26,53 +26,53 @@ const Plan = () => {
 
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
-  
+
     const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
     const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
+
     const userId = currentUser ? currentUser._id : null;
-  
+
     if (!userId) {
       toast.error("User not authenticated");
       return;
     }
-  
+
     try {
       if (goalType === "dailySteps" && !isNaN(steps) && date) {
         if (selectedDate > today) {
           toast.error("You cannot set steps for a future date.");
           return;
         }
-  
-        console.log("Submitting daily steps:", { 
-          userId, 
-          steps, 
-          date: selectedDate.toISOString().split('T')[0] 
+
+        console.log("Submitting daily steps:", {
+          userId,
+          steps,
+          date: selectedDate.toISOString().split('T')[0]
         });
-  
+
         await addDailySteps({
           userId,
           steps,
           date: selectedDate.toISOString().split('T')[0],
         });
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
-        console.log("Submitting weekly distance:", { 
-          userId, 
+        console.log("Submitting weekly distance:", {
+          userId,
           weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
-          distance 
+          distance
         });
-  
+
         await addWeeklyDistance({
           userId,
           weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
           distance,
         });
       }
-  
+
       handleModalClose();
     } catch (error) {
       console.error("Full error in handleGoalSubmit:", error);
@@ -130,8 +130,14 @@ const Plan = () => {
           {goalType === "dailySteps" && (
             <>
               <div className="flex flex-col w-full">
-                <label htmlFor="steps" className="text-sm font-medium mb-2">Daily Step Goal</label>
+                <label
+                  htmlFor="steps"
+                  className="text-sm font-medium mb-2"
+                >
+                  Daily Step Goal
+                </label>
                 <input
+                  id="steps"  
                   type="number"
                   name="steps"
                   placeholder="Enter steps"
@@ -141,8 +147,14 @@ const Plan = () => {
               </div>
 
               <div className="flex flex-col w-full">
-                <label htmlFor="date" className="text-sm font-medium mb-2">Date</label>
+                <label
+                  htmlFor="date"
+                  className="text-sm font-medium mb-2"
+                >
+                  Date
+                </label>
                 <DatePicker
+                  id="date"  
                   selected={date}
                   onChange={(date) => setDate(date)}
                   className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
@@ -154,8 +166,14 @@ const Plan = () => {
 
           {goalType === "weeklyDistance" && (
             <div className="flex flex-col w-full">
-              <label htmlFor="distance" className="text-sm font-medium mb-2">Weekly Running Distance Goal (km)</label>
+              <label
+                htmlFor="distance"
+                className="text-sm font-medium mb-2"
+              >
+                Weekly Running Distance Goal (km)
+              </label>
               <input
+                id="distance"  
                 type="number"
                 name="distance"
                 placeholder="Enter distance"
