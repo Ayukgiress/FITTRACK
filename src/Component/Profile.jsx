@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { CiLogout } from "react-icons/ci";
 import { useAuth } from "../Pages/AuthContext";
 import { API_URL } from "../../constants";
+import Plan from "../Pages/Plan";
+import { Link } from "react-router-dom";
 
 const Profile = ({ isAuthenticated }) => {
   const { logout } = useAuth();
@@ -197,6 +199,13 @@ const Profile = ({ isAuthenticated }) => {
           <p className="text-sm text-gray-400">{profile.email}</p>
         </div>
       </div>
+
+      <Link
+
+        className="flex items-center justify-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group h-12"
+      >
+        <Plan className="text-white w-5 h-5 group-hover:text-red-700" />
+      </Link>
 
       <div className="flex items-center justify-center mt-10">
         <button onClick={handleLogout} className="flex items-center text-white text-xl bg-red-600 px-4 py-2 rounded transition duration-200 hover:bg-red-500">

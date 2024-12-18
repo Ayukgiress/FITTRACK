@@ -57,15 +57,22 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    // Ensure startTime and endTime are not empty
+    if (!startTime || !endTime) {
+      toast.error("Please provide both start time and end time.");
+      return;
+    }
+  
     const calculatedCalories = calculateCalories();
     const workoutData = { exercise, startTime, endTime, date, calories: calculatedCalories };
-
-    onSubmit(workoutData);
+  
+    onSubmit(workoutData); // This will trigger addWorkout or updateWorkout
     toast.success("Exercise logged successfully!");
     onClose();
     resetForm();
   };
-
+  
   // Conditional rendering to avoid registering modal multiple times
   if (!isOpen) return null;
 

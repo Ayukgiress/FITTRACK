@@ -20,7 +20,6 @@ import Profile from "./Component/Profile";
 import { AuthProvider, useAuth } from './Pages/AuthContext'; 
 import {  FitnessProvider } from "./Pages/PlanContext";
 
-import Plan from './Pages/Plan';
 import './App.css';
 import WorkoutStore from "./Pages/WorkoutStore";
 import VerifyEmail from "./Component/VerifyEmail";
@@ -28,6 +27,7 @@ import OauthCallback from "./Component/OauthCallback";
 import PasswordReset from "./Pages/ResetToken";
 import PasswordResetRequest from "./Pages/ResetPassword";
 import VerifyEmails from "./Component/VerifyEmails";
+import { WorkoutProvider } from "./Pages/WorkoutContext";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
@@ -62,7 +62,6 @@ const AppRoutes = () => {
           <Route path="statistics" element={<Statistics />} />
           <Route path="settings" element={<Settings />} />
           <Route path="workoutStore" element={<WorkoutStore />} />
-          <Route path="plan" element={<Plan />} />
           <Route index element={<Activity />} />
         </Route>
       </Routes>
@@ -71,15 +70,18 @@ const AppRoutes = () => {
   );
 };
 
+
 const App = () => (
   <AuthProvider>
     <FitnessProvider>
-      <div className="bg-customGradient">
-        <Router>
-          <Toaster richColors />
-          <AppRoutes />
-        </Router>
-      </div>
+      <WorkoutProvider> 
+        <div className="bg-customGradient">
+          <Router>
+            <Toaster richColors />
+            <AppRoutes />
+          </Router>
+        </div>
+      </WorkoutProvider>
     </FitnessProvider>
   </AuthProvider>
 );

@@ -19,21 +19,20 @@ export const FitnessProvider = ({ children }) => {
   const [dailyStepCount, setDailyStepCount] = useState([]);
   const [weeklyRunningDistance, setWeeklyRunningDistance] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {error, setError} = useState(null)
 
   const fetchData = async () => {
     if (!currentUser) {
       setLoading(false);
       return;
     }
-  
+
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No authentication token found');
       }
-  
+
       const [stepsResponse, distanceResponse] = await Promise.all([
         axios.get(`${API_URL}/plan/daily-steps`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -42,10 +41,7 @@ export const FitnessProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         })
       ]);
-  
-      console.log("Fetched steps:", stepsResponse.data); 
-      console.log("Fetched distance:", distanceResponse.data); 
-  
+
       setDailyStepCount(stepsResponse.data);
       setWeeklyRunningDistance(distanceResponse.data);
     } catch (error) {
@@ -55,61 +51,57 @@ export const FitnessProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  
-
 
   const addDailySteps = async (data) => {
-    console.log('Adding daily steps:', data);
-  
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No authentication token found');
       }
-  
+
       const response = await axios.post(`${API_URL}/plan/daily-steps`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
       });
-  
-      await fetchData();  
+
+      await fetchData();  // Refresh data after adding
       toast.success("Daily steps added successfully!");
       return response.data;
     } catch (error) {
-      console.error('Full error details in addDailySteps:', error);
+      console.error('Error adding daily steps:', error); 
       const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred";
       toast.error(errorMessage);
       throw new Error(errorMessage);
     }
   };
-  
+
   const addWeeklyDistance = async (data) => {
-    console.log('Adding weekly distance:', data);
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No authentication token found');
       }
-  
+
       const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
       });
-  
-      await fetchData();
+
+      await fetchData();  // Refresh data after adding
       toast.success("Weekly distance added successfully!");
       return response.data;
     } catch (error) {
-      console.error('Full error details in addWeeklyDistance:', error);
+      console.error('Error adding weekly distance:', error);
       const errorMessage = error.response?.data?.message || error.message || "Error adding weekly distance";
       toast.error(errorMessage);
       throw new Error(errorMessage);
     }
   };
+
   useEffect(() => {
     if (currentUser) {
       fetchData();
