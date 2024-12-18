@@ -3,38 +3,17 @@ import { toast } from "sonner";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { FaWalking } from "react-icons/fa";
 import { RiMapPinLine } from "react-icons/ri";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  Colors,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-} from 'chart.js';
 import { Pie, Line } from 'react-chartjs-2';
 import { useAuth } from "./AuthContext";
 import { useFitness } from './PlanContext';
 import Workout from "./Workout";
 import { API_URL } from "../../constants";
 import { getDurationFromEndTimeAndStartTime } from "../utils/utils";
+import { useWorkout } from "./WorkoutContext"; // Make sure to import useWorkout
 
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  Colors,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title
-);
+// Chart.js registration
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend, Colors, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title);
 
 const prepareChartData = (workoutLog) => {
   const today = new Date();
@@ -77,14 +56,7 @@ const TodaysWorkoutChart = ({ workoutLog }) => {
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          color: 'white',
-          font: { size: 12 },
-          padding: 20,
-        },
-      },
+      legend: { position: 'top', labels: { color: 'white', font: { size: 12 }, padding: 20 } },
       tooltip: {
         callbacks: {
           label: (context) => {
@@ -153,7 +125,7 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
 
 const Activity = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [workoutLog, setWorkoutLog] = useState([]);
+  const { workoutLog, addWorkout } = useWorkout(); 
   const [weeklyCaloriesBurned, setWeeklyCaloriesBurned] = useState(Array(7).fill(0));
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -168,7 +140,7 @@ const Activity = () => {
       const fetchInitialData = async () => {
         setIsLoading(true);
         try {
-          await fetchWorkoutLog();
+          await fetchWorkoutLog(); 
         } catch (error) {
           console.error("Error fetching initial data:", error);
           toast.error("Error loading dashboard data");
@@ -182,6 +154,12 @@ const Activity = () => {
       setIsLoading(false);
     }
   }, [currentUser, currentUserLoading, isAuthenticated]);
+
+  useEffect(() => {
+    if (workoutLog.length > 0) {
+      calculateWeeklyCalories(workoutLog);
+    }
+  }, [workoutLog]); 
 
   const fetchWorkoutLog = async () => {
     if (!currentUser?._id || !isAuthenticated) return;
@@ -202,7 +180,7 @@ const Activity = () => {
 
       const data = await response.json();
       if (Array.isArray(data)) {
-        setWorkoutLog(data);
+        addWorkout(data); 
         calculateWeeklyCalories(data);
       } else {
         throw new Error("Invalid data format received");
@@ -210,75 +188,19 @@ const Activity = () => {
     } catch (error) {
       console.error("Error fetching workout log:", error);
       toast.error("Failed to load workout data");
-      setWorkoutLog([]);
-      setWeeklyCaloriesBurned(Array(7).fill(0));
+      addWorkout([]); 
+      setWeeklyCaloriesBurned(Array(7).fill(0)); 
     }
   };
 
   const handleLogSubmit = async (workoutData) => {
-    if (!currentUser) {
-      toast.error("Please log in to track workouts");
-      return;
-    }
-
-    // const currentDate = new Date();
-    // const workoutDate = new Date(workoutData.date || new Date());
-
-    // if (workoutDate > currentDate) {
-    //   toast.error("Cannot log workouts for future dates");
-    //   return;
-    // }
-
-    // const todayStepEntry = dailyStepCount.find(item =>
-    //   new Date(item.date).toDateString() === currentDate.toDateString()
-    // );
-
-    // if (workoutData.type === 'steps' && todayStepEntry) {
-    //   toast.error("Daily steps already logged for today");
-    //   return;
-    // }
-
-    // const todayRunningEntry = weeklyRunningDistance.find(item =>
-    //   new Date(item.date).toDateString() === currentDate.toDateString()
-    // );
-
-    // if (workoutData.type === 'running' && todayRunningEntry) {
-    //   toast.error("Running distance already logged for today");
-    //   return;
-    // }
-
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No authentication token found");
-
-      const response = await fetch(`${API_URL}/workouts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...workoutData,
-          userId: currentUser._id,
-          date: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to log workout");
-
-      const newWorkout = await response.json();
-      setWorkoutLog(prevLog => {
-        const updatedLog = [...prevLog, newWorkout];
-        calculateWeeklyCalories(updatedLog);
-        return updatedLog;
-      });
-
-      toast.success("Workout added successfully!");
+      const addedWorkout = await addWorkout(workoutData);
+      
+      toast.success("Workout logged successfully!");
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error logging workout:", error);
-      toast.error("Failed to log workout");
-    } finally {
-      setIsModalOpen(false);
     }
   };
 

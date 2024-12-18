@@ -22,7 +22,7 @@ const Home = () => {
             you <br /> achieve your goals and exceed your expectations. Ready to make a change?"
           </h4>
           <Link to="/login">
-            <button className="w-72 3xl:w-[35rem] 3xl:ml-16 3xl:h-[5rem] h-12 3xl:text-4xl rounded-md bg-red-700 text-white start-btn">
+            <button className="w-72 3xl:w-[35rem] 3xl:ml-13 3xl:h-[5rem] h-12 3xl:text-4xl rounded-md bg-red-700 text-white start-btn">
               Start Your Journey
             </button>
           </Link>

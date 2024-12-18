@@ -6,7 +6,7 @@ const AboutApp = () => {
       <h1 className="text-3xl text-white text-center font-bold mb-6 3xl:text-6xl xl:text-5xl">FAQ</h1>
 
       <div className="flex flex-col items-center justify-center w-full max-w-full sm:max-w-[80rem] md:max-w-[90rem] lg:max-w-[110rem] xl:max-w-[120rem] 2xl:max-w-[140rem] 3xl:max-w-[160rem] px-4">
-        <div className="bg-black 3xl:h-70 3xl:p-8 3xl:gap-9 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[150rem]">
+        <div className="bg-black 3xl:h-70 3xl:p-8 3xl:gap-9 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[158rem]">
           <h2 className="text-lg sm:text-xl md:text-2xl font-semibold 3xl:text-5xl">
             What is ActivePulse and how can it help me reach my fitness goals?
           </h2>
@@ -19,7 +19,7 @@ const AboutApp = () => {
           </p>
         </div>
 
-        <div className="bg-black 3xl:h-70 3xl:p-8 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[150rem]">
+        <div className="bg-black 3xl:h-70 3xl:p-8 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[158rem]">
           <h2 className="text-lg sm:text-xl md:text-2xl font-semibold 3xl:text-5xl">
             How do I get started with a workout plan on ActivePulse?
           </h2>
@@ -30,7 +30,7 @@ const AboutApp = () => {
           </p>
         </div>
 
-        <div className="bg-black 3xl:h-70 3xl:p-8 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[150rem]">
+        <div className="bg-black 3xl:h-70 3xl:p-8 border-2 border-red-700 text-white p-4 mb-4 xl:w-[75rem] 2xl:w-[109rem] 3xl:w-[158rem]">
           <h2 className="text-lg 3xl:text-5xl sm:text-xl md:text-2xl font-semibold">
             Can I change my plan after signing up?
           </h2>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,86 +9,89 @@ import { useFitness } from "./PlanContext";
 
 const Plan = () => {
   const { currentUser } = useAuth();
-  const { addDailySteps, addWeeklyDistance } = useFitness()
+  const { addDailySteps, addWeeklyDistance } = useFitness();
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [goalType, setGoalType] = useState("dailySteps");
   const [date, setDate] = useState(new Date());
+  const [steps, setSteps] = useState('');
+  const [distance, setDistance] = useState('');
+
+  useEffect(() => {
+    console.log('Fitness Methods:', {
+      addDailySteps: typeof addDailySteps,
+      addWeeklyDistance: typeof addWeeklyDistance
+    });
+  }, [addDailySteps, addWeeklyDistance]);
 
   const handleModalOpen = () => {
+    console.log('Modal opened');
     setModalIsOpen(true);
     setGoalType("dailySteps");
     setDate(new Date());
+    setSteps('');
+    setDistance('');
   };
 
   const handleModalClose = () => {
+    console.log('Modal closed');
     setModalIsOpen(false);
   };
+
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
 
-    // Log to ensure form is being submitted
-    console.log("Form submitted");
+    console.group('Goal Submission Debug');
+    console.log('Submission Initiated', {
+      goalType,
+      steps,
+      date: date.toISOString(),
+      userId: currentUser?._id
+    });
 
-    const steps = goalType === "dailySteps" ? parseInt(e.target.steps.value) : null;
-    const distance = goalType === "weeklyDistance" ? parseFloat(e.target.distance.value) : null;
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const userId = currentUser ? currentUser._id : null;
-
-    if (!userId) {
-      toast.error("User not authenticated");
-      return;
-    }
-
-    if (goalType === "dailySteps" && !isNaN(steps) && date) {
-      if (selectedDate > today) {
-        toast.error("You cannot set steps for a future date.");
+    try {
+      if (!currentUser || !currentUser._id) {
+        console.error('No authenticated user');
+        toast.error('Please log in');
+        console.groupEnd();
         return;
       }
 
-      console.log("Submitting daily steps:", {
-        userId,
-        steps,
+      const parsedSteps = parseInt(steps);
+      if (isNaN(parsedSteps)) {
+        console.error('Invalid steps input');
+        toast.error('Please enter a valid number of steps');
+        console.groupEnd();
+        return;
+      }
+
+      // Prepare date
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      // Log submission details
+      console.log('Submission Details', {
+        userId: currentUser._id,
+        steps: parsedSteps,
+        formattedDate: selectedDate.toISOString().split('T')[0]
+      });
+
+      // Attempt to add daily steps
+      const result = await addDailySteps({
+        userId: currentUser._id,
+        steps: parsedSteps,
         date: selectedDate.toISOString().split('T')[0]
       });
 
-      try {
-        await addDailySteps({
-          userId,
-          steps,
-          date: selectedDate.toISOString().split('T')[0],
-        });
-
-        handleModalClose(); // Move here after successful submission
-      } catch (error) {
-        console.error("Full error in handleGoalSubmit:", error);
-        toast.error(error.message || "Failed to add goal");
-      }
-    } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
-      console.log("Submitting weekly distance:", {
-        userId,
-        weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
-        distance
-      });
-
-      try {
-        await addWeeklyDistance({
-          userId,
-          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
-          distance,
-        });
-
-        handleModalClose();
-      } catch (error) {
-        console.error("Full error in handleGoalSubmit:", error);
-        toast.error(error.message || "Failed to add goal");
-      }
+      console.log('Submission Result:', result);
+      handleModalClose();
+    } catch (error) {
+      console.error('Submission Error:', error);
+      toast.error(error.message || 'Failed to submit goal');
+    } finally {
+      console.groupEnd();
     }
   };
-
 
   return (
     <div className="flex flex-col items-center p-6">
@@ -97,7 +100,7 @@ const Plan = () => {
         className="text-white font-semibold flex items-center justify-start gap-4 hover:text-red-700 transition-colors"
       >
         <TiPlus className="h-8 w-8" />
-        <h3 className="text-xl"> Goal</h3>
+        <h3 className="text-xl">Goal</h3>
       </button>
 
       <Modal
@@ -109,16 +112,16 @@ const Plan = () => {
             backgroundColor: "rgba(0, 0, 0, 0.75)",
           },
           content: {
-            backgroundColor: "#1a1a1a",
+            backgroundColor: "black",
             color: "white",
             padding: "20px",
             borderRadius: "12px",
             width: "80vw",
             maxWidth: "600px",
-            height: "auto",
+            height: "40vh",
             margin: "auto",
             top: "50%",
-            left: "50%",
+            left: "40%",
             transform: "translate(-50%, -50%)",
             overflow: "auto",
           },
@@ -149,24 +152,9 @@ const Plan = () => {
                 <input
                   id="steps"
                   type="number"
-                  name="steps"
+                  value={steps}
+                  onChange={(e) => setSteps(e.target.value)}
                   placeholder="Enter steps"
-                  className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col w-full">
-                <label
-                  htmlFor="date"
-                  className="text-sm font-medium mb-2"
-                >
-                  Date
-                </label>
-                <DatePicker
-                  id="date"
-                  selected={date}
-                  onChange={(date) => setDate(date)}
                   className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
                   required
                 />
@@ -174,29 +162,25 @@ const Plan = () => {
             </>
           )}
 
-          {goalType === "weeklyDistance" && (
-            <div className="flex flex-col w-full">
-              <label
-                htmlFor="distance"
-                className="text-sm font-medium mb-2"
-              >
-                Weekly Running Distance Goal (km)
-              </label>
-              <input
-                id="distance"
-                type="number"
-                name="distance"
-                placeholder="Enter distance"
-                step="0.1"
-                className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
-                required
-              />
-            </div>
-          )}
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="date"
+              className="text-sm font-medium mb-2"
+            >
+              Date
+            </label>
+            <DatePicker
+              id="date"
+              selected={date}
+              onChange={(newDate) => setDate(newDate)}
+              dateFormat="yyyy-MM-dd"
+              className="w-full p-3 bg-gray-800 text-white rounded-md focus:outline-none"
+              required
+            />
+          </div>
 
-          <div className="flex justify-between w-full mt-6">
+          <div className="flex justify-between w-full mt-6 gap-6">
             <button
-              onClick={handleGoalSubmit}
               type="submit"
               className="w-full py-3 bg-red-700 text-white font-semibold rounded-md hover:bg-red-600 transition"
             >

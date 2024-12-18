@@ -26,14 +26,6 @@ const NavBar = () => {
       >
         Home
       </Link>
-      <Link 
-        to="/about" 
-        onClick={toggleMenu} 
-        className="text-white hover:text-red-600 px-3 py-2"
-      >
-        About
-      </Link>
-      
       {isAuthenticated && (
         <Link 
           to="/dashboard" 
@@ -51,7 +43,7 @@ const NavBar = () => {
             onClick={toggleMenu}
             className="block md:inline-block"
           >
-            <button className="bg-red-700 h-9 w-24 rounded-md text-white hover:bg-red-600 px-4 py-2">
+            <button className="bg-red-700 h-9 w-24 rounded-md text-white hover:bg-red-600 px-4 py-2 flex item-center justify-center text-center ">
               Register
             </button>
           </Link>
@@ -60,7 +52,7 @@ const NavBar = () => {
             onClick={toggleMenu}
             className="block md:inline-block ml-2"
           >
-            <button className="bg-gray-700 text-white rounded-md px-4 py-2 hover:bg-gray-600">
+            <button className="bg-gray-700 text-white rounded-md px-4 py-2 hover:bg-gray-600 flex item-center justify-center text-center ">
               Login
             </button>
           </Link>
@@ -111,15 +103,7 @@ const NavBar = () => {
               className="text-center w-full hover:text-red-600"
             >
               Home
-            </Link>
-            <Link 
-              to="/about" 
-              onClick={toggleMenu} 
-              className="text-center w-full hover:text-red-600"
-            >
-              About
-            </Link>
-            
+            </Link>     
             {isAuthenticated && (
               <Link 
                 to="/dashboard" 
@@ -136,7 +120,7 @@ const NavBar = () => {
                   to="/login" 
                   onClick={toggleMenu}
                 >
-                  <button className="btns rounded-md border-2 h-9 w-24 border-red-700 text-rose-400 font-medium shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:text-white">
+                  <button className="btns  flex item-center justify-center text-center rounded-md border-2 h-9 w-24 border-red-700 text-rose-400 font-medium shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:text-white">
                     Login
                   </button>
                 </Link>
@@ -144,7 +128,7 @@ const NavBar = () => {
                   to="/registration" 
                   onClick={toggleMenu}
                 >
-                  <button className="bg-red-700 h-10 w-28 rounded-md btns p-6 text-white">
+                  <button className="bg-red-700 h-10 w-28 rounded-md btns p-6 text-white flex item-center justify-center text-center">
                     Register
                   </button>
                 </Link>
