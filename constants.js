@@ -1,2 +1,1 @@
-export const API_URL = "https://fitness-tracker-api-backends.onrender.com";
-
+export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";

@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { useFitness } from "./PlanContext";
 import { TiPlus } from "react-icons/ti";
 import { useAuth } from "./AuthContext";
+import { getIsoWeekNumber } from "../utils/utils";
 
 const Plan = () => {
   const { currentUser } = useAuth();
@@ -43,7 +44,7 @@ const Plan = () => {
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
         await addWeeklyDistance({
           userId,
-          weekNumber: Math.ceil((new Date().getDate() + 1) / 7),
+          weekNumber: getIsoWeekNumber(),
           distance,
         });
       }

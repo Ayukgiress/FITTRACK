@@ -1,106 +1,64 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { IoSettings } from 'react-icons/io5';
-import { FcStatistics } from 'react-icons/fc';
-import { IoHome } from "react-icons/io5";
-import Plan from '../Pages/Plan';
-import Activity from '../Pages/Activity';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaHome, FaChartBar, FaCog, FaTrophy, FaChartLine, FaHistory } from 'react-icons/fa';
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const isActive = (path) => location.pathname === path;
+
+  const menuItems = [
+    { to: '/', icon: FaHome, label: 'Home', color: 'blue' },
+    { to: '/dashboard', icon: FaChartBar, label: 'Dashboard', color: 'blue' },
+    { to: '/dashboard/workoutstore', icon: FaTrophy, label: 'Goals', color: 'red' },
+    { to: '/dashboard/statistics', icon: FaChartLine, label: 'Statistics', color: 'purple' },
+    { to: '/dashboard/history', icon: FaHistory, label: 'History', color: 'orange' },
+    { to: '/dashboard/settings', icon: FaCog, label: 'Settings', color: 'green' },
+  ];
 
   return (
-    <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 text-white focus:outline-none md:hidden"
-      >
-        <FaBars className={`w-8 h-8 ${isOpen ? 'hidden' : 'block'}`} />
-      </button>
-
-      {/* Backdrop for mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 z-40 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 md:w-52 md:relative`}
-      >
-        {/* Close button for mobile */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute top-4 right-4 text-white focus:outline-none md:hidden"
-        >
-          <FaTimes className="w-8 h-8" />
-        </button>
-
-        {/* Navigation Links */}
-        <nav className="flex flex-col h-full pt-16 px-4 sidebar">
-          <div className="space-y-6">
-          
-
-            <Link 
-              to="/" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <IoHome className="text-white w-8 h-8 group-hover:text-red-700" />
-              <span className="text-white ml-2 group-hover:text-red-700">Home</span>
-            </Link>
-
-            <Link 
-              to="/dashboard" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <span className="text-white text-2xl ml-2 group-hover:text-red-700">Dashboard</span>
-            </Link>
-
-            <Link 
-              to="/dashboard/settings" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <IoSettings className="text-white w-8 h-8 group-hover:text-red-700" />
-              <span className="text-white ml-2 group-hover:text-red-700">Settings</span>
-            </Link>
-
-            <Link 
-              to="/dashboard/statistics" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <FcStatistics className="text-white w-8 h-8 group-hover:text-red-700" />
-              <span className="text-white ml-2 group-hover:text-red-700">Statistics</span>
-            </Link>
-
-            <div className="w-full flex items-center p-2 rounded-3xl hover:bg-black  hover:text-red-700 transition-colors duration-200 w-full group">
-              <Plan className="text-white ml-2 group-hover:text-red-700"/>
-            </div>
-
-            <Link 
-              to="/dashboard/workoutstore" 
-              className="flex items-center p-2 rounded-3xl hover:bg-black transition-colors duration-200 w-full group"
-            >
-              <img 
-                src="/src/assets/images/report (1).png" 
-                alt="Workouts" 
-                className="w-10 h-8"
-              />
-              <span className="text-white ml-2 group-hover:text-red-700">Goals</span>
-            </Link>
+    <aside className="w-64 bg-gray-900 shadow-xl border-r border-gray-700 min-h-screen">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-700">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold">FT</span>
           </div>
-        </nav>
-      </aside>
-    </>
+          <span className="text-white font-bold text-xl">FitTrack</span>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-4 py-6">
+        <div className="space-y-2">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                  isActive(item.to)
+                    ? `bg-${item.color}-600 text-white shadow-lg`
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md'
+                }`}
+              >
+                <Icon className={`w-5 h-5 mr-3 group-hover:text-${item.color}-400`} />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+
+        </div>
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-gray-700 mt-auto">
+        <div className="text-center">
+          <p className="text-gray-400 text-sm">Stay fit, stay healthy! 💪</p>
+        </div>
+      </div>
+    </aside>
   );
 };
 

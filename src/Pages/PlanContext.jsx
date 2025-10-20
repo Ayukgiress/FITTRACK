@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
 import { API_URL } from '../../constants';
+import { getIsoWeekNumber } from '../utils/utils';
 
 const PlanContext = createContext();
 
@@ -30,7 +31,7 @@ export const FitnessProvider = ({ children }) => {
       const stepsResponse = await axios.get(`${API_URL}/plan/daily-steps`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const distanceResponse = await axios.get(`${API_URL}/plan/weekly-distance`, {
+      const distanceResponse = await axios.get(`${API_URL}/plan/daily-distance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDailyStepCount(stepsResponse.data);
@@ -52,7 +53,7 @@ export const FitnessProvider = ({ children }) => {
   const addDailySteps = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/plan/daily-steps`, data, {
+      const response = await axios.post(`${API_URL}/api/plan/daily-steps`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchData(); // Fetch the updated data
@@ -69,16 +70,16 @@ export const FitnessProvider = ({ children }) => {
   const addWeeklyDistance = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/plan/weekly-distance`, data, {
+      const response = await axios.post(`${API_URL}/plan/daily-distance`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchData();
-      toast.success("Weekly distance added successfully!");
+      toast.success("Daily distance added successfully!");
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Error adding weekly distance";
+      const errorMessage = error.response?.data?.message || "Error adding daily distance";
       toast.error(errorMessage);
-      console.error("Error adding weekly distance:", errorMessage);
+      console.error("Error adding daily distance:", errorMessage);
       throw error;
     }
   };

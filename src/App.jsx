@@ -17,14 +17,16 @@ import Statistics from "./Pages/Statistics";
 import Settings from "./Pages/Settings";
 import Activity from "./Pages/Activity";
 import Profile from "./Component/Profile";
-import { AuthProvider, useAuth } from './Pages/AuthContext'; 
+import { AuthProvider, useAuth } from './Pages/AuthContext';
 import {  FitnessProvider } from "./Pages/PlanContext";
 
 import Plan from './Pages/Plan';
 import './App.css';
 import WorkoutStore from "./Pages/WorkoutStore";
+import History from "./Pages/History";
 import VerifyEmail from "./Component/VerifyEmail";
 import OauthCallback from "./Component/OauthCallback";
+import ErrorBoundary from "./Component/ErrorBoundary";
 
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated, currentUserLoading } = useAuth();
@@ -36,10 +38,11 @@ const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/registration";
 
   return (
     <>
-      {!isDashboard && <NavBar />}
+      {!isDashboard && !isAuthPage && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
@@ -55,25 +58,28 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="workoutStore" element={<WorkoutStore />} />
           <Route path="plan" element={<Plan />} />
+          <Route path="history" element={<History />} />
           <Route index element={<Activity />} />
         </Route>
       </Routes>
-      {!isDashboard && <Footer />}
+      {!isDashboard && !isAuthPage && <Footer />}
     </>
   );
 };
 
 const App = () => (
-  <AuthProvider>
-    <FitnessProvider>
-      <div className="bg-customGradient">
-        <Router>
-          <Toaster richColors />
-          <AppRoutes />
-        </Router>
-      </div>
-    </FitnessProvider>
-  </AuthProvider>
+  <ErrorBoundary>
+    <AuthProvider>
+      <FitnessProvider>
+        <div className="bg-customGradient">
+          <Router>
+            <Toaster richColors />
+            <AppRoutes />
+          </Router>
+        </div>
+      </FitnessProvider>
+    </AuthProvider>
+  </ErrorBoundary>
 );
 
 export default App;

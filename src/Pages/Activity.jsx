@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { FaWalking } from "react-icons/fa";
 import { RiMapPinLine } from "react-icons/ri";
+import { MdOutlineFastfood, MdOutlineFlag } from "react-icons/md";
+import { BsFire } from "react-icons/bs";
+import MealsCalculatorModal from "../Component/MealsCalculatorModal";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -20,6 +23,8 @@ import { Pie, Line } from 'react-chartjs-2';
 import { useAuth } from "./AuthContext";
 import { useFitness } from './PlanContext';
 import Workout from "./Workout";
+import StepsModal from "../Component/StepsModal";
+import DistanceModal from "../Component/DistanceModal";
 import { API_URL } from "../../constants";
 import { getDurationFromEndTimeAndStartTime } from "../utils/utils";
 
@@ -35,6 +40,92 @@ ChartJS.register(
   PointElement,
   Title
 );
+
+const NUTRITION_TARGETS = {
+  calories: 2200,
+  protein: 150,
+  carbs: 260,
+  fats: 70,
+};
+
+const MEAL_LOG_PLACEHOLDER = [
+  {
+    name: "Power Breakfast",
+    time: "7:30 AM",
+    calories: 420,
+    macros: { protein: 32, carbs: 48, fats: 12 },
+  },
+  {
+    name: "Post-Workout Shake",
+    time: "10:30 AM",
+    calories: 280,
+    macros: { protein: 30, carbs: 24, fats: 6 },
+  },
+  {
+    name: "Refuel Lunch",
+    time: "1:00 PM",
+    calories: 610,
+    macros: { protein: 38, carbs: 68, fats: 20 },
+  },
+  {
+    name: "Recovery Dinner",
+    time: "7:15 PM",
+    calories: 520,
+    macros: { protein: 36, carbs: 46, fats: 18 },
+  },
+  {
+    name: "Evening Snack",
+    time: "9:30 PM",
+    calories: 190,
+    macros: { protein: 18, carbs: 22, fats: 8 },
+  },
+];
+
+
+
+const WEEKLY_STEP_TARGET = 70000;
+const WEEKLY_DISTANCE_TARGET = 25;
+const WEEKLY_CALORIES_TARGET = 3500;
+const WEEKLY_ACTIVE_DAYS_TARGET = 5;
+const DAILY_STEP_TARGET = Math.round(WEEKLY_STEP_TARGET / 7);
+
+const GOAL_INSIGHTS_PLACEHOLDER = [
+  {
+    title: "Consistency is paying off",
+    insight: "You have stayed active for four consecutive days — keep the streak alive!",
+  },
+  {
+    title: "Hydration hero",
+    insight: "Hydration levels are above 75% of your goal. Top up once more to hit 100%!",
+  },
+  {
+    title: "Protein on point",
+    insight: "You’re just a shake away from your protein target for the day.",
+  },
+];
+
+const UPCOMING_GOALS_PLACEHOLDER = [
+  {
+    title: "Beat 10k steps",
+    date: "Tomorrow",
+    description: "Aim for a brisk 45-minute walk to push past your daily step record.",
+  },
+  {
+    title: "Long run Saturday",
+    date: "Saturday",
+    description: "Plan for a 7 km endurance run with a negative split finish.",
+  },
+  {
+    title: "Active recovery day",
+    date: "Sunday",
+    description: "Stretch session plus light yoga to reset before the new week.",
+  },
+];
+
+const calculateProgressPercentage = (current = 0, target = 0) => {
+  if (!target || target <= 0) return 0;
+  return Math.max(0, Math.min(100, Math.round((current / target) * 100)));
+};
 
 const prepareChartData = (workoutLog) => {
   const today = new Date();
@@ -153,13 +244,173 @@ const WeeklyChart = ({ weeklyWorkoutData }) => {
 
 const Activity = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStepsModalOpen, setIsStepsModalOpen] = useState(false);
+  const [isDistanceModalOpen, setIsDistanceModalOpen] = useState(false);
+  const [isMealsCalculatorOpen, setIsMealsCalculatorOpen] = useState(false);
+  const [todaysMeals, setTodaysMeals] = useState([]);
   const [workoutLog, setWorkoutLog] = useState([]);
   const [weeklyCaloriesBurned, setWeeklyCaloriesBurned] = useState(Array(7).fill(0));
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [weeklyDistanceGoals, setWeeklyDistanceGoals] = useState([]);
 
   const { currentUser, currentUserLoading, isAuthenticated } = useAuth();
   const { dailyStepCount, weeklyRunningDistance, loading } = useFitness();
+
+  const todaysSteps = useMemo(() => {
+    return dailyStepCount.reduce((acc, item) => {
+      const date = new Date(item.date).toDateString();
+      if (date === new Date().toDateString()) {
+        return acc + item.steps;
+      }
+      return acc;
+    }, 0);
+  }, [dailyStepCount]);
+
+  const totalWeeklyDistance = useMemo(() => {
+    return weeklyRunningDistance.reduce((acc, item) => acc + (item.distance || 0), 0);
+  }, [weeklyRunningDistance]);
+
+  const todaysDistance = useMemo(() => {
+    const today = new Date().toDateString();
+    return weeklyRunningDistance.find(item => new Date(item.date).toDateString() === today)?.distance || 0;
+  }, [weeklyRunningDistance]);
+
+
+
+  const totalWeeklyCalories = useMemo(() => {
+    return weeklyCaloriesBurned.reduce((acc, item) => acc + item, 0);
+  }, [weeklyCaloriesBurned]);
+
+  const nutritionTotals = useMemo(() => {
+    const placeholderMeals = MEAL_LOG_PLACEHOLDER.reduce(
+      (acc, meal) => {
+        acc.calories += meal.calories;
+        acc.protein += meal.macros.protein;
+        acc.carbs += meal.macros.carbs;
+        acc.fats += meal.macros.fats;
+        return acc;
+      },
+      { calories: 0, protein: 0, carbs: 0, fats: 0 }
+    );
+
+    const todaysMealsTotal = todaysMeals.reduce(
+      (acc, meal) => {
+        acc.calories += meal.totalCalories;
+        meal.items.forEach(item => {
+          acc.protein += item.protein || 0;
+          acc.carbs += item.carbs || 0;
+          acc.fats += item.fats || 0;
+        });
+        return acc;
+      },
+      { calories: 0, protein: 0, carbs: 0, fats: 0 }
+    );
+
+    return {
+      calories: placeholderMeals.calories + todaysMealsTotal.calories,
+      protein: placeholderMeals.protein + todaysMealsTotal.protein,
+      carbs: placeholderMeals.carbs + todaysMealsTotal.carbs,
+      fats: placeholderMeals.fats + todaysMealsTotal.fats,
+    };
+  }, [todaysMeals]);
+
+  const nutritionProgress = useMemo(() => {
+    return {
+      calories: calculateProgressPercentage(nutritionTotals.calories, NUTRITION_TARGETS.calories),
+      protein: calculateProgressPercentage(nutritionTotals.protein, NUTRITION_TARGETS.protein),
+      carbs: calculateProgressPercentage(nutritionTotals.carbs, NUTRITION_TARGETS.carbs),
+      fats: calculateProgressPercentage(nutritionTotals.fats, NUTRITION_TARGETS.fats),
+    };
+  }, [nutritionTotals]);
+
+  const activeDaysThisWeek = useMemo(() => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const activeDates = new Set();
+
+    workoutLog.forEach((workout) => {
+      const workoutDate = new Date(workout.date);
+      if (workoutDate >= startOfWeek && workoutDate <= today) {
+        const dateString = workoutDate.toDateString();
+        activeDates.add(dateString);
+      }
+    });
+
+    return activeDates.size;
+  }, [workoutLog]);
+
+  const weeklyGoalProgress = useMemo(() => {
+    return {
+      steps: calculateProgressPercentage(todaysSteps, WEEKLY_STEP_TARGET / 7),
+      distance: calculateProgressPercentage(totalWeeklyDistance, WEEKLY_DISTANCE_TARGET),
+      calories: calculateProgressPercentage(totalWeeklyCalories, WEEKLY_CALORIES_TARGET),
+      activeDays: calculateProgressPercentage(activeDaysThisWeek, WEEKLY_ACTIVE_DAYS_TARGET),
+    };
+  }, [todaysSteps, totalWeeklyDistance, totalWeeklyCalories, activeDaysThisWeek, todaysDistance]);
+
+  const {
+    steps: stepsProgress,
+    distance: distanceProgress,
+    calories: caloriesGoalProgress,
+    activeDays: activeDaysProgress,
+  } = weeklyGoalProgress;
+
+  const caloriesRemaining = Math.max(0, NUTRITION_TARGETS.calories - nutritionTotals.calories);
+
+  const macroBreakdown = useMemo(() => (
+    [
+      {
+        label: "Protein",
+        consumed: nutritionTotals.protein,
+        target: NUTRITION_TARGETS.protein,
+        progress: nutritionProgress.protein,
+        unit: "g",
+      },
+      {
+        label: "Carbs",
+        consumed: nutritionTotals.carbs,
+        target: NUTRITION_TARGETS.carbs,
+        progress: nutritionProgress.carbs,
+        unit: "g",
+      },
+      {
+        label: "Fats",
+        consumed: nutritionTotals.fats,
+        target: NUTRITION_TARGETS.fats,
+        progress: nutritionProgress.fats,
+        unit: "g",
+      },
+    ]
+  ), [nutritionTotals, nutritionProgress]);
+
+  const weeklyGoalDetails = useMemo(() => (
+    [
+      {
+        title: "Daily Step Pace",
+        description: `${todaysSteps.toLocaleString()} / ${DAILY_STEP_TARGET.toLocaleString()} steps`,
+        progress: stepsProgress,
+      },
+      {
+        title: "Distance Covered",
+        description: `${totalWeeklyDistance.toFixed(1)} km / ${WEEKLY_DISTANCE_TARGET} km`,
+        progress: distanceProgress,
+      },
+      {
+        title: "Calories Burned",
+        description: `${totalWeeklyCalories.toFixed(0)} kcal / ${WEEKLY_CALORIES_TARGET.toLocaleString()} kcal`,
+        progress: caloriesGoalProgress,
+      },
+      {
+        title: "Active Day Streak",
+        description: `${activeDaysThisWeek} / ${WEEKLY_ACTIVE_DAYS_TARGET} days active`,
+        progress: activeDaysProgress,
+      },
+    ]
+  ), [todaysSteps, stepsProgress, totalWeeklyDistance, distanceProgress, totalWeeklyCalories, caloriesGoalProgress, activeDaysThisWeek, activeDaysProgress, todaysDistance]);
 
   useEffect(() => {
     if (currentUserLoading) return;
@@ -213,6 +464,12 @@ const Activity = () => {
       setWorkoutLog([]);
       setWeeklyCaloriesBurned(Array(7).fill(0));
     }
+  };
+
+  const handleMealSaved = (mealData) => {
+    setTodaysMeals(prevMeals => [...prevMeals, mealData]);
+    // Here you would also save to backend
+    console.log('Meal saved and added to todays meals:', mealData);
   };
 
   const handleLogSubmit = async (workoutData) => {
@@ -285,75 +542,260 @@ const Activity = () => {
   }
 
   return (
-    <div className="flex flex-col p-4 space-y-4">
-      <div className="flex justify-end mb-4">
-        <button
-          className="bg-black border-2 border-red-700 text-white rounded p-2 workout-btn"
-          onClick={() => {
-            setIsModalOpen(true);
-            setEditingWorkout(null);
-          }}
-        >
-          Add Workout
-        </button>
-        <Workout
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingWorkout(null);
-          }}
-          onSubmit={handleLogSubmit}
-          workoutToEdit={editingWorkout}
-        />
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div className="relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Welcome back, {currentUser?.username || 'Fitness Enthusiast'}! 💪
+          </h1>
+          <p className="text-xl text-blue-100 mb-6">
+            Ready to crush your fitness goals today? Let's track your progress and stay motivated!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+              onClick={() => {
+                setIsModalOpen(true);
+                setEditingWorkout(null);
+              }}
+            >
+              <AiOutlineThunderbolt className="w-5 h-5 mr-2" />
+              Start New Workout
+            </button>
+            <button className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300">
+              View Progress
+            </button>
+          </div>
+        </div>
+        {/* Decorative elements */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-white bg-opacity-10 rounded-full"></div>
+        <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white bg-opacity-10 rounded-full"></div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message ">Weekly Kcal Burned</h3>
-    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-yellow-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <AiOutlineThunderbolt className="text-yellow-500 w-8 h-8" />
-      {weeklyCaloriesBurned.reduce((a, b) => a + b, 0).toFixed(2)} <br />
-      kcal
-    </p>
-  </div>
-  
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Daily Steps Count</h3>
-    <p className="text-white flex flex-col gap-4 text-center font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-green-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <FaWalking className="text-green-500 w-8 h-8" />
-      {dailyStepCount.reduce((acc, item) => {
-        const date = new Date(item.date).toDateString();
-        if (date === new Date().toDateString()) {
-          return acc + item.steps;
-        }
-        return acc;
-      }, 0)} <br />steps
-    </p>
-  </div>
+      {/* Quick Stats Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
+        <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-white text-lg font-bold">Weekly Calories</h3>
+              <p className="text-yellow-100 text-sm">Target: {WEEKLY_CALORIES_TARGET.toLocaleString()} kcal</p>
+            </div>
+            <BsFire className="text-white w-10 h-10 opacity-80" />
+          </div>
+          <p className="text-white text-4xl font-black">{totalWeeklyCalories.toFixed(0)} kcal</p>
+          <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{ width: `${caloriesGoalProgress}%` }}></div>
+          </div>
+          <p className="text-white text-xs mt-2 opacity-80">{caloriesGoalProgress}% of weekly goal</p>
+        </div>
 
-  <div className="bg-neutral-800 rounded-md flex items-center justify-center flex-col p-4 workout-card w-80 gap-12">
-    <h3 className="text-white text-lg sm:text-xl lg:text-3xl message">Weekly Running Distance</h3>
-    <p className="text-white flex flex-col text-center gap-4 font-bold text-xl sm:text-2xl lg:text-3xl border-t-4 border-l-4 border-blue-500 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 justify-center items-center rounded-full">
-      <RiMapPinLine className="text-blue-500 w-8 h-8" />
-      {weeklyRunningDistance.reduce((acc, item) => acc + item.distance, 0)} <br /> km
-    </p>
-  </div>
-</div>
+        <div className="bg-gradient-to-br from-green-400 to-teal-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-white text-lg font-bold">Today's Steps</h3>
+              <p className="text-green-100 text-sm">Target: {DAILY_STEP_TARGET.toLocaleString()} steps</p>
+            </div>
+            <FaWalking className="text-white w-10 h-10 opacity-80" />
+          </div>
+          <p className="text-white text-4xl font-black">{todaysSteps.toLocaleString()}</p>
+          <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{ width: `${stepsProgress}%` }}></div>
+          </div>
+          <p className="text-white text-xs mt-2 opacity-80">{stepsProgress}% of daily goal</p>
+        </div>
 
+        <div className="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-white text-lg font-bold">Weekly Distance Goal</h3>
+              <p className="text-blue-100 text-sm">Achieved: {totalWeeklyDistance.toFixed(1)} km</p>
+            </div>
+            <RiMapPinLine className="text-white w-10 h-10 opacity-80" />
+          </div>
+          <p className="text-white text-4xl font-black">{WEEKLY_DISTANCE_TARGET} km</p>
+          <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{ width: `${distanceProgress}%` }}></div>
+          </div>
+          <p className="text-white text-xs mt-2 opacity-80">{distanceProgress}% of weekly goal</p>
+          <p className="text-white text-xs mt-2 opacity-80">Today's: {todaysDistance.toFixed(1)} km</p>
+        </div>
 
-<div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-  <div className="bg-dashboard-gradient flex-1 w-full md:w-[60%] chart-container h-132"> 
-    <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
-  </div>
+        <div className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-white text-lg font-bold">Active Days</h3>
+              <p className="text-purple-100 text-sm">Target: {WEEKLY_ACTIVE_DAYS_TARGET} days</p>
+            </div>
+            <MdOutlineFlag className="text-white w-10 h-10 opacity-80" />
+          </div>
+          <p className="text-white text-4xl font-black">{activeDaysThisWeek}</p>
+          <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{ width: `${activeDaysProgress}%` }}></div>
+          </div>
+          <p className="text-white text-xs mt-2 opacity-80">{activeDaysProgress}% of weekly streak goal</p>
+        </div>
 
-  <div className="bg-neutral-900 flex-1 w-full md:w-[35%] chart-container h-132 p-8"> 
-    <h2 className="text-white text-lg sm:text-xl mb-4 text-center">Today's Workouts</h2>
-      <TodaysWorkoutChart workoutLog={workoutLog} />
-  </div>
-</div>
+        <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-white text-lg font-bold">Today's Meals</h3>
+              <p className="text-green-100 text-sm">Calories consumed</p>
+            </div>
+            <MdOutlineFastfood className="text-white w-10 h-10 opacity-80" />
+          </div>
+          <p className="text-white text-4xl font-black">{nutritionTotals.calories}</p>
+          <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{ width: `${nutritionProgress.calories}%` }}></div>
+          </div>
+          <p className="text-white text-xs mt-2 opacity-80">{nutritionProgress.calories}% of daily nutrition goal</p>
+        </div>
 
-</div>
-  
+      </div>
+
+      {/* Charts and Analytics */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Weekly Progress Chart */}
+        <div className="xl:col-span-2 bg-gray-800 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-white text-2xl font-bold">Weekly Progress</h2>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span className="text-gray-300 text-sm">Calories Burned</span>
+            </div>
+          </div>
+          <div className="h-80">
+            <WeeklyChart weeklyWorkoutData={weeklyCaloriesBurned} />
+          </div>
+        </div>
+
+        {/* Today's Workouts */}
+        <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
+          <h2 className="text-white text-2xl font-bold mb-6">Today's Workouts</h2>
+          <div className="h-80 flex items-center justify-center">
+            <TodaysWorkoutChart workoutLog={workoutLog} />
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activities & Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Recent Workouts */}
+        <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
+          <h2 className="text-white text-2xl font-bold mb-6">Recent Activities</h2>
+          <div className="space-y-4">
+            {workoutLog.slice(0, 3).map((workout, index) => (
+              <div key={index} className="flex items-center justify-between bg-gray-700 rounded-xl p-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">🏃</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold">{workout.exercise || 'Workout'}</h3>
+                    <p className="text-gray-300 text-sm">
+                      {new Date(workout.date).toLocaleDateString()} • {workout.duration || 'N/A'} min
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-bold text-lg">{workout.calories || 0} kcal</p>
+                </div>
+              </div>
+            ))}
+            {workoutLog.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-400 mb-4">No recent workouts</p>
+                <button
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setEditingWorkout(null);
+                  }}
+                >
+                  Start Your First Workout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
+          <h2 className="text-white text-2xl font-bold mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"
+              onClick={() => {
+                setIsModalOpen(true);
+                setEditingWorkout(null);
+              }}
+            >
+              <AiOutlineThunderbolt className="w-8 h-8 mb-2" />
+              <span>Log Workout</span>
+            </button>
+            <button
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"
+              onClick={() => setIsStepsModalOpen(true)}
+            >
+              <FaWalking className="w-8 h-8 mb-2" />
+              <span>Add Steps</span>
+            </button>
+            <button
+              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"
+              onClick={() => setIsDistanceModalOpen(true)}
+            >
+              <RiMapPinLine className="w-8 h-8 mb-2" />
+              <span>Add Distance</span>
+            </button>
+            <button
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"
+              onClick={() => setIsMealsCalculatorOpen(true)}
+            >
+              <MdOutlineFastfood className="w-8 h-8 mb-2" />
+              <span>Meals Calculator</span>
+            </button>
+            <button
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"
+              onClick={() => window.location.href = '/dashboard/workoutstore'}
+            >
+              <span className="text-2xl mb-2">🎯</span>
+              <span>Set Goal</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Workout Modal */}
+      <Workout
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingWorkout(null);
+        }}
+        onSubmit={handleLogSubmit}
+        workoutToEdit={editingWorkout}
+      />
+
+      {/* Steps Modal */}
+      <StepsModal
+        isOpen={isStepsModalOpen}
+        onClose={() => setIsStepsModalOpen(false)}
+      />
+
+      {/* Distance Modal */}
+      <DistanceModal
+        isOpen={isDistanceModalOpen}
+        onClose={() => setIsDistanceModalOpen(false)}
+      />
+
+      {/* Meals Calculator Modal */}
+      <MealsCalculatorModal
+        isOpen={isMealsCalculatorOpen}
+        onClose={() => setIsMealsCalculatorOpen(false)}
+        onMealSaved={handleMealSaved}
+      />
+    </div>
   );
 };
 

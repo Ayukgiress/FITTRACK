@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-import logoImage from "../../src/assets/96ef8bf31735460fbde3e1c404a3212f-free (1).png"; // Adjust the import path as necessary
+import logoImage from "../../src/assets/96ef8bf31735460fbde3e1c404a3212f-free (1).png";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,44 +11,42 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-black p-4 w-full flex flex-col md:flex-row justify-between nav items-center">
+    <nav className="fixed top-0 left-0 right-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black shadow-lg p-4 w-full flex flex-col md:flex-row justify-around items-center border-b-4 border-red-500 z-50">
       {/* Logo Section */}
       <div className="flex items-center mb-4 md:mb-0">
         <img
           src={logoImage}
           alt="logo"
-          className="h-18 w-24"
+          className="h-16 w-20"
         />
-        <div className="text-white ml-2">
-          <span className="font-bold text-lg">Active</span>
-          <span className="text-red-600 font-bold text-lg">Pulse</span>
-          <h5 className="text-xs">Transform Your Body</h5>
+        <div className="text-gray-800 ml-3">
+          <div className="flex items-center">
+            <span className="font-bold text-2xl text-red-600">Active</span>
+            <span className="font-bold text-2xl text-gray-800">Pulse</span>
+          </div>
+          <h5 className="text-sm text-gray-600 font-medium">Transform Your Body</h5>
         </div>
       </div>
 
       <div className="md:hidden">
-        <button onClick={toggleMenu} className="text-white">
-          {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        <button onClick={toggleMenu} className="text-gray-800 hover:text-red-600 transition-colors">
+          {isMenuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
         </button>
       </div>
 
-      <div className="hidden md:flex justify-center w-full">
-        <Link to="/" className="text-white">
-          Home
-        </Link>
-      </div>
+      
 
-      <div className="hidden md:flex items-center gap-5">
-        <Link to="/about" className="text-white">
+      <div className="hidden md:flex items-center gap-4">
+        <Link to="/about" className="text-gray-800 font-semibold hover:text-red-600 transition-colors px-4 py-2">
           About
         </Link>
         <Link to="/login">
-          <button className="rounded-md border-2 h-9 w-24 border-red-700 text-rose-400 font-medium shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:text-white">
+          <button className="rounded-lg border-2 border-red-500 text-red-600 font-semibold px-6 py-2 hover:bg-red-500 hover:text-white transition-all duration-300">
             Login
           </button>
         </Link>
         <Link to="/registration">
-          <button className="bg-red-700 h-9 w-24 rounded-md">
+          <button className="bg-red-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-300">
             Register
           </button>
         </Link>
@@ -56,28 +54,28 @@ const NavBar = () => {
 
       {/* Mobile View */}
       {isMenuOpen && (
-        <div className="md:hidden mt-4">
-          <ul className="flex flex-col items-center text-white">
-            <li className="py-2 w-full text-center border-b border-red-700">
-              <Link to="/" onClick={toggleMenu}>
+        <div className="md:hidden mt-4 w-full bg-white border-t border-gray-200">
+          <ul className="flex flex-col items-center text-gray-800 py-4">
+            <li className="py-3 w-full text-center border-b border-gray-200">
+              <Link to="/" onClick={toggleMenu} className="font-semibold hover:text-red-600 transition-colors">
                 Home
               </Link>
             </li>
-            <li className="py-2 w-full text-center border-b border-red-700">
-              <Link to="/about" onClick={toggleMenu}>
+            <li className="py-3 w-full text-center border-b border-gray-200">
+              <Link to="/about" onClick={toggleMenu} className="font-semibold hover:text-red-600 transition-colors">
                 About
               </Link>
             </li>
-            <li className="py-2 w-full text-center border-b border-red-700">
+            <li className="py-3 w-full text-center border-b border-gray-200">
               <Link to="/login" onClick={toggleMenu}>
-                <button className=" btns rounded-md border-2 h-9 w-24 border-red-700 text-rose-400 font-medium shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:text-white">
+                <button className="rounded-lg border-2 border-red-500 text-red-600 font-semibold px-6 py-2 hover:bg-red-500 hover:text-white transition-all duration-300">
                   Login
                 </button>
               </Link>
             </li>
-            <li className="py-2 w-full text-center">
+            <li className="py-3 w-full text-center">
               <Link to="/registration" onClick={toggleMenu}>
-                <button className="bg-red-700 h-10 w-28 rounded-md btns p-6">
+                <button className="bg-red-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-300">
                   Register
                 </button>
               </Link>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { API_URL } from "../../constants";
+import WeightModal from "../Component/WeightModal";
 
 const AuthContext = createContext();
 
@@ -11,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserLoading, setCurrentUserLoading] = useState(true);
   const [refetchCurrentUser, setRefetchCurrentUser] = useState(false);
+  const [showWeightModal, setShowWeightModal] = useState(false);
 
   const isAuthenticated = useMemo(() => {
     return !currentUserLoading && !!currentUser?._id;
@@ -33,6 +35,11 @@ export const AuthProvider = ({ children }) => {
       const user = await response.json();
 
       setCurrentUser(user);
+
+      // Check if user needs to set weight (e.g., for Google signup)
+      if (!user.weight) {
+        setShowWeightModal(true);
+      }
     } catch (error) {
       console.error("Error fetching current user:", error);
     }
@@ -65,6 +72,10 @@ export const AuthProvider = ({ children }) => {
       }}
     >
       {children}
+      <WeightModal
+        isOpen={showWeightModal}
+        onClose={() => setShowWeightModal(false)}
+      />
     </AuthContext.Provider>
   );
 };

@@ -1,0 +1,33 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:945799872792:stack/InfraStack/badfb800-9ead-11f0-91e2-1261b795a9f7",
+            "StackName": "InfraStack",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:945799872792:changeSet/cdk-deploy-change-set/c646e933-2b48-433b-98fd-7f8a85cc0ab4",
+            "Parameters": [
+                {
+                    "ParameterKey": "BootstrapVersion",
+                    "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+                    "ResolvedValue": "29"
+                }
+            ],
+            "CreationTime": "2025-10-01T10:02:25.273000+00:00",
+            "LastUpdatedTime": "2025-10-01T10:02:34.242000+00:00",
+            "RollbackConfiguration": {},
+            "StackStatus": "CREATE_IN_PROGRESS",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_IAM",
+                "CAPABILITY_NAMED_IAM",
+                "CAPABILITY_AUTO_EXPAND"
+            ],
+            "RoleARN": "arn:aws:iam::945799872792:role/cdk-hnb659fds-cfn-exec-role-945799872792-us-east-1",
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

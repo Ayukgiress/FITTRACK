@@ -1,0 +1,4 @@
+- [x] Create WeightModal.jsx component for weight input
+- [x] Update AuthContext.jsx to show WeightModal if user has no weight after Google auth
+- [x] Handle weight submission in modal to update user profile
+- [x] Test Google signup flow with weight modal
