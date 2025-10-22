@@ -81,12 +81,11 @@ const Dashboard = () => {
       {/* Mobile Drawer */}
       <MobileDrawer isOpen={isMobileDrawerOpen} onClose={toggleMobileDrawer} />
 
-      {/* Top Navigation */}
-      <TopNav onMenuClick={toggleMobileDrawer} />
+
 
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:block fixed left-0 top-16 h-full">
+        <div className="hidden lg:block fixed left-0 top-0 h-full">
           <Sidebar />
         </div>
 
@@ -103,7 +102,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2024 FitTrack. All rights reserved.
+              © 2025 NoSlack. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm text-gray-400">
               <a href="#" className="hover:text-white transition-colors duration-200">Privacy Policy</a>

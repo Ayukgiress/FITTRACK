@@ -37,7 +37,7 @@ const MobileDrawer = ({ isOpen, onClose }) => {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">FT</span>
             </div>
-            <span className="text-white font-bold text-lg">FitTrack</span>
+            <span className="text-white font-bold text-lg">NoSlack</span>
           </div>
           <button
             onClick={onClose}

@@ -70,7 +70,7 @@ const Registration = () => {
             <FaDumbbell className="text-red-600 text-3xl" />
           </div>
           <h1 className="text-4xl font-black text-gray-900 mb-2">
-            Join ActivePulse
+            Join NoSlack
           </h1>
           <p className="text-gray-600">
             Start your fitness journey today
@@ -171,7 +171,6 @@ const Registration = () => {
                 />
                 <FaDumbbell className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
               </div>
-              {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight.message}</p>}
             </div>
 
             <button

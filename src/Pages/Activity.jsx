@@ -84,7 +84,7 @@ const MEAL_LOG_PLACEHOLDER = [
 
 
 const WEEKLY_STEP_TARGET = 70000;
-const WEEKLY_DISTANCE_TARGET = 25;
+
 const WEEKLY_CALORIES_TARGET = 3500;
 const WEEKLY_ACTIVE_DAYS_TARGET = 5;
 const DAILY_STEP_TARGET = Math.round(WEEKLY_STEP_TARGET / 7);
@@ -255,7 +255,7 @@ const Activity = () => {
   const [weeklyDistanceGoals, setWeeklyDistanceGoals] = useState([]);
 
   const { currentUser, currentUserLoading, isAuthenticated } = useAuth();
-  const { dailyStepCount, weeklyRunningDistance, loading } = useFitness();
+  const { dailyStepCount, weeklyRunningDistance, loading, weeklyDistanceTarget } = useFitness();
 
   const todaysSteps = useMemo(() => {
     return dailyStepCount.reduce((acc, item) => {
@@ -283,17 +283,7 @@ const Activity = () => {
   }, [weeklyCaloriesBurned]);
 
   const nutritionTotals = useMemo(() => {
-    const placeholderMeals = MEAL_LOG_PLACEHOLDER.reduce(
-      (acc, meal) => {
-        acc.calories += meal.calories;
-        acc.protein += meal.macros.protein;
-        acc.carbs += meal.macros.carbs;
-        acc.fats += meal.macros.fats;
-        return acc;
-      },
-      { calories: 0, protein: 0, carbs: 0, fats: 0 }
-    );
-
+    // Only use actual today's meals, not placeholder data
     const todaysMealsTotal = todaysMeals.reduce(
       (acc, meal) => {
         acc.calories += meal.totalCalories;
@@ -307,12 +297,7 @@ const Activity = () => {
       { calories: 0, protein: 0, carbs: 0, fats: 0 }
     );
 
-    return {
-      calories: placeholderMeals.calories + todaysMealsTotal.calories,
-      protein: placeholderMeals.protein + todaysMealsTotal.protein,
-      carbs: placeholderMeals.carbs + todaysMealsTotal.carbs,
-      fats: placeholderMeals.fats + todaysMealsTotal.fats,
-    };
+    return todaysMealsTotal;
   }, [todaysMeals]);
 
   const nutritionProgress = useMemo(() => {
@@ -346,11 +331,11 @@ const Activity = () => {
   const weeklyGoalProgress = useMemo(() => {
     return {
       steps: calculateProgressPercentage(todaysSteps, WEEKLY_STEP_TARGET / 7),
-      distance: calculateProgressPercentage(totalWeeklyDistance, WEEKLY_DISTANCE_TARGET),
+      distance: calculateProgressPercentage(totalWeeklyDistance, weeklyDistanceTarget || 0),
       calories: calculateProgressPercentage(totalWeeklyCalories, WEEKLY_CALORIES_TARGET),
       activeDays: calculateProgressPercentage(activeDaysThisWeek, WEEKLY_ACTIVE_DAYS_TARGET),
     };
-  }, [todaysSteps, totalWeeklyDistance, totalWeeklyCalories, activeDaysThisWeek, todaysDistance]);
+  }, [todaysSteps, totalWeeklyDistance, totalWeeklyCalories, activeDaysThisWeek, todaysDistance, weeklyDistanceTarget]);
 
   const {
     steps: stepsProgress,
@@ -396,7 +381,7 @@ const Activity = () => {
       },
       {
         title: "Distance Covered",
-        description: `${totalWeeklyDistance.toFixed(1)} km / ${WEEKLY_DISTANCE_TARGET} km`,
+        description: `${totalWeeklyDistance.toFixed(1)} km / ${weeklyDistanceTarget || 0} km`,
         progress: distanceProgress,
       },
       {
@@ -410,7 +395,7 @@ const Activity = () => {
         progress: activeDaysProgress,
       },
     ]
-  ), [todaysSteps, stepsProgress, totalWeeklyDistance, distanceProgress, totalWeeklyCalories, caloriesGoalProgress, activeDaysThisWeek, activeDaysProgress, todaysDistance]);
+  ), [todaysSteps, stepsProgress, totalWeeklyDistance, distanceProgress, totalWeeklyCalories, caloriesGoalProgress, activeDaysThisWeek, activeDaysProgress, todaysDistance, weeklyDistanceTarget]);
 
   useEffect(() => {
     if (currentUserLoading) return;
@@ -420,6 +405,7 @@ const Activity = () => {
         setIsLoading(true);
         try {
           await fetchWorkoutLog();
+          await fetchTodaysMeals();
         } catch (error) {
           console.error("Error fetching initial data:", error);
           toast.error("Error loading dashboard data");
@@ -466,9 +452,39 @@ const Activity = () => {
     }
   };
 
+  const fetchTodaysMeals = async () => {
+    if (!currentUser?._id || !isAuthenticated) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+      const response = await fetch(`${API_URL}/api/meals/${currentUser._id}/${today}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setTodaysMeals(data);
+        }
+      } else if (response.status === 404) {
+        // No meals for today, set empty array
+        setTodaysMeals([]);
+      }
+    } catch (error) {
+      console.error("Error fetching today's meals:", error);
+      setTodaysMeals([]);
+    }
+  };
+
   const handleMealSaved = (mealData) => {
     setTodaysMeals(prevMeals => [...prevMeals, mealData]);
-    // Here you would also save to backend
     console.log('Meal saved and added to todays meals:', mealData);
   };
 
@@ -534,7 +550,14 @@ const Activity = () => {
   };
 
   if (currentUserLoading || isLoading || loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading your activity data...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -614,7 +637,7 @@ const Activity = () => {
             </div>
             <RiMapPinLine className="text-white w-10 h-10 opacity-80" />
           </div>
-          <p className="text-white text-4xl font-black">{WEEKLY_DISTANCE_TARGET} km</p>
+          <p className="text-white text-4xl font-black">{weeklyDistanceTarget || 0} km</p>
           <div className="mt-3 bg-white bg-opacity-20 rounded-full h-2">
             <div className="bg-white h-2 rounded-full" style={{ width: `${distanceProgress}%` }}></div>
           </div>
@@ -746,7 +769,7 @@ const Activity = () => {
               onClick={() => setIsDistanceModalOpen(true)}
             >
               <RiMapPinLine className="w-8 h-8 mb-2" />
-              <span>Add Distance</span>
+              <span>Set Distance Goal</span>
             </button>
             <button
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center"

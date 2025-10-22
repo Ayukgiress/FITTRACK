@@ -31,19 +31,37 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch current user");
-      const user = await response.json();
+      if (!response.ok) {
+        // If token is invalid, clear it and don't set user
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          setCurrentUser(null);
+          return;
+        }
+        throw new Error("Failed to fetch current user");
+      }
 
+      const user = await response.json();
       setCurrentUser(user);
 
-      // Check if user needs to set weight (e.g., for Google signup)
-      if (!user.weight) {
+      // Prompt for weight if missing after any auth flow
+      if (!user.weight || localStorage.getItem("pendingWeight")) {
         setShowWeightModal(true);
+        if (!localStorage.getItem("pendingWeight")) {
+          localStorage.setItem("pendingWeight", "true");
+        }
+      } else {
+        setShowWeightModal(false);
+        localStorage.removeItem("pendingWeight");
       }
     } catch (error) {
       console.error("Error fetching current user:", error);
+      // Clear invalid token on error
+      localStorage.removeItem("token");
+      setCurrentUser(null);
     }
   };
+
 
   useEffect(() => {
     setCurrentUserLoading(true);
@@ -51,6 +69,7 @@ export const AuthProvider = ({ children }) => {
 
     if (!token) {
       setCurrentUserLoading(false);
+      setShowWeightModal(false);
       return;
     }
   
@@ -58,6 +77,11 @@ export const AuthProvider = ({ children }) => {
       setCurrentUserLoading(false);
     });
   }, [refetchCurrentUser]);
+
+  const handleWeightComplete = () => {
+    setShowWeightModal(false);
+    setRefetchCurrentUser(prev => !prev);
+  };
 
   return (
     <AuthContext.Provider
@@ -69,12 +93,14 @@ export const AuthProvider = ({ children }) => {
         currentUserLoading,
         setCurrentUserLoading,
         setRefetchCurrentUser,
+        setShowWeightModal,
       }}
     >
       {children}
       <WeightModal
         isOpen={showWeightModal}
         onClose={() => setShowWeightModal(false)}
+        onSubmit={handleWeightComplete}
       />
     </AuthContext.Provider>
   );

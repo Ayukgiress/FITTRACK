@@ -8,13 +8,13 @@ const AboutApp = () => {
       <div className="w-full max-w-full px-4">
         <div className="bg-black border-2 border-red-700 h-auto text-white p-4 mb-4">
           <h2 className="text-lg font-semibold">
-            What is ActivePulse and how can it help me reach my fitness goals?
+            What is NoSlack and how can it help me reach my fitness goals?
           </h2>
         </div>
 
         <div className="bg-black border-2 border-red-700 h-auto text-white p-4 mb-4">
           <h2 className="text-lg">
-            ActivePulse is an online fitness platform that offers personalized
+            NoSlack is an online fitness platform that offers personalized
             workout plans, expert coaching, and comprehensive nutritional
             guidance. Whether you're looking to lose weight, build muscle, or
             simply stay fit, our tailored programs and community support will
@@ -24,7 +24,7 @@ const AboutApp = () => {
 
         <div className="bg-black border-2 border-red-700 h-auto text-white p-4 mb-4">
           <h2 className="text-lg font-semibold">
-            How do I get started with a workout plan on ActivePulse?
+            How do I get started with a workout plan on NoSlack?
           </h2>
         </div>
 

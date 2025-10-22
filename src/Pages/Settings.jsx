@@ -1,20 +1,28 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { toast } from 'react-toastify';
-import { FaUser, FaPalette, FaSignOutAlt, FaCog, FaSave, FaCamera, FaEdit } from 'react-icons/fa';
+import { toast } from 'sonner';
+import { FaUser, FaPalette, FaSignOutAlt, FaCog, FaSave, FaCamera, FaEdit, FaWeight, FaRuler, FaCalendarAlt, FaVenusMars } from 'react-icons/fa';
+import { API_URL } from '../../constants';
 
 const Settings = () => {
   const { currentUser, logout } = useAuth();
   const [settings, setSettings] = useState({
-    theme: 'dark',
+    theme: localStorage.getItem('theme') || 'dark',
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [profileData, setProfileData] = useState({
     username: currentUser?.username || '',
     email: currentUser?.email || '',
+    firstName: currentUser?.firstName || '',
+    lastName: currentUser?.lastName || '',
+    dateOfBirth: currentUser?.dateOfBirth || '',
+    gender: currentUser?.gender || '',
+    height: currentUser?.height || '',
+    weight: currentUser?.weight || '',
     profilePhoto: null,
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleSettingChange = (setting, value) => {
@@ -39,15 +47,57 @@ const Settings = () => {
     }
   };
 
-  const handleSaveSettings = () => {
-    // Save theme to localStorage
-    localStorage.setItem('theme', settings.theme);
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: settings.theme } }));
-    // Here you would typically save profile data to backend
-    toast.success('Settings saved successfully!');
-    setHasChanges(false);
-    setIsEditing(false);
+  const handleSaveSettings = async () => {
+    setLoading(true);
+    try {
+      // Save theme to localStorage
+      localStorage.setItem('theme', settings.theme);
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: settings.theme } }));
+
+      // Save profile data to backend
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error('Authentication token not found');
+        return;
+      }
+
+      const profileUpdateData = {
+        username: profileData.username,
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        dateOfBirth: profileData.dateOfBirth,
+        gender: profileData.gender,
+        height: profileData.height,
+        weight: profileData.weight,
+      };
+
+      const response = await fetch(`${API_URL}/users/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(profileUpdateData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+
+      toast.success('Settings saved successfully!');
+      setHasChanges(false);
+      setIsEditing(false);
+
+      // Refresh user data in context
+      window.location.reload();
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error(error.message || 'Failed to save settings');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -79,9 +129,17 @@ const Settings = () => {
               </div>
               <button
                 onClick={handleSaveSettings}
-                className="bg-white text-green-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                disabled={loading}
+                className="bg-white text-green-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
-                Save Changes
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
               </button>
             </div>
           </div>
@@ -160,16 +218,110 @@ const Settings = () => {
                   </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">Email Address</label>
+                    <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                      <p className="text-white font-medium">{profileData.email || 'N/A'}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">First Name</label>
                     {isEditing ? (
                       <input
-                        type="email"
-                        value={profileData.email}
-                        onChange={(e) => handleProfileChange('email', e.target.value)}
+                        type="text"
+                        value={profileData.firstName}
+                        onChange={(e) => handleProfileChange('firstName', e.target.value)}
                         className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       />
                     ) : (
                       <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
-                        <p className="text-white font-medium">{profileData.email || 'N/A'}</p>
+                        <p className="text-white font-medium">{profileData.firstName || 'N/A'}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">Last Name</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.lastName}
+                        onChange={(e) => handleProfileChange('lastName', e.target.value)}
+                        className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-white font-medium">{profileData.lastName || 'N/A'}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">Date of Birth</label>
+                    {isEditing ? (
+                      <input
+                        type="date"
+                        value={profileData.dateOfBirth}
+                        onChange={(e) => handleProfileChange('dateOfBirth', e.target.value)}
+                        className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-white font-medium">{profileData.dateOfBirth ? new Date(profileData.dateOfBirth).toLocaleDateString() : 'N/A'}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">Gender</label>
+                    {isEditing ? (
+                      <select
+                        value={profileData.gender}
+                        onChange={(e) => handleProfileChange('gender', e.target.value)}
+                        className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                      </select>
+                    ) : (
+                      <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-white font-medium">{profileData.gender || 'N/A'}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300 flex items-center">
+                      <FaRuler className="mr-2" />
+                      Height (cm)
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        value={profileData.height}
+                        onChange={(e) => handleProfileChange('height', e.target.value)}
+                        placeholder="Enter height in cm"
+                        className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-white font-medium">{profileData.height ? `${profileData.height} cm` : 'N/A'}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300 flex items-center">
+                      <FaWeight className="mr-2" />
+                      Weight (kg)
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        value={profileData.weight}
+                        onChange={(e) => handleProfileChange('weight', e.target.value)}
+                        placeholder="Enter weight in kg"
+                        className="w-full bg-gray-700/50 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-white font-medium">{profileData.weight ? `${profileData.weight} kg` : 'N/A'}</p>
                       </div>
                     )}
                   </div>

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaChartBar, FaCog, FaTrophy, FaChartLine, FaHistory } from 'react-icons/fa';
+import { FaHome, FaChartBar, FaCog, FaTrophy, FaChartLine, FaHistory, FaSignOutAlt } from 'react-icons/fa';
+import { useAuth } from '../Pages/AuthContext';
 
 const Sidebar = () => {
   const location = useLocation();
+  const { logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -17,19 +19,19 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-gray-900 shadow-xl border-r border-gray-700 min-h-screen">
+    <aside className="w-64 bg-gray-900 shadow-xl border-r border-gray-700 min-h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-gray-700">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
             <span className="text-white font-bold">FT</span>
           </div>
-          <span className="text-white font-bold text-xl">FitTrack</span>
+          <span className="text-white font-bold text-xl">NoSlack</span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 py-6 overflow-y-auto">
         <div className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -53,10 +55,17 @@ const Sidebar = () => {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-700 mt-auto">
+      <div className="p-4 border-t border-gray-700 mt-auto flex flex-col justify-between h-full">
         <div className="text-center">
           <p className="text-gray-400 text-sm">Stay fit, stay healthy! 💪</p>
         </div>
+        <button
+          onClick={logout}
+          className="flex items-center w-full px-4 py-3 rounded-xl text-gray-300 hover:bg-red-600 hover:text-white transition-all duration-200 group mt-auto"
+        >
+          <FaSignOutAlt className="w-5 h-5 mr-3 group-hover:text-red-400" />
+          <span className="font-medium">Logout</span>
+        </button>
       </div>
     </aside>
   );

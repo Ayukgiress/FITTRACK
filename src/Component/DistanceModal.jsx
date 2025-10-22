@@ -5,7 +5,6 @@ import { useFitness } from '../Pages/PlanContext';
 import { useAuth } from '../Pages/AuthContext';
 
 const DistanceModal = ({ isOpen, onClose }) => {
-  const [date, setDate] = useState('');
   const [distance, setDistance] = useState('');
   const { addWeeklyDistance } = useFitness();
   const { currentUser } = useAuth();
@@ -13,17 +12,15 @@ const DistanceModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!currentUser) {
-      toast.error("Please log in to add distance");
+      toast.error("Please log in to set distance goal");
       return;
     }
     try {
       await addWeeklyDistance({
         userId: currentUser._id,
-        date,
         distance: parseFloat(distance),
       });
       onClose();
-      setDate('');
       setDistance('');
     } catch (error) {
       // Error handled in context
@@ -58,23 +55,10 @@ const DistanceModal = ({ isOpen, onClose }) => {
       }}
     >
       <form onSubmit={handleSubmit} className='form'>
-        <h2 className="text-2xl font-bold mb-4">Add Daily Distance</h2>
-        <div className="mb-4">
-          <label htmlFor="date" className="block text-sm font-medium text-white">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded p-3 text-black"
-            required
-          />
-        </div>
+        <h2 className="text-2xl font-bold mb-4">Set Weekly Distance Goal</h2>
         <div className="mb-4">
           <label htmlFor="distance" className="block text-sm font-medium text-white">
-            Distance (km)
+            Weekly Distance Goal (km)
           </label>
           <input
             type="number"
@@ -85,8 +69,10 @@ const DistanceModal = ({ isOpen, onClose }) => {
             required
             min="0"
             step="0.1"
+            placeholder="e.g., 25"
           />
         </div>
+
         <div className="flex justify-between mt-4">
           <button onClick={onClose} className="text-red-500 font-semibold">
             Cancel

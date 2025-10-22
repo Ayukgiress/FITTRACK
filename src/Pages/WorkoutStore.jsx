@@ -27,14 +27,21 @@ const WorkoutStore = () => {
       const token = localStorage.getItem('token');
 
       // Fetch regular goals
-      const goalsResponse = await fetch(`${API_URL}/api/goals/${currentUser._id}`, {
+      const goalsResponse = await fetch(`${API_URL}/goals/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       let allGoals = [];
       if (goalsResponse.ok) {
         const goalsData = await goalsResponse.json();
-        allGoals = [...goalsData];
+        // Map backend types to frontend types
+        const mappedGoals = goalsData.map(goal => ({
+          ...goal,
+          type: goal.type === 'dailySteps' ? 'Daily Steps' : goal.type === 'weeklyDistance' ? 'Weekly Distance' : goal.type,
+          target: goal.value,
+          unit: goal.type === 'dailySteps' ? 'steps' : 'km'
+        }));
+        allGoals = [...mappedGoals];
       }
 
       // Fetch daily distance goals
@@ -121,11 +128,12 @@ const WorkoutStore = () => {
           userId: currentUser._id,
         });
       } else {
-        url = `${API_URL}/api/goals/${currentUser._id}`;
+        url = `${API_URL}/goals/`;
+        // Map frontend types to backend types
+        const backendType = newGoal.type === 'Daily Steps' ? 'dailySteps' : newGoal.type === 'Weekly Distance' ? 'weeklyDistance' : newGoal.type;
         body = JSON.stringify({
-          type: newGoal.type,
-          target: parseFloat(newGoal.target),
-          unit: newGoal.unit,
+          type: backendType,
+          value: parseFloat(newGoal.target),
         });
       }
 
@@ -153,6 +161,8 @@ const WorkoutStore = () => {
 
     try {
       const token = localStorage.getItem('token');
+      // Map frontend types to backend types
+      const backendType = editingGoal.type === 'Daily Steps' ? 'dailySteps' : editingGoal.type === 'Weekly Distance' ? 'weeklyDistance' : editingGoal.type;
       const response = await fetch(`${API_URL}/goals/${editingGoal._id}`, {
         method: 'PUT',
         headers: {
@@ -160,9 +170,8 @@ const WorkoutStore = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          type: editingGoal.type,
-          target: parseFloat(editingGoal.target),
-          unit: editingGoal.unit,
+          type: backendType,
+          value: parseFloat(editingGoal.target),
         }),
       });
 

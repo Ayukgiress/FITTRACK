@@ -21,21 +21,50 @@ export const FitnessProvider = ({ children }) => {
 
   const fetchData = async () => {
     if (!currentUser || !currentUser._id) {
-      console.error("No current user provided");
+      console.log("No current user provided, skipping data fetch");
+      setLoading(false);
       return;
     }
-    
+
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const stepsResponse = await axios.get(`${API_URL}/plan/daily-steps`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const distanceResponse = await axios.get(`${API_URL}/plan/daily-distance`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setDailyStepCount(stepsResponse.data);
-      setWeeklyRunningDistance(distanceResponse.data);
+      if (!token) {
+        console.error("No auth token found");
+        setLoading(false);
+        return;
+      }
+
+      const [stepsResponse, distanceResponse, goalsResponse] = await Promise.allSettled([
+        axios.get(`${API_URL}/plan/daily-steps`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/plan/daily-distance`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/goals/`, { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+
+      if (stepsResponse.status === 'fulfilled') {
+        setDailyStepCount(stepsResponse.value.data);
+      } else {
+        console.warn("Failed to fetch daily steps:", stepsResponse.reason);
+        setDailyStepCount([]);
+      }
+
+      if (distanceResponse.status === 'fulfilled') {
+        setWeeklyRunningDistance(distanceResponse.value.data);
+      } else {
+        console.warn("Failed to fetch weekly distance:", distanceResponse.reason);
+        setWeeklyRunningDistance([]);
+      }
+
+      if (goalsResponse.status === 'fulfilled' && goalsResponse.value.data) {
+        const weeklyDistanceGoal = goalsResponse.value.data.find(goal => goal.type === 'weeklyDistance');
+        const dailyStepsGoal = goalsResponse.value.data.find(goal => goal.type === 'dailySteps');
+        setWeeklyDistanceTarget(weeklyDistanceGoal ? weeklyDistanceGoal.value : 0);
+        setWeeklyStepTarget(dailyStepsGoal ? dailyStepsGoal.value : 0);
+      } else {
+        console.warn("Failed to fetch goals:", goalsResponse.reason);
+        setWeeklyDistanceTarget(0);
+        setWeeklyStepTarget(0);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch data. Please try again.");
@@ -44,16 +73,31 @@ export const FitnessProvider = ({ children }) => {
     }
   };
 
-  const setTargets = async (stepsTarget, distanceTarget) => {
-    setWeeklyStepTarget(stepsTarget);
-    setWeeklyDistanceTarget(distanceTarget);
-    toast.success("Targets set successfully!");
+  const setTargets = async (stepsTarget = null, distanceTarget = null) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_URL}/plan/goals`, {
+        weeklyStepTarget: stepsTarget,
+        weeklyDistanceTarget: distanceTarget,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (stepsTarget !== null) setWeeklyStepTarget(stepsTarget);
+      if (distanceTarget !== null) setWeeklyDistanceTarget(distanceTarget);
+      toast.success("Targets set successfully!");
+      return response.data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Error setting targets";
+      toast.error(errorMessage);
+      console.error("Error setting targets:", errorMessage);
+      throw error;
+    }
   };
 
   const addDailySteps = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/api/plan/daily-steps`, data, {
+      const response = await axios.post(`${API_URL}/plan/daily-steps`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchData(); // Fetch the updated data
@@ -70,16 +114,16 @@ export const FitnessProvider = ({ children }) => {
   const addWeeklyDistance = async (data) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/plan/daily-distance`, data, {
+      const response = await axios.post(`${API_URL}/plan/weekly-distance-goal`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      await fetchData();
-      toast.success("Daily distance added successfully!");
+      setWeeklyDistanceTarget(data.distance);
+      toast.success("Weekly distance goal set successfully!");
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Error adding daily distance";
+      const errorMessage = error.response?.data?.message || "Error setting weekly distance goal";
       toast.error(errorMessage);
-      console.error("Error adding daily distance:", errorMessage);
+      console.error("Error setting weekly distance goal:", errorMessage);
       throw error;
     }
   };

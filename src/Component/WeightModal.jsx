@@ -5,9 +5,9 @@ import { useAuth } from '../Pages/AuthContext';
 import { API_URL } from '../../constants';
 
 const WeightModal = ({ isOpen, onClose, onSubmit }) => {
-  const [weight, setWeight] = useState('');
+  const [weight, setWeight] = useState("");
   const [loading, setLoading] = useState(false);
-  const { currentUser, setRefetchCurrentUser } = useAuth();
+  const { setRefetchCurrentUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,21 +15,28 @@ const WeightModal = ({ isOpen, onClose, onSubmit }) => {
       toast.error("Please enter a valid weight between 30 and 300 kg");
       return;
     }
+
+    const parsedWeight = parseFloat(weight);
     setLoading(true);
-    if (onSubmit) {
-      onSubmit(weight);
-      setWeight('');
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      localStorage.setItem("pendingWeight", weight.toString());
+      onClose();
+      toast.success("Weight saved locally. Please complete Google sign-in to finish registration.");
+      setLoading(false);
       return;
     }
+
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/users/update-weight`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ weight: parseFloat(weight) }),
+        body: JSON.stringify({ weight: parsedWeight }),
       });
 
       if (!response.ok) {
@@ -38,8 +45,14 @@ const WeightModal = ({ isOpen, onClose, onSubmit }) => {
 
       toast.success("Weight updated successfully!");
       setRefetchCurrentUser(prev => !prev);
+      setWeight("");
+      localStorage.removeItem("pendingWeight");
+
+      if (onSubmit) {
+        onSubmit();
+      }
+
       onClose();
-      setWeight('');
     } catch (error) {
       console.error("Error updating weight:", error);
       toast.error("Failed to update weight. Please try again.");

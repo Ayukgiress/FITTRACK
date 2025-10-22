@@ -44,7 +44,6 @@ const Plan = () => {
       } else if (goalType === "weeklyDistance" && !isNaN(distance)) {
         await addWeeklyDistance({
           userId,
-          weekNumber: getIsoWeekNumber(),
           distance,
         });
       }
