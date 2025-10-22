@@ -6,3 +6,16 @@ node_modules
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+# AWS SAM build directory
+.sam-build
+# AWS SAM configuration file
+.samconfig.toml
+# Compiled Python files
+__pycache__/
+*.pyc
+# Local AWS credentials file
+.aws/credentials
+# Local AWS config file
+.aws/config
+# Terraform files
+*.tfstate   
