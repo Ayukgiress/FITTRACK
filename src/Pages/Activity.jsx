@@ -459,7 +459,17 @@ const Activity = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+      let today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
+      // Validate date - if it's in the future, use current date
+      const todayDate = new Date(today);
+      const now = new Date();
+      if (todayDate > now) {
+        console.warn("Calculated date is in the future, using current date:", today);
+        today = now.toISOString().split('T')[0];
+      }
+
+      console.log("Fetching meals for date:", today);
       const response = await fetch(`${API_URL}/api/meals/${currentUser._id}/${today}`, {
         method: 'GET',
         headers: {

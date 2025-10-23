@@ -17,7 +17,10 @@ const GoogleAuth = () => {
 
   const handleGoogleLogin = () => {
     setLoading(true);
-    window.location.href = `${API_URL}/users/auth/google?missingWeight=true`;
+    const callbackUrl = `${window.location.origin}/auth/callback`;
+    console.log("Redirecting to Google OAuth with callback:", callbackUrl);
+    console.log("API_URL:", API_URL);
+    window.location.href = `${API_URL}/users/auth/google?missingWeight=true&callbackUrl=${encodeURIComponent(callbackUrl)}`;
   };
 
   return (

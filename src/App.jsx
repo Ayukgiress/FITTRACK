@@ -61,7 +61,8 @@ const AppRoutes = () => {
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<OauthCallback />} />
-        <Route path="//auth/callback" element={<OauthCallback />} />
+        <Route path="/users/auth/google/callback" element={<OauthCallback />} />
+        <Route path="/users/auth/google" element={<OauthCallback />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
           path="/dashboard/*"
