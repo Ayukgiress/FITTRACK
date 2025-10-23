@@ -43,9 +43,12 @@ const Registration = () => {
       }
 
       const data = await response.json();
-      toast.success("Registration successful! Redirecting to dashboard...");
-      navigate("/dashboard");
-      setRefetchCurrentUser(prev => !prev);
+
+      // Clear any existing token to prevent auto-login
+      localStorage.removeItem("token");
+
+      toast.success("Registration successful! Please check your email for verification.");
+      navigate("/email-verification-sent");
     } catch (error) {
       console.error("Error registering:", error);
       toast.error("An unexpected error occurred during registration.");

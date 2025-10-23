@@ -23,7 +23,7 @@ const VerifyEmail = () => {
         if (response.ok && data.success) {
           setVerificationStatus('success');
           toast.success("Email verified successfully! You can now log in.");
-          setTimeout(() => navigate("/login"), 2000);
+          setTimeout(() => navigate("/login"), 3000);
         } else {
           setVerificationStatus('error');
           toast.error(data.message || "Verification failed. Please try again.");
@@ -53,7 +53,13 @@ const VerifyEmail = () => {
         <>
           <div className="text-green-500 text-4xl">✓</div>
           <h2 className="text-xl text-green-600">Email verified successfully!</h2>
-          <p className="text-gray-600">Redirecting to login...</p>
+          <p className="text-gray-600">Redirecting to login in 3 seconds...</p>
+          <button
+            onClick={() => navigate("/login")}
+            className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login Now
+          </button>
         </>
       )}
       

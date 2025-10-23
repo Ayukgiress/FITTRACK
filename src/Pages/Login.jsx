@@ -50,6 +50,14 @@ const Login = () => {
         });
         if (userResponse.ok) {
           const user = await userResponse.json();
+
+          // Check if user email is verified
+          if (!user.isVerified) {
+            toast.error("Please verify your email before logging in. Check your inbox for the verification link.");
+            navigate("/email-verification-sent");
+            return;
+          }
+
           setCurrentUser(user);
           toast.success('Login successful');
           navigate("/dashboard");

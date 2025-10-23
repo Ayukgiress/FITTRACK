@@ -23,8 +23,8 @@ const NavBar = () => {
             />
             <div className="ml-3">
               <div className="flex items-center">
-                <span className="font-bold text-xl text-blue-600">No</span>
-                <span className="font-bold text-xl text-gray-900">Slack</span>
+                <span className="font-bold text-xl text-blue-600">Fit</span>
+                <span className="font-bold text-xl text-gray-900">Track</span>
               </div>
               <p className="text-xs text-gray-600 font-medium">Track Your Fitness Journey</p>
             </div>

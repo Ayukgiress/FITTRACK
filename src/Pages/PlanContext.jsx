@@ -12,7 +12,7 @@ export const useFitness = () => {
 };
 
 export const FitnessProvider = ({ children }) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth() || {};
   const [dailyStepCount, setDailyStepCount] = useState([]);
   const [weeklyRunningDistance, setWeeklyRunningDistance] = useState([]);
   const [weeklyStepTarget, setWeeklyStepTarget] = useState(0);

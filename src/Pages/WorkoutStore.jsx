@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useFitness } from './PlanContext';
-import { FaTrophy, FaCalendarAlt, FaChartLine, FaPlus, FaBullseye, FaFire, FaWalking, FaRoute, FaCheckCircle, FaClock, FaDumbbell, FaCrosshairs, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaTrophy, FaCalendarAlt, FaChartLine, FaPlus, FaBullseye, FaFire, FaWalking, FaRoute, FaCheckCircle, FaClock, FaDumbbell, FaCrosshairs, FaEdit, FaTrash, FaCheck } from 'react-icons/fa';
 import Modal from 'react-modal';
 import { API_URL } from '../../constants';
 import { getIsoWeekNumber } from '../utils/utils';
@@ -453,90 +453,111 @@ const WorkoutStore = () => {
         ariaHideApp={false}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.85)",
-            backdropFilter: "blur(8px)",
-            zIndex: 1000,
+            backgroundColor: 'rgba(0, 0, 0, 1)',
+            backdropFilter: 'blur(16px)',
+            zIndex: 9999,
           },
           content: {
-            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-            color: "white",
-            padding: "0",
-            borderRadius: "20px",
-            width: "90vw",
-            maxWidth: "480px",
-            height: "auto",
-            margin: "auto",
-            border: "none",
-            boxShadow: "0 32px 64px -12px rgba(0, 0, 0, 0.9)",
-            overflow: "hidden",
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            transform: 'translate(-50%, -50%)',
+            width: '420px',
+            maxWidth: '90vw',
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '20px',
+            padding: '0',
+            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
           },
         }}
       >
-        <div className="relative p-8">
-          {/* Decorative background elements */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <div className="absolute top-4 right-4 w-20 h-20 bg-emerald-500 rounded-full blur-xl"></div>
-            <div className="absolute bottom-4 left-4 w-16 h-16 bg-blue-500 rounded-full blur-xl"></div>
+        <div className="p-8">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full mb-4">
+              <FaBullseye className="text-white text-2xl" />
+            </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent mb-2">
+              Create New Goal
+            </h2>
+            <p className="text-gray-300 text-lg">
+              Set a new fitness target to achieve
+            </p>
           </div>
 
-          <div className="relative z-10 space-y-6">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl mb-4">
-                <FaBullseye className="text-white text-2xl" />
+          <div className="space-y-6">
+            {/* Goal Type Section */}
+            <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+              <div className="flex items-center mb-4">
+                <FaBullseye className="text-emerald-400 mr-3 text-xl" />
+                <label htmlFor="goalType" className="text-lg font-semibold text-white">
+                  Goal Type
+                </label>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-2">Create New Goal</h2>
-              <p className="text-gray-300">Set a new fitness target to achieve</p>
-            </div>
-
-            <div className="space-y-5">
-              <div className="group">
-                <label className="block text-sm font-semibold text-gray-200 mb-3">Goal Type</label>
-                <div className="relative">
-                  <select
-                    value={newGoal.type}
-                    onChange={(e) => handleGoalTypeChange(e.target.value)}
-                    className="w-full appearance-none border-2 border-gray-600 rounded-xl p-4 bg-gray-800/50 backdrop-blur-sm text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-500"
-                  >
-                    <option value="Daily Steps">🏃 Daily Steps</option>
-                    <option value="Daily Distance">🏃‍♂️ Daily Distance</option>
-                    <option value="Weekly Distance">🏃‍♂️ Weekly Distance</option>
-                    <option value="Calories Burned">🔥 Calories Burned</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                    ▼
-                  </div>
+              <div className="relative">
+                <select
+                  id="goalType"
+                  value={newGoal.type}
+                  onChange={(e) => handleGoalTypeChange(e.target.value)}
+                  className="w-full bg-gray-900/80 border-2 border-gray-600 rounded-xl p-4 text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300 appearance-none"
+                >
+                  <option value="Daily Steps">🏃 Daily Steps</option>
+                  <option value="Daily Distance">🏃‍♂️ Daily Distance</option>
+                  <option value="Weekly Distance">🏃‍♂️ Weekly Distance</option>
+                  <option value="Calories Burned">🔥 Calories Burned</option>
+                </select>
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                  ▼
                 </div>
               </div>
-
-              <div className="group">
-                <label className="block text-sm font-semibold text-gray-200 mb-3">
-                  Target ({newGoal.unit})
-                </label>
-                <input
-                  type="number"
-                  value={newGoal.target}
-                  onChange={(e) => setNewGoal({ ...newGoal, target: e.target.value })}
-                  placeholder={`Enter target ${newGoal.unit}`}
-                  className="w-full border-2 border-gray-600 rounded-xl p-4 bg-gray-800/50 backdrop-blur-sm text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-500"
-                  min="1"
-                />
-              </div>
             </div>
 
-            <div className="flex space-x-4 pt-6">
-              <button
-                onClick={handleAddGoal}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-emerald-500/25"
-              >
-                🚀 Create Goal
-              </button>
+            {/* Target Input Section */}
+            <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+              <div className="flex items-center mb-4">
+                <FaTrophy className="text-green-400 mr-3 text-xl" />
+                <label htmlFor="target" className="text-lg font-semibold text-white">
+                  Target ({newGoal.unit})
+                </label>
+              </div>
+              <input
+                id="target"
+                type="number"
+                value={newGoal.target}
+                onChange={(e) => setNewGoal({ ...newGoal, target: e.target.value })}
+                placeholder={`Enter target ${newGoal.unit}`}
+                className="w-full bg-gray-900/80 border-2 border-gray-600 rounded-xl p-4 text-white text-center text-2xl font-mono focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                min="1"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setShowAddGoal(false)}
-                className="flex-1 bg-gray-700/50 backdrop-blur-sm hover:bg-gray-600/50 text-white font-semibold py-4 px-6 rounded-xl border-2 border-gray-600 hover:border-gray-500 transition-all duration-300"
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
               >
                 Cancel
               </button>
+              <button
+                onClick={handleAddGoal}
+                disabled={!newGoal.target || !newGoal.type}
+                className="flex-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              >
+                <FaCheck className="text-sm" />
+                🚀 Create Goal
+              </button>
             </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center mt-6 pt-4 border-t border-gray-700">
+            <p className="text-sm text-gray-400">
+              Set ambitious goals and achieve your fitness dreams!
+            </p>
           </div>
         </div>
       </Modal>

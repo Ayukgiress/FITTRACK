@@ -19,7 +19,7 @@ const Home = () => {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
             <div>
               <span className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full mb-6 border border-white border-opacity-30 text-white font-semibold">
-                NoSlackDashboard
+                FitTrack Dashboard
               </span>
               <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
                 Command center for your
@@ -29,7 +29,7 @@ const Home = () => {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed">
-                NoSlack brings all your training, nutrition, recovery, and goals into one smart command center...
+                FitTrack brings all your training, nutrition, recovery, and goals into one smart command center...
               </p>
               <div className="flex gap-4 mt-10">
                 <Link to="/register">
@@ -105,7 +105,7 @@ const Home = () => {
                 What our dashboard helps you achieve
               </h2>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                The NoSlack dashboard is your always-on accountability coach...
+                The FitTrack dashboard is your always-on accountability coach...
               </p>
               {/* Quick metrics strip */}
               <div className="grid grid-cols-3 gap-4">
@@ -188,7 +188,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
-              Why Choose <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">NoSlack</span>?
+              Why Choose <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">ActivePulse</span>?
             </h2>
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Experience the future of fitness with our comprehensive fitness tracking platform designed for real results.
@@ -275,7 +275,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
-              About <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">NoSlack</span>
+              About <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">ActivePulse</span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               We're not just another fitness app. We're revolutionizing how people approach health and wellness
@@ -401,7 +401,7 @@ const Home = () => {
               Success Stories
             </h2>
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Join thousands of users who've transformed their lives with NoSlack.
+              Join thousands of users who've transformed their lives with ActivePulse.
               Real results from real people around the world.
             </p>
           </div>
@@ -414,7 +414,7 @@ const Home = () => {
                 ))}
               </div>
                 <p className="text-gray-300 text-lg leading-relaxed mb-8">
-                "NoSlack completely transformed my fitness routine. The comprehensive tracking system is incredibly accurate and helps me stay on top of my progress. I've never felt more motivated!"
+                "ActivePulse completely transformed my fitness routine. The comprehensive tracking system is incredibly accurate and helps me stay on top of my progress. I've never felt more motivated!"
               </p>
               <div className="flex items-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
@@ -435,7 +435,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-gray-300 text-lg leading-relaxed mb-8">
-                "As a personal trainer, I was skeptical about AI coaching. But NoSlack has become an invaluable tool for my clients. The community and expert guidance are unmatched!"
+                "As a personal trainer, I was skeptical about AI coaching. But ActivePulse has become an invaluable tool for my clients. The community and expert guidance are unmatched!"
               </p>
               <div className="flex items-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
@@ -456,7 +456,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-gray-300 text-lg leading-relaxed mb-8">
-                "After years of inconsistent training, NoSlack helped me build sustainable habits. The app's intelligence and the supportive community keep me accountable every day."
+                "After years of inconsistent training, ActivePulse helped me build sustainable habits. The app's intelligence and the supportive community keep me accountable every day."
               </p>
               <div className="flex items-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
@@ -522,7 +522,7 @@ const Home = () => {
                     <FaDumbbell className="text-white text-2xl" />
                   </div>
                 </div>
-                <span className="text-3xl font-bold text-white">NoSlack</span>
+                <span className="text-3xl font-bold text-white">ActivePulse</span>
               </div>
 
               <p className="text-gray-300 leading-relaxed text-lg mb-6 max-w-md">
@@ -589,7 +589,7 @@ const Home = () => {
 
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
-              © 2025 NoSlack. All rights reserved. Built for the future of fitness.
+              © 2024 ActivePulse. All rights reserved. Built for the future of fitness.
             </p>
             <div className="flex items-center space-x-6">
               <span className="text-gray-500 text-sm">Made with</span>

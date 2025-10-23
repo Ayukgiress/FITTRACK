@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }) => {
         isOpen={showWeightModal}
         onClose={() => setShowWeightModal(false)}
         onSubmit={handleWeightComplete}
+        setRefetchCurrentUser={setRefetchCurrentUser}
       />
     </AuthContext.Provider>
   );

@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import Home from "./Pages/LandingPage/Home";
 import Registration from "./Pages/Registration";
 import Login from "./Pages/Login";
+import EmailVerificationSent from "./Pages/EmailVerificationSent";
 import NavBar from "./Component/NavBar";
 import Footer from "./Component/Footer";
 import Dashboard from "./Pages/Dashboard";
@@ -56,9 +57,11 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
+        <Route path="/email-verification-sent" element={<EmailVerificationSent />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/oauth-callback" element={<OauthCallback />} />
+        <Route path="/auth/callback" element={<OauthCallback />} />
+        <Route path="//auth/callback" element={<OauthCallback />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
           path="/dashboard/*"
@@ -82,7 +85,7 @@ const App = () => (
     <AuthProvider>
       <FitnessProvider>
         <div className="bg-customGradient">
-          <Router>
+          <Router basename="/">
             <Toaster richColors />
             <AppRoutes />
           </Router>
