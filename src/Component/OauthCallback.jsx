@@ -49,7 +49,31 @@ const OauthCallback = () => {
       console.error("Search params:", location.search);
       setError(errorMessage);
     }
-  }, [location, navigate, setRefetchCurrentUser, setShowWeightModal]);
+  }, [location, navigate, setShowWeightModal]);
+
+  // Add timeout for cases where backend fails and no redirect happens
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!error) {
+        console.error("OAuth callback timeout - no response from backend");
+        setError("Authentication timed out. The backend may be experiencing issues. Please try again later.");
+      }
+    }, 15000); // 15 seconds timeout
+
+    return () => clearTimeout(timeout);
+  }, [error]);
+
+  // Force navigation if we're stuck on callback page
+  useEffect(() => {
+    const forceNavigate = setTimeout(() => {
+      if (location.pathname === '/auth/callback' && !error) {
+        console.log("Forcing navigation to dashboard from callback");
+        navigate("/dashboard");
+      }
+    }, 3000); // 3 seconds
+
+    return () => clearTimeout(forceNavigate);
+  }, [location.pathname, navigate, error]);
 
   if (error) {
     return (

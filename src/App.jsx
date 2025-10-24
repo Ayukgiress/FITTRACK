@@ -55,7 +55,6 @@ const AppRoutes = () => {
     <>
       {!isDashboard && !isAuthPage && <NavBar />}
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/email-verification-sent" element={<EmailVerificationSent />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
@@ -63,6 +62,7 @@ const AppRoutes = () => {
         <Route path="/auth/callback" element={<OauthCallback />} />
         <Route path="/users/auth/google/callback" element={<OauthCallback />} />
         <Route path="/users/auth/google" element={<OauthCallback />} />
+        <Route path="/" element={<Home />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route
           path="/dashboard/*"
