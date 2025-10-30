@@ -19,7 +19,7 @@ const NavBar = () => {
             <img
               src={logoImage}
               alt="logo"
-              className="h-12 w-16"
+              className="h-12 w-16 rounded-md"
             />
             <div className="ml-3">
               <div className="flex items-center">

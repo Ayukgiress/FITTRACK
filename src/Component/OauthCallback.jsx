@@ -54,18 +54,18 @@ const OauthCallback = () => {
         console.log("Triggering current user refetch");
         setRefetchCurrentUser(prev => !prev);
 
-        const redirectPath = searchParams.get("redirect") || searchParams.get("state") || "/dashboard";
-
         if (missingWeight === "true") {
           console.log("Setting pending weight flag");
           localStorage.setItem("pendingWeight", "true");
           setShowWeightModal(true);
+          navigate("/dashboard");
+        } else {
+          const redirectPath = searchParams.get("redirect") || searchParams.get("state") || "/dashboard";
+          console.log("Navigating to:", redirectPath);
+          setTimeout(() => {
+            navigate(redirectPath);
+          }, 100);
         }
-
-        console.log("Navigating to:", redirectPath);
-        setTimeout(() => {
-          navigate(redirectPath);
-        }, 100);
       } else if (missingWeight === "true") {
         console.log("Missing weight detected, showing weight modal");
         localStorage.setItem("pendingWeight", "true");

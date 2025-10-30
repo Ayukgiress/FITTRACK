@@ -247,7 +247,6 @@ const WorkoutStore = () => {
 
       <div className="max-w-full mx-auto px-4 pb-16">
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="bg-gradient-to-br from-blue-600 via-cyan-700 to-blue-800 rounded-2xl p-8 shadow-2xl border border-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105">
             <div className="flex items-center justify-between mb-6">

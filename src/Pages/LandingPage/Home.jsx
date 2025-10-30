@@ -19,7 +19,7 @@ const Home = () => {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
             <div>
               <span className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full mb-6 border border-white border-opacity-30 text-white font-semibold">
-                FitTrack Dashboard
+                NoSlack Dashboard
               </span>
               <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
                 Command center for your
@@ -29,7 +29,7 @@ const Home = () => {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed">
-                FitTrack brings all your training, nutrition, recovery, and goals into one smart command center...
+                NoSlack brings all your training, nutrition, recovery, and goals into one smart command center...
               </p>
               <div className="flex gap-4 mt-10">
                 <Link to="/register">
@@ -105,7 +105,7 @@ const Home = () => {
                 What our dashboard helps you achieve
               </h2>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                The FitTrack dashboard is your always-on accountability coach...
+                The NoSlack dashboard is your always-on accountability coach...
               </p>
               {/* Quick metrics strip */}
               <div className="grid grid-cols-3 gap-4">

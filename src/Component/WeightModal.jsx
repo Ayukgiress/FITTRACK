@@ -99,7 +99,7 @@ const WeightModal = ({ isOpen, onClose, onSubmit, setRefetchCurrentUser }) => {
             <FaWeight className="text-white text-2xl" />
           </div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-            Welcome to FitTrack!
+            Welcome to Noslack!
           </h2>
           <p className="text-gray-300 text-lg">
             Let's get your profile set up
