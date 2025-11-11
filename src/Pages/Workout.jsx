@@ -197,6 +197,19 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
     }
   }, [workoutToEdit]);
 
+  // Automatically calculate calories when exercise, startTime, endTime, or weight changes
+  useEffect(() => {
+    const calculateOnChange = async () => {
+      if (exercise && startTime && endTime && currentUser?.weight) {
+        const calculatedCalories = await calculateCalories();
+        setCalories(calculatedCalories);
+      } else {
+        setCalories(0);
+      }
+    };
+    calculateOnChange();
+  }, [exercise, startTime, endTime, currentUser?.weight]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
