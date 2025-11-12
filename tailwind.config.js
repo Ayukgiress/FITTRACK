@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto Condensed', 'sans-serif'],
+      },
       backgroundImage: {
         "image-backdrop":
           " linear-gradient(0deg, rgba(51,52,52,1) 0%, rgba(6,4,0,1) 100%);",

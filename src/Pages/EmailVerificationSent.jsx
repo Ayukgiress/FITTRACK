@@ -137,7 +137,7 @@ const EmailVerificationSent = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-500">
                 Need help?{" "}
-                <a href="mailto:support@fittrack.com" className="text-blue-600 hover:text-blue-700 font-medium">
+                <a href="mailto:support@Noslack.com" className="text-blue-600 hover:text-blue-700 font-medium">
                   Contact Support
                 </a>
               </p>

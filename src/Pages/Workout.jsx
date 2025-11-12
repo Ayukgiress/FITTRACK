@@ -4,9 +4,8 @@ import { toast } from 'sonner'; // For notifications
 import { getDurationFromEndTimeAndStartTime } from '../utils/utils';
 import { useAuth } from './AuthContext';
 
-const NUTRITIONIX_APP_ID = '812ef2a4';
-const NUTRITIONIX_APP_KEY = 'c3edfe63c89968c3a92493ac01c02f8b';
-const NUTRITIONIX_EXERCISE_URL = 'https://trackapi.nutritionix.com/v2/natural/exercise';
+const SPOONACULAR_API_KEY = 'f3fcdd67f0b149d78da58e355d4f48d3';
+const SPOONACULAR_CALORIES_URL = 'https://api.spoonacular.com/fitness/calories-burned';
 
 const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
   const [exercise, setExercise] = useState('');
@@ -75,20 +74,11 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       }
       console.log('Calculating calories for:', { exercise: effectiveExercise, duration, weight: currentUser.weight });
 
-      const query = `${duration} minutes of ${effectiveExercise}`;
-      console.log('Nutritionix query:', query);
+      const url = `${SPOONACULAR_CALORIES_URL}?exercise=${encodeURIComponent(effectiveExercise)}&duration=${duration}&weight=${currentUser.weight}&apiKey=${SPOONACULAR_API_KEY}`;
+      console.log('Spoonacular URL:', url);
 
-      const response = await fetch(NUTRITIONIX_EXERCISE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-app-id': NUTRITIONIX_APP_ID,
-          'x-app-key': NUTRITIONIX_APP_KEY,
-        },
-        body: JSON.stringify({
-          query,
-          weight_kg: currentUser.weight,
-        }),
+      const response = await fetch(url, {
+        method: 'GET',
       });
 
       console.log('API response status:', response.status);
@@ -102,13 +92,13 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       const data = await response.json();
       console.log('API response data:', data);
 
-      if (data.exercises && data.exercises.length > 0) {
-        const calculatedCalories = Math.round(data.exercises[0].nf_calories);
+      if (data && typeof data.calories === 'number') {
+        const calculatedCalories = Math.round(data.calories);
         console.log('Calculated calories:', calculatedCalories);
         return calculatedCalories;
       } else {
-        console.warn('No exercises found in response');
-        throw new Error('No exercise data found');
+        console.warn('No calories found in response');
+        throw new Error('No calorie data found');
       }
     } catch (error) {
       console.error('Error calculating calories:', error);
