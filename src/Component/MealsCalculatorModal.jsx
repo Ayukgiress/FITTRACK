@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import { API_URL } from '../../constants';
 import { useAuth } from '../Pages/AuthContext';
 
-const SPOONACULAR_API_KEY = 'f3fcdd67f0b149d78da58e355d4f48d3';
-const SPOONACULAR_API_URL = 'https://api.spoonacular.com/food/nutrients';
+const API_NINJAS_API_KEY = 'i5ORPhMoNonDHKhIgeMqDg==JsqKQFZNTkyT7lNO';
+const API_NINJAS_NUTRITION_URL = 'https://api.api-ninjas.com/v1/nutrition';
 
 const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
   const [foodItems, setFoodItems] = useState([]);
@@ -18,15 +18,11 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
   const fetchNutritionData = async (query) => {
     setLoading(true);
     try {
-      const response = await fetch(SPOONACULAR_API_URL, {
-        method: 'POST',
+      const response = await fetch(`${API_NINJAS_NUTRITION_URL}?query=${encodeURIComponent(query)}`, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'X-Api-Key': API_NINJAS_API_KEY,
         },
-        body: JSON.stringify({
-          query,
-          apiKey: SPOONACULAR_API_KEY,
-        }),
       });
 
       if (!response.ok) {
@@ -34,7 +30,7 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
       }
 
       const data = await response.json();
-      return data; // Return the data object
+      return data; // Return the data array
     } catch (error) {
       console.error('Error fetching nutrition data:', error);
       toast.error('Failed to fetch nutrition data. Please try again.');
@@ -51,13 +47,23 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
     }
 
     const nutritionData = await fetchNutritionData(foodQuery);
-    if (nutritionData) {
+    if (nutritionData && Array.isArray(nutritionData) && nutritionData.length > 0) {
+      // API-Ninjas returns an array, take the first item or sum all items
+      const totalNutrition = nutritionData.reduce((acc, item) => {
+        return {
+          calories: acc.calories + (item.calories || 0),
+          protein: acc.protein + (item.protein_g || 0),
+          carbs: acc.carbs + (item.carbohydrates_total_g || 0),
+          fats: acc.fats + (item.fat_total_g || 0),
+        };
+      }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
+
       const newItem = {
-        name: foodQuery, // Use the query as name since Spoonacular doesn't return food name
-        calories: Math.round(nutritionData.calories?.value || 0),
-        protein: Math.round(nutritionData.protein?.value || 0),
-        carbs: Math.round(nutritionData.carbs?.value || 0),
-        fats: Math.round(nutritionData.fat?.value || 0),
+        name: foodQuery,
+        calories: Math.round(totalNutrition.calories),
+        protein: Math.round(totalNutrition.protein),
+        carbs: Math.round(totalNutrition.carbs),
+        fats: Math.round(totalNutrition.fats),
         quantity: 1,
       };
       setFoodItems([...foodItems, newItem]);

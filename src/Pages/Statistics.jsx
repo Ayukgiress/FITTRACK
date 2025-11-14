@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaFire, FaWalking, FaRoute, FaChartLine, FaTrophy, FaCalendarAlt, FaArrowUp, FaArrowDown, FaEquals, FaFilter, FaDownload } from 'react-icons/fa';
+import { FaFire, FaWalking, FaRoute, FaChartLine, FaTrophy, FaCalendarAlt, FaArrowUp, FaArrowDown, FaEquals, FaFilter, FaDownload, FaUtensils, FaBalanceScale } from 'react-icons/fa';
 import MonthlyActivity from "./Homes";
 import MonthlyStepChart from '../Component/GoalsList';
 import { useAuth } from './AuthContext';
 import { useFitness } from './PlanContext';
+import { API_URL } from '../../constants';
 
 const Statistics = () => {
   const [timeRange, setTimeRange] = useState('month');
@@ -11,11 +12,14 @@ const Statistics = () => {
   const { currentUser, isAuthenticated } = useAuth();
   const { dailyStepCount, loading } = useFitness();
   const [workoutLog, setWorkoutLog] = useState([]);
+  const [mealsData, setMealsData] = useState([]);
   const [statsData, setStatsData] = useState({
     totalWorkouts: { value: 0, change: 0, trend: 'neutral' },
     avgSteps: { value: 0, change: 0, trend: 'neutral' },
     monthlyDistance: { value: 0, change: 0, trend: 'neutral' },
-    totalCalories: { value: 0, change: 0, trend: 'neutral' }
+    totalCalories: { value: 0, change: 0, trend: 'neutral' },
+    caloriesConsumed: { value: 0, change: 0, trend: 'neutral' },
+    netCalories: { value: 0, change: 0, trend: 'neutral' }
   });
 
   // Fetch workout data
@@ -25,7 +29,7 @@ const Statistics = () => {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:5000/workouts/${currentUser._id}`, {
+        const response = await fetch(`${API_URL}/workouts/${currentUser._id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -47,9 +51,38 @@ const Statistics = () => {
     fetchWorkoutLog();
   }, [currentUser, isAuthenticated]);
 
+  // Fetch meals data
+  useEffect(() => {
+    const fetchMealsData = async () => {
+      if (!currentUser?._id || !isAuthenticated) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/api/meals/${currentUser._id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch meals data");
+
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setMealsData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching meals data:", error);
+      }
+    };
+
+    fetchMealsData();
+  }, [currentUser, isAuthenticated]);
+
   // Calculate real statistics
   useEffect(() => {
-    if (workoutLog.length > 0 || dailyStepCount.length > 0) {
+    if (workoutLog.length > 0 || dailyStepCount.length > 0 || mealsData.length > 0) {
       // Calculate total workouts this month
       const currentMonth = new Date().getMonth();
       const currentYear = new Date().getFullYear();
@@ -69,8 +102,18 @@ const Statistics = () => {
       const workoutChange = prevMonthWorkouts.length > 0 ?
         ((thisMonthWorkouts.length - prevMonthWorkouts.length) / prevMonthWorkouts.length) * 100 : 0;
 
-      // Calculate total calories this month
-      const totalCalories = thisMonthWorkouts.reduce((sum, workout) => sum + (parseFloat(workout.calories) || 0), 0);
+      // Calculate total calories burned this month
+      const totalCaloriesBurned = thisMonthWorkouts.reduce((sum, workout) => sum + (parseFloat(workout.calories) || 0), 0);
+
+      // Calculate total calories consumed this month
+      const thisMonthMeals = mealsData.filter(meal => {
+        const mealDate = new Date(meal.date);
+        return mealDate.getMonth() === currentMonth && mealDate.getFullYear() === currentYear;
+      });
+      const totalCaloriesConsumed = thisMonthMeals.reduce((sum, meal) => sum + (parseFloat(meal.totalCalories) || 0), 0);
+
+      // Calculate net calories
+      const netCalories = totalCaloriesConsumed - totalCaloriesBurned;
 
       // Calculate average daily steps
       const avgSteps = dailyStepCount.length > 0 ?
@@ -96,13 +139,23 @@ const Statistics = () => {
           trend: 'neutral'
         },
         totalCalories: {
-          value: Math.round(totalCalories),
+          value: Math.round(totalCaloriesBurned),
+          change: 0, // Would need historical data for accurate change
+          trend: 'neutral'
+        },
+        caloriesConsumed: {
+          value: Math.round(totalCaloriesConsumed),
+          change: 0, // Would need historical data for accurate change
+          trend: 'neutral'
+        },
+        netCalories: {
+          value: Math.round(netCalories),
           change: 0, // Would need historical data for accurate change
           trend: 'neutral'
         }
       });
     }
-  }, [workoutLog, dailyStepCount]);
+  }, [workoutLog, dailyStepCount, mealsData]);
 
   const getTrendIcon = (trend) => {
     switch (trend) {
@@ -170,7 +223,7 @@ const Statistics = () => {
         </div>
 
         {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-2xl p-6 shadow-2xl border border-purple-500/20 hover:shadow-purple-500/30 transition-all duration-300 transform hover:scale-105">
             <div className="flex items-center justify-between mb-4">
               <FaTrophy className="text-purple-200 text-2xl" />
@@ -218,9 +271,35 @@ const Statistics = () => {
                 <span className="text-sm font-medium">{Math.abs(statsData.totalCalories.change)}%</span>
               </div>
             </div>
-            <h3 className="text-white text-lg font-semibold mb-2">Total Calories</h3>
+            <h3 className="text-white text-lg font-semibold mb-2">Calories Burned</h3>
             <p className="text-white text-3xl font-bold mb-1">{statsData.totalCalories.value.toLocaleString()}</p>
             <p className="text-orange-100 text-sm">kcal burned</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-600 via-green-700 to-emerald-600 rounded-2xl p-6 shadow-2xl border border-green-500/20 hover:shadow-green-500/30 transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between mb-4">
+              <FaUtensils className="text-green-200 text-2xl" />
+              <div className={`flex items-center space-x-1 ${getTrendColor(statsData.caloriesConsumed.trend)}`}>
+                {getTrendIcon(statsData.caloriesConsumed.trend)}
+                <span className="text-sm font-medium">{Math.abs(statsData.caloriesConsumed.change)}%</span>
+              </div>
+            </div>
+            <h3 className="text-white text-lg font-semibold mb-2">Calories Consumed</h3>
+            <p className="text-white text-3xl font-bold mb-1">{statsData.caloriesConsumed.value.toLocaleString()}</p>
+            <p className="text-green-100 text-sm">kcal consumed</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-600 rounded-2xl p-6 shadow-2xl border border-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between mb-4">
+              <FaBalanceScale className="text-indigo-200 text-2xl" />
+              <div className={`flex items-center space-x-1 ${getTrendColor(statsData.netCalories.trend)}`}>
+                {getTrendIcon(statsData.netCalories.trend)}
+                <span className="text-sm font-medium">{Math.abs(statsData.netCalories.change)}%</span>
+              </div>
+            </div>
+            <h3 className="text-white text-lg font-semibold mb-2">Net Calories</h3>
+            <p className="text-white text-3xl font-bold mb-1">{statsData.netCalories.value >= 0 ? '+' : ''}{statsData.netCalories.value.toLocaleString()}</p>
+            <p className="text-indigo-100 text-sm">kcal net</p>
           </div>
         </div>
 

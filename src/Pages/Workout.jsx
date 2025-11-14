@@ -3,9 +3,10 @@ import Modal from 'react-modal';
 import { toast } from 'sonner'; // For notifications
 import { getDurationFromEndTimeAndStartTime } from '../utils/utils';
 import { useAuth } from './AuthContext';
+import { API_URL } from '../../constants';
 
-const SPOONACULAR_API_KEY = 'f3fcdd67f0b149d78da58e355d4f48d3';
-const SPOONACULAR_CALORIES_URL = 'https://api.spoonacular.com/fitness/calories-burned';
+const API_NINJAS_API_KEY = 'i5ORPhMoNonDHKhIgeMqDg==JsqKQFZNTkyT7lNO';
+const API_NINJAS_CALORIES_URL = 'https://api.api-ninjas.com/v1/caloriesburned';
 
 const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
   const [exercise, setExercise] = useState('');
@@ -74,11 +75,14 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       }
       console.log('Calculating calories for:', { exercise: effectiveExercise, duration, weight: currentUser.weight });
 
-      const url = `${SPOONACULAR_CALORIES_URL}?exercise=${encodeURIComponent(effectiveExercise)}&duration=${duration}&weight=${currentUser.weight}&apiKey=${SPOONACULAR_API_KEY}`;
-      console.log('Spoonacular URL:', url);
+      const url = `${API_NINJAS_CALORIES_URL}?activity=${encodeURIComponent(effectiveExercise)}&weight=${currentUser.weight}&duration=${duration}`;
+      console.log('API-Ninjas URL:', url);
 
       const response = await fetch(url, {
         method: 'GET',
+        headers: {
+          'X-Api-Key': API_NINJAS_API_KEY,
+        },
       });
 
       console.log('API response status:', response.status);
@@ -92,12 +96,22 @@ const Workout = ({ isOpen, onClose, onSubmit, workoutToEdit }) => {
       const data = await response.json();
       console.log('API response data:', data);
 
-      if (data && typeof data.calories === 'number') {
-        const calculatedCalories = Math.round(data.calories);
-        console.log('Calculated calories:', calculatedCalories);
-        return calculatedCalories;
+      if (data && Array.isArray(data) && data.length > 0) {
+        // API-Ninjas returns an array, take the first item
+        const caloriesData = data[0];
+        if (caloriesData && typeof caloriesData.calories_per_hour === 'number') {
+          // Calculate total calories based on duration
+          const caloriesPerHour = caloriesData.calories_per_hour;
+          const totalCalories = (caloriesPerHour * duration) / 60; // Convert to per minute rate
+          const calculatedCalories = Math.round(totalCalories);
+          console.log('Calculated calories:', calculatedCalories);
+          return calculatedCalories;
+        } else {
+          console.warn('No calories_per_hour found in response');
+          throw new Error('No calorie data found');
+        }
       } else {
-        console.warn('No calories found in response');
+        console.warn('No data found in response');
         throw new Error('No calorie data found');
       }
     } catch (error) {
