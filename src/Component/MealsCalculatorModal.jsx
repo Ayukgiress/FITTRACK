@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-// import { API_URL } from '../constants';
 import { API_URL } from '../../constants';
 import { useAuth } from '../Pages/AuthContext';
 
@@ -30,7 +29,8 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
       }
 
       const data = await response.json();
-      return data; // Return the data array
+      console.log('Raw API Response:', data); // Debug log
+      return data;
     } catch (error) {
       console.error('Error fetching nutrition data:', error);
       toast.error('Failed to fetch nutrition data. Please try again.');
@@ -50,37 +50,48 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
     console.log('API Response:', nutritionData); // Debug log
 
     if (nutritionData && Array.isArray(nutritionData) && nutritionData.length > 0) {
-      // API-Ninjas returns an array, take the first item or sum all items
+      // Log the first item to see its structure
+      console.log('First item structure:', nutritionData[0]);
+      
+      // API-Ninjas returns an array, sum all items
       const totalNutrition = nutritionData.reduce((acc, item) => {
-        console.log('Processing item:', item); // Debug log
+        console.log('Processing item:', item);
+        
+        // Parse values as floats and ensure they're numbers
+        const calories = parseFloat(item.calories) || 0;
+        const protein = parseFloat(item.protein_g) || 0;
+        const carbs = parseFloat(item.carbohydrates_total_g) || 0;
+        const fats = parseFloat(item.fat_total_g) || 0;
+        
+        console.log('Parsed values:', { calories, protein, carbs, fats });
+        
         return {
-          calories: acc.calories + (Number(item.calories) || 0),
-          protein: acc.protein + (Number(item.protein_g) || 0),
-          carbs: acc.carbs + (Number(item.carbohydrates_total_g) || 0),
-          fats: acc.fats + (Number(item.fat_total_g) || 0),
+          calories: acc.calories + calories,
+          protein: acc.protein + protein,
+          carbs: acc.carbs + carbs,
+          fats: acc.fats + fats,
         };
       }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
 
-      console.log('Total nutrition calculated:', totalNutrition); // Debug log
+      console.log('Total nutrition calculated:', totalNutrition);
 
-      // Ensure values are numbers, default to 0 if NaN
-      totalNutrition.calories = Number(totalNutrition.calories) || 0;
-      totalNutrition.protein = Number(totalNutrition.protein) || 0;
-      totalNutrition.carbs = Number(totalNutrition.carbs) || 0;
-      totalNutrition.fats = Number(totalNutrition.fats) || 0;
-
+      // Round to 1 decimal place for better accuracy
       const newItem = {
         name: foodQuery,
-        calories: Math.round(totalNutrition.calories),
-        protein: Math.round(totalNutrition.protein),
-        carbs: Math.round(totalNutrition.carbs),
-        fats: Math.round(totalNutrition.fats),
+        calories: Math.round(totalNutrition.calories * 10) / 10,
+        protein: Math.round(totalNutrition.protein * 10) / 10,
+        carbs: Math.round(totalNutrition.carbs * 10) / 10,
+        fats: Math.round(totalNutrition.fats * 10) / 10,
         quantity: 1,
       };
+      
+      console.log('New item to add:', newItem);
+      
       setFoodItems([...foodItems, newItem]);
       setFoodQuery('');
       toast.success(`Added ${foodQuery}`);
     } else {
+      console.log('No valid nutrition data found');
       toast.error('No nutrition data found for this food');
     }
   };
@@ -96,7 +107,11 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
   };
 
   const calculateTotalCalories = () => {
-    return foodItems.reduce((total, item) => total + (item.calories * item.quantity), 0);
+    const total = foodItems.reduce((sum, item) => {
+      const itemCalories = (parseFloat(item.calories) || 0) * (parseFloat(item.quantity) || 1);
+      return sum + itemCalories;
+    }, 0);
+    return Math.round(total * 10) / 10;
   };
 
   const handleSaveMeal = async () => {
@@ -121,7 +136,7 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
       type: mealType,
       items: foodItems,
       totalCalories,
-      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+      date: new Date().toISOString().split('T')[0],
     };
 
     try {
@@ -152,7 +167,6 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
 
       toast.success(`Meal "${mealName}" saved with ${totalCalories} calories!`);
 
-      // Call the callback to update parent component
       if (onMealSaved) {
         onMealSaved(mealData);
       }
@@ -224,6 +238,7 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
                 placeholder="e.g., 1 apple, 2 eggs, 100g chicken..."
                 value={foodQuery}
                 onChange={(e) => setFoodQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && !loading && addFoodItem()}
                 className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={loading}
               />
@@ -256,6 +271,8 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
                     <div className="flex items-center gap-2">
                       <input
                         type="number"
+                        min="0.1"
+                        step="0.1"
                         placeholder="Qty"
                         value={item.quantity || ''}
                         onChange={(e) => updateFoodItem(index, 'quantity', parseFloat(e.target.value) || 1)}
@@ -263,7 +280,7 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
                       />
                       <button
                         onClick={() => removeFoodItem(index)}
-                        className="text-red-400 hover:text-red-300"
+                        className="text-red-400 hover:text-red-300 text-xl font-bold"
                       >
                         ×
                       </button>
