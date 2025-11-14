@@ -47,16 +47,27 @@ const MealsCalculatorModal = ({ isOpen, onClose, onMealSaved }) => {
     }
 
     const nutritionData = await fetchNutritionData(foodQuery);
+    console.log('API Response:', nutritionData); // Debug log
+
     if (nutritionData && Array.isArray(nutritionData) && nutritionData.length > 0) {
       // API-Ninjas returns an array, take the first item or sum all items
       const totalNutrition = nutritionData.reduce((acc, item) => {
+        console.log('Processing item:', item); // Debug log
         return {
-          calories: acc.calories + (item.calories || 0),
-          protein: acc.protein + (item.protein_g || 0),
-          carbs: acc.carbs + (item.carbohydrates_total_g || 0),
-          fats: acc.fats + (item.fat_total_g || 0),
+          calories: acc.calories + (Number(item.calories) || 0),
+          protein: acc.protein + (Number(item.protein_g) || 0),
+          carbs: acc.carbs + (Number(item.carbohydrates_total_g) || 0),
+          fats: acc.fats + (Number(item.fat_total_g) || 0),
         };
       }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
+
+      console.log('Total nutrition calculated:', totalNutrition); // Debug log
+
+      // Ensure values are numbers, default to 0 if NaN
+      totalNutrition.calories = Number(totalNutrition.calories) || 0;
+      totalNutrition.protein = Number(totalNutrition.protein) || 0;
+      totalNutrition.carbs = Number(totalNutrition.carbs) || 0;
+      totalNutrition.fats = Number(totalNutrition.fats) || 0;
 
       const newItem = {
         name: foodQuery,
